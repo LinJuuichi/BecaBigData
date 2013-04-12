@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Queue;
 import java.util.concurrent.SynchronousQueue;
 
+import org.json.JSONObject;
+
 /**
  * Abstract class for social networks connectors
  * @author Robert
