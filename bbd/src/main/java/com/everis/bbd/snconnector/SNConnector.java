@@ -1,4 +1,4 @@
-package com.everis.bbd.socialnetworkconnector;
+package com.everis.bbd.snconnector;
 
 import java.util.HashMap;
 import java.util.Queue;
@@ -11,12 +11,12 @@ import org.json.JSONObject;
  * @author Robert
  *
  */
-public abstract class SocialNetworkConnector 
+public abstract class SNConnector 
 {
 	private SynchronousQueue<JSONObject> _results;
 	private HashMap<String, String> _configuration;
 	
-	public SocialNetworkConnector()
+	public SNConnector()
 	{
 		_results = null;
 		_configuration = null;
