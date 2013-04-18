@@ -2,6 +2,10 @@ package com.everis.bbd.snconnector;
 
 import java.util.logging.Logger;
 
+/**
+ * Factory for social network connectors.
+ *
+ */
 public class SNConnectorFactory 
 {
 	private static Logger log = Logger.getLogger(SNConnectorFactory.class.getName());
@@ -12,6 +16,11 @@ public class SNConnectorFactory
 	
 	private SNConnectorFactory() { }
 	
+	/**
+	 * Returns the connector for the social network type.
+	 * @param type social network.
+	 * @return connector (SNConnector).
+	 */
 	public static SNConnector getConnector(int type)
 	{
 		SNConnector connector = null;
