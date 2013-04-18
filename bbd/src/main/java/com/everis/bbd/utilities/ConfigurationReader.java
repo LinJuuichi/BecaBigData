@@ -82,6 +82,22 @@ public class ConfigurationReader
 		return _configuration.get(key);
 	}
 	
+	public String getValue(String key)
+	{
+		int number = exists(key);
+		if (number == 1) return _configuration.get(key).get(0);
+		else if (number == 0) 
+		{
+			log.warning("WARNING - ConfigurationReader.getvalue() - The key "+key+" is empty.");
+			return null;
+		}
+		else 
+		{
+			log.warning("WARNING - ConfigurationReader.getvalue() - The key "+key+" has more than one value.");
+			return null;
+		}
+	}
+	
 	public String getValue(String key, String defaultValue)
 	{
 		int number = exists(key);
