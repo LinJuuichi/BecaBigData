@@ -88,12 +88,12 @@ public class ConfigurationReader
 		if (number == 1) return _configuration.get(key).get(0);
 		else if (number == 0) 
 		{
-			log.warning("WARNING - ConfigurationReader.getvalue() - The key "+key+" is empty.");
+			log.warning("Key "+key+" is empty.");
 			return null;
 		}
 		else 
 		{
-			log.warning("WARNING - ConfigurationReader.getvalue() - The key "+key+" has more than one value.");
+			log.warning("Key "+key+" has more than one value.");
 			return null;
 		}
 	}
