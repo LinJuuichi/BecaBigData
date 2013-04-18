@@ -1,10 +1,13 @@
 package com.everis.bbd.snconnector;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.SynchronousQueue;
 
 import org.json.JSONObject;
+
+import twitter4j.Status;
 
 /**
  * Abstract class for social networks connectors
@@ -13,7 +16,7 @@ import org.json.JSONObject;
  */
 public abstract class SNConnector 
 {
-	private SynchronousQueue<JSONObject> _results;
+	private List<Status> _results;
 	private HashMap<String, String> _configuration;
 	
 	public SNConnector()
@@ -27,7 +30,7 @@ public abstract class SNConnector
 		_configuration = configuration;
 	}
 	
-	public synchronized SynchronousQueue getResults()
+	public synchronized List<Status> getResults()
 	{
 		return _results;
 	}
