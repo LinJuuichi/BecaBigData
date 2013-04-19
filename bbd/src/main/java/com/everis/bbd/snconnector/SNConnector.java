@@ -37,7 +37,7 @@ public abstract class SNConnector
 	protected String _query;
 	
 	/**
-	 * Creator initializing attributes.
+	 * Creator initializing attributes and configuration.
 	 * 
 	 * @param propertiesFilePath path to the configuration path.
 	 */
@@ -74,8 +74,6 @@ public abstract class SNConnector
 		_query = query;
 	}
 	
-	public 
-	
 	/**
 	 * Return the results.
 	 * 
@@ -104,4 +102,29 @@ public abstract class SNConnector
 	 * @return number of results (0 if non and < 0 if error)
 	 */
 	public abstract int query();
+	
+	/**
+	 * Executes the query and saves the results.
+	 * 
+	 * @param query word/s to search.
+	 * @return number of results (0 if non and < 0 if error)
+	 */
+	public int query(String query)
+	{
+		_query = query;
+		return query();
+	}
+	
+	/**
+	 * Executes the query and saves the results.
+	 * 
+	 * @return number of results (0 if non and < 0 if error)
+	 */
+	public abstract int nextQuery();
+	
+	
+	/**
+	 * @return if last search has more results to query.
+	 */
+	public abstract boolean hasNextQuery();
 }

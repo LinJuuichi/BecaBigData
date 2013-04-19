@@ -3,6 +3,9 @@ package com.everis.bbd.snconnector;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import org.json.JSONObject;
+
 import com.everis.bbd.utilities.ConfigurationReader;
 import twitter4j.Query;
 import twitter4j.QueryResult;
@@ -73,14 +76,13 @@ public class TwitterConnector extends SNConnector
 			log.warning("Properties file no specified.");
 			return false;
 		}
-		_config = new ConfigurationReader(_propertiesFilePath);
 		
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true)
-		  .setOAuthConsumerKey(_config.getValue(TwitterConnector.CONSUMER_KEY))
-		  .setOAuthConsumerSecret(_config.getValue(TwitterConnector.CONSUMER_SECRET))
-		  .setOAuthAccessToken(_config.getValue(TwitterConnector.ACCESS_TOKEN))
-		  .setOAuthAccessTokenSecret(_config.getValue(TwitterConnector.ACCESS_TOKEN_SECRET));
+		  .setOAuthConsumerKey(_config.getValue(TwitterConnector.CONSUMER_KEY,""))
+		  .setOAuthConsumerSecret(_config.getValue(TwitterConnector.CONSUMER_SECRET,""))
+		  .setOAuthAccessToken(_config.getValue(TwitterConnector.ACCESS_TOKEN,""))
+		  .setOAuthAccessTokenSecret(_config.getValue(TwitterConnector.ACCESS_TOKEN_SECRET,""));
 
 		TwitterFactory tf = new TwitterFactory(cb.build());
 		_twitter = tf.getInstance();
@@ -165,13 +167,31 @@ public class TwitterConnector extends SNConnector
 		return -1;
 	}
 
-	public List<Status> getResults()
+	/*public List<JSONObject> getResults()
 	{
-		ArrayList<Status> results = null;
+		ArrayList<JSONObject> results = null;
 		if (_queryResults != null)
 		{
 			return _queryResults.getTweets();
 		}
 		return results;
+	}*/
+
+	@Override
+	public void close() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int query() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int nextQuery() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

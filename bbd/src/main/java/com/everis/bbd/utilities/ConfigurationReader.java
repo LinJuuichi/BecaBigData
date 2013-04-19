@@ -151,7 +151,7 @@ public class ConfigurationReader
 	{
 		if (!_configuration.containsKey(key))
 		{
-			log.warning("No configuration or no key with value: "+key+".");
+			log.info("Key "+key+" has no values.");
 			return new ArrayList<String>();
 		}
 		return _configuration.get(key);
@@ -169,7 +169,7 @@ public class ConfigurationReader
 		int number = exists(key);
 		if (number == 0) 
 		{
-			log.warning("Key "+key+" has no values.");
+			log.info("Key "+key+" has no values.");
 			return defaultValue;
 		}
 		else if (number == 1) 
@@ -201,7 +201,7 @@ public class ConfigurationReader
 		} 
 		catch (NumberFormatException  e) 
 		{
-			log.warning("Key "+key+" has not contain a parsable integer. Value = "+value+".");
+			log.info("Key "+key+" has not contain a parsable integer. Value = "+value+".");
 			return defaultValue;
 		}
 		return result;
