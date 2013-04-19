@@ -24,7 +24,7 @@ public class FrequentPatternMining
 	
 	private static Logger log = Logger.getLogger(FrequentPatternMining.class.getName());
 	
-	private static String CONFIGURATION_PATH = "config/mahoutFPM.properties";
+	private static String CONFIGURATION_PATH = "/home/training/Desktop/mahout_fpm.properties";
 	
 	private String _inputPath;
 	
