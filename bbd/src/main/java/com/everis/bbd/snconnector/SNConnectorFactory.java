@@ -4,13 +4,15 @@ import java.util.logging.Logger;
 
 /**
  * Factory for social network connectors.
- *
  */
 public class SNConnectorFactory 
 {
 	private static Logger log = Logger.getLogger(SNConnectorFactory.class.getName());
 
-	private static final int TWITTER_CONNECTOR = 1;
+	/**
+	 * Identifier for TwitterConnector.
+	 */
+	public static final int TWITTER_CONNECTOR = 1;
 	//private static final int FACEBOOK_CONNECTOR = 2;
 	//private static final int LINKEDIN_CONNECTOR = 3;
 	
@@ -18,6 +20,7 @@ public class SNConnectorFactory
 	
 	/**
 	 * Returns the connector for the social network type.
+	 * 
 	 * @param type social network.
 	 * @return connector (SNConnector).
 	 */

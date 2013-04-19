@@ -14,41 +14,46 @@ import twitter4j.conf.ConfigurationBuilder;
 
 /**
  * Connector for Twitter.
- *
  */
 public class TwitterConnector extends SNConnector 
 {
-	private static Logger log = Logger.getLogger(TwitterConnector.class.getName());
+	/**
+	 * Logger.
+	 */
+	protected static Logger log = Logger.getLogger(TwitterConnector.class.getName());
+	
+	public static final String DEFAULT_CONFIGURATION_PATH = "";
 	
 	private static final String CONSUMER_KEY = "CONSUMER_KEY";
 	private static final String CONSUMER_SECRET = "CONSUMER_SECRET";
 	private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
 	private static final String ACCESS_TOKEN_SECRET = "ACCESS_TOKEN_SECRET";
 
-	private String _propertiesFilePath;
 	private ConfigurationReader _config;
 	
 	private Twitter _twitter;
 	private Query _query;
 	private QueryResult _queryResults;
-
-	/**
-	 * Returns a TwitterConnector without any configuration.
-	 */
-	public TwitterConnector() {}
+	
+	public TwitterConnector()
+	{
+		super(DEFAULT_CONFIGURATION_PATH);
+	}
 	
 	/**
 	 * Returns a TwitterConnector configured with the properties in
 	 * propertiesFilePath.
+	 * 
 	 * @param propertiesFilePath file path with the properties (tokens).
 	 */
 	public TwitterConnector(String propertiesFilePath)
 	{
-		connect(propertiesFilePath);
+		super(propertiesFilePath);
 	}
 	
 	/**
 	 * Connects Twitter with the the properties in propertiesFilePath.
+	 * 
 	 * @param propertiesFilePath file path with the properties (tokens).
 	 */
 	public void connect(String propertiesFilePath)
@@ -58,6 +63,7 @@ public class TwitterConnector extends SNConnector
 
 	/**
 	 * Connects to Twitter if a properties file was specified.
+	 * 
 	 * @return if the connection was successful
 	 */
 	public boolean connect()
@@ -91,6 +97,7 @@ public class TwitterConnector extends SNConnector
 
 	/**
 	 * Sets a new Query.
+	 * 
 	 * @param query String containing the query to execute.
 	 */
 	public void setQuery(String query)
@@ -100,6 +107,7 @@ public class TwitterConnector extends SNConnector
 
 	/**
 	 * Executes the setted query. Saves the results. 
+	 * 
 	 * @return the number of downloaded tweets.
 	 */
 	public int doQuery()
@@ -118,6 +126,7 @@ public class TwitterConnector extends SNConnector
 
 	/**
 	 * Sets the query and executes it. Saves the results. 
+	 * 
 	 * @param  query String containing the query to execute.
 	 * @return the number of downloaded tweets.
 	 */
@@ -129,6 +138,7 @@ public class TwitterConnector extends SNConnector
 
 	/**
 	 * Asks if there is more results for the executed query.
+	 * 
 	 * @return if there is another query.
 	 */
 	public boolean hasNextQuery()
@@ -141,7 +151,8 @@ public class TwitterConnector extends SNConnector
 	}
 
 	/**
-	 * Executes the next query. Saves the results. 
+	 * Executes the next query. Saves the results.
+	 *  
 	 * @return the number of downloaded tweets.
 	 */
 	public int doNextQuery()

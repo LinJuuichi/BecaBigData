@@ -1,56 +1,107 @@
 package com.everis.bbd.snconnector;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.SynchronousQueue;
-
+import java.util.logging.Logger;
 import org.json.JSONObject;
-
-import twitter4j.Status;
+import com.everis.bbd.utilities.ConfigurationReader;
 
 /**
  * Abstract class for social networks connectors.
- *
  */
 public abstract class SNConnector 
-{
-	private List<Status> _results;
-	private HashMap<String, String> _configuration;
+{	
+	/**
+	 * Logger.
+	 */
+	protected static Logger log;
 	
 	/**
+	 * Path to the configuration file.
+	 */
+	protected String _propertiesFilePath;
+
+	/**
+	 * Connector configuration.
+	 */
+	protected ConfigurationReader _configuration;
+	
+	/**
+	 * List containing the queries results.
+	 */
+	protected List<JSONObject> _results;
+	
+	/**
+	 * Word/s to search.
+	 */
+	protected String _query;
+	
+	/**
+	 * Creator initializing attributes.
 	 * 
+	 * @param propertiesFilePath path to the configuration path.
 	 */
-	public SNConnector()
+	public SNConnector(String propertiesFilePath)
 	{
-		_results = null;
-		_configuration = null;
+		_propertiesFilePath = propertiesFilePath;
 	}
 	
 	/**
-	 * Configures the connector with the file.
-	 * @param configurationFile the configuration of the connector.
+	 * Initializes the configuration and the results.
+	 * 
+	 * @param propertiesFilePath path to the configuration path.
+	 * @return initialization success
 	 */
-	public void configure(String configurationFile)
+	public boolean configure(String propertiesFilePath)
 	{
-		// #TODO
-		//_configuration = configuration;
+		_results = new ArrayList<JSONObject>();
+		_configuration = new ConfigurationReader(propertiesFilePath);
+		if (!_configuration.readConfigurationFile())
+		{
+			log.severe("Could not read "+_propertiesFilePath+". Connector don't configured.");
+			return false;
+		}
+		return true;
 	}
 	
 	/**
-	 * Return the results of the query.
-	 * @return the results of the last executed query.
+	 * Sets the query.
+	 * 
+	 * @param query word/s to search.
 	 */
-	public synchronized List<Status> getResults()
+	public void setQuery(String query)
+	{
+		_query = query;
+	}
+	
+	public 
+	
+	/**
+	 * Return the results.
+	 * 
+	 * @return a list with the results query.
+	 */
+	public List<JSONObject> getResults()
 	{
 		return _results;
 	}
 	
 	/**
-	 * @param newResults
+	 * Connects to the social network.
+	 * 
+	 * @return connection success.
 	 */
-	public synchronized void appendResults(SynchronousQueue<JSONObject> newResults)
-	{
-		
-	}
+	public abstract boolean connect();
+	
+	/**
+	 * Closes the connection to the social network.
+	 */
+	public abstract void close();
+	
+	/**
+	 * Executes the query and saves the results.
+	 * 
+	 * @return number of results (0 if non and < 0 if error)
+	 */
+	public abstract int query();
 }

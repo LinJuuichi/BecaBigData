@@ -56,6 +56,7 @@ public class ConfigurationReader
 	public ConfigurationReader(String filePath)
 	{
 		_filePath = filePath;
+		_configuration = new HashMap<String, List<String>>();
 	}
 	
 	/**
@@ -133,7 +134,7 @@ public class ConfigurationReader
 	 */
 	public int exists(String key)
 	{
-		if (!_configuration.isEmpty() || _configuration.containsKey(key)) 
+		if (_configuration.containsKey(key)) 
 		{
 			return _configuration.get(key).size();
 		}
@@ -144,14 +145,14 @@ public class ConfigurationReader
 	 * Get a list with the values in the configuration for key.
 	 * 
 	 * @param key parameter key.
-	 * @return a list with the values. (null if there is no configuration or existing key)
+	 * @return a list with the values. (empty list if there is no configuration or existing key)
 	 */
 	public List<String> getValues(String key)
 	{
-		if (_configuration.isEmpty() || !_configuration.containsKey(key))
+		if (!_configuration.containsKey(key))
 		{
 			log.warning("No configuration or no key with value: "+key+".");
-			return null;
+			return new ArrayList<String>();
 		}
 		return _configuration.get(key);
 	}
@@ -162,7 +163,7 @@ public class ConfigurationReader
 	 * @param key parameter key.
 	 * @param defaultValue in case the key does not exist.
 	 * @return a single value.
-	 */
+	 */ 
 	public String getValue(String key, String defaultValue)
 	{
 		int number = exists(key);
