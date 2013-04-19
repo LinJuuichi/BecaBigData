@@ -85,6 +85,14 @@ public abstract class SNConnector
 	}
 	
 	/**
+	 * Clears the results obtained.
+	 */
+	public void clearResults()
+	{
+		_results.clear();
+	}
+	
+	/**
 	 * Connects to the social network.
 	 * 
 	 * @return connection success.
@@ -99,24 +107,27 @@ public abstract class SNConnector
 	/**
 	 * Executes the query and saves the results.
 	 * 
+	 * @param appendResults append the results of the new query to existing ones (if exist)
 	 * @return number of results (0 if non and < 0 if error)
 	 */
-	public abstract int query();
+	public abstract int query(boolean appendResults);
 	
 	/**
 	 * Executes the query and saves the results.
 	 * 
 	 * @param query word/s to search.
+	 * @param appendResults append the results of the new query to existing ones (if exist)
 	 * @return number of results (0 if non and < 0 if error)
 	 */
-	public int query(String query)
+	public int query(String query, boolean appendResults)
 	{
 		_query = query;
-		return query();
+		return query(appendResults);
 	}
 	
 	/**
 	 * Executes the query and saves the results.
+	 * Append the results to the existing ones.
 	 * 
 	 * @return number of results (0 if non and < 0 if error)
 	 */

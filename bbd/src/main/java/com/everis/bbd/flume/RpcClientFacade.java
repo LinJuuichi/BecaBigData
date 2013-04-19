@@ -13,10 +13,26 @@ import org.apache.flume.event.EventBuilder;
  */
 public class RpcClientFacade 
 {
+	/**
+	 * Logger.
+	 */
 	private static Logger log = Logger.getLogger(RpcClientFacade.class.getName());
 	
+	/**
+	 * Client to communicate with Flume source.
+	 */
 	private RpcClient _client;
+	
+	
+	/**
+	 * Hostname of  Flume source.
+	 */
 	private String _hostname;
+	
+	
+	/**
+	 * Port of Flume source.
+	 */
 	private int _port;
 
 	/**

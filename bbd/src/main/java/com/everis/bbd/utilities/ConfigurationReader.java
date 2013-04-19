@@ -119,6 +119,14 @@ public class ConfigurationReader
 	}
 	
 	/**
+	 * Clears the configuration.
+	 */
+	public void clearConfiguration()
+	{
+		_configuration.clear();
+	}
+	
+	/**
 	 * @return the configuration.
 	 */
 	public Map<String, List<String>> getConfiguration()

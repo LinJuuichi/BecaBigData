@@ -1,12 +1,9 @@
 package com.everis.bbd.snconnector;
 
-import java.util.ArrayList;
+import java.text.ParseException;
 import java.util.List;
 import java.util.logging.Logger;
-
 import org.json.JSONObject;
-
-import com.everis.bbd.utilities.ConfigurationReader;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -25,19 +22,52 @@ public class TwitterConnector extends SNConnector
 	 */
 	protected static Logger log = Logger.getLogger(TwitterConnector.class.getName());
 	
+	/**
+	 * Path to default configuration path.
+	 */
 	public static final String DEFAULT_CONFIGURATION_PATH = "";
 	
+	/**
+	 * Key for accessing the consumer key in the configuration.
+	 */
 	private static final String CONSUMER_KEY = "CONSUMER_KEY";
-	private static final String CONSUMER_SECRET = "CONSUMER_SECRET";
-	private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
-	private static final String ACCESS_TOKEN_SECRET = "ACCESS_TOKEN_SECRET";
-
-	private ConfigurationReader _config;
 	
+	/**
+	 * Key for accessing the consumer secret in the configuration.
+	 */
+	private static final String CONSUMER_SECRET = "CONSUMER_SECRET";
+	
+	
+	/**
+	 * Key for accessing the access token in the configuration.
+	 */
+	private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
+	
+	
+	/**
+	 * Key for accessing the access token secret in the configuration.
+	 */
+	private static final String ACCESS_TOKEN_SECRET = "ACCESS_TOKEN_SECRET";
+	
+	/**
+	 * Twitter instances for querying.
+	 */
 	private Twitter _twitter;
-	private Query _query;
+	
+	/**
+	 * Query.
+	 */
+	private Query _twitterQuery;
+	
+	
+	/**
+	 * Results for query.
+	 */
 	private QueryResult _queryResults;
 	
+	/**
+	 * Default configuration file creator
+	 */
 	public TwitterConnector()
 	{
 		super(DEFAULT_CONFIGURATION_PATH);
@@ -54,21 +84,7 @@ public class TwitterConnector extends SNConnector
 		super(propertiesFilePath);
 	}
 	
-	/**
-	 * Connects Twitter with the the properties in propertiesFilePath.
-	 * 
-	 * @param propertiesFilePath file path with the properties (tokens).
-	 */
-	public void connect(String propertiesFilePath)
-	{
-		_propertiesFilePath = propertiesFilePath;
-	}
-
-	/**
-	 * Connects to Twitter if a properties file was specified.
-	 * 
-	 * @return if the connection was successful
-	 */
+	@Override
 	public boolean connect()
 	{
 		if (_propertiesFilePath.isEmpty())
@@ -79,45 +95,44 @@ public class TwitterConnector extends SNConnector
 		
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true)
-		  .setOAuthConsumerKey(_config.getValue(TwitterConnector.CONSUMER_KEY,""))
-		  .setOAuthConsumerSecret(_config.getValue(TwitterConnector.CONSUMER_SECRET,""))
-		  .setOAuthAccessToken(_config.getValue(TwitterConnector.ACCESS_TOKEN,""))
-		  .setOAuthAccessTokenSecret(_config.getValue(TwitterConnector.ACCESS_TOKEN_SECRET,""));
+		  .setOAuthConsumerKey(_configuration.getValue(TwitterConnector.CONSUMER_KEY,""))
+		  .setOAuthConsumerSecret(_configuration.getValue(TwitterConnector.CONSUMER_SECRET,""))
+		  .setOAuthAccessToken(_configuration.getValue(TwitterConnector.ACCESS_TOKEN,""))
+		  .setOAuthAccessTokenSecret(_configuration.getValue(TwitterConnector.ACCESS_TOKEN_SECRET,""));
 
 		TwitterFactory tf = new TwitterFactory(cb.build());
 		_twitter = tf.getInstance();
 		return true;
 	}
 
-	/**
-	 * @return the query specified.
-	 */
-	public Query getQuery()
+	@Override
+	public void close() 
 	{
-		return _query;
+		_twitter.shutdown();
+		_query = null;
+		_configuration.clearConfiguration();
+		clearResults();
 	}
 
-	/**
-	 * Sets a new Query.
-	 * 
-	 * @param query String containing the query to execute.
-	 */
-	public void setQuery(String query)
-	{
-		_query = new Query(query);
-	}
-
-	/**
-	 * Executes the setted query. Saves the results. 
-	 * 
-	 * @return the number of downloaded tweets.
-	 */
-	public int doQuery()
+	@Override
+	public int query(boolean appendResults) 
 	{
 		try 
 		{
-			_queryResults = _twitter.search(_query);
-			return _queryResults.getCount();
+			_twitterQuery = new Query(_query);
+			_queryResults = _twitter.search(_twitterQuery);
+			List<Status> statusList = _queryResults.getTweets();
+			int results = 0;
+			for (Status status: statusList)
+			{
+				JSONObject object = statusToJSONObject(status);
+				if (object != null)
+				{
+					_results.add(object);
+					results++;
+				}
+			}
+			return results;
 		} 
 		catch (TwitterException e) 
 		{
@@ -126,23 +141,18 @@ public class TwitterConnector extends SNConnector
 		return -1;
 	}
 
-	/**
-	 * Sets the query and executes it. Saves the results. 
-	 * 
-	 * @param  query String containing the query to execute.
-	 * @return the number of downloaded tweets.
-	 */
-	public int doQuery(String query)
+	@Override
+	public int nextQuery()
 	{
-		this.setQuery(query);
-		return this.doQuery();
+		if (this.hasNextQuery())
+		{
+			_twitterQuery = _queryResults.nextQuery();
+			return query(true);
+		}
+		return -1;
 	}
-
-	/**
-	 * Asks if there is more results for the executed query.
-	 * 
-	 * @return if there is another query.
-	 */
+	
+	@Override
 	public boolean hasNextQuery()
 	{
 		if (_queryResults != null)
@@ -151,47 +161,25 @@ public class TwitterConnector extends SNConnector
 		}
 		return false;
 	}
-
+	
 	/**
-	 * Executes the next query. Saves the results.
-	 *  
-	 * @return the number of downloaded tweets.
+	 * Creates a JSONObject from a Status.
+	 * 
+	 * @param status tweet to convert to JSONObject.
+	 * @return the tweet formatted.
 	 */
-	public int doNextQuery()
+	private JSONObject statusToJSONObject(Status status)
 	{
-		if (this.hasNextQuery())
+		JSONObject tweet;
+		try 
 		{
-			_query = _queryResults.nextQuery();
-			return this.doQuery();
-		}
-		return -1;
-	}
-
-	/*public List<JSONObject> getResults()
-	{
-		ArrayList<JSONObject> results = null;
-		if (_queryResults != null)
+			tweet = new JSONObject(status.toString());
+			return tweet;
+		} 
+		catch (ParseException e) 
 		{
-			return _queryResults.getTweets();
+			log.severe("Could not parse status.");
 		}
-		return results;
-	}*/
-
-	@Override
-	public void close() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public int query() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int nextQuery() {
-		// TODO Auto-generated method stub
-		return 0;
+		return null;
 	}
 }

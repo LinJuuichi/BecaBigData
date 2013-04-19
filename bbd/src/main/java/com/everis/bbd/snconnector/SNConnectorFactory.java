@@ -7,6 +7,9 @@ import java.util.logging.Logger;
  */
 public class SNConnectorFactory 
 {
+	/**
+	 * Logger.
+	 */
 	private static Logger log = Logger.getLogger(SNConnectorFactory.class.getName());
 
 	/**
@@ -16,6 +19,9 @@ public class SNConnectorFactory
 	//private static final int FACEBOOK_CONNECTOR = 2;
 	//private static final int LINKEDIN_CONNECTOR = 3;
 	
+	/**
+	 * SNConnectorFactory can't be instanciated.
+	 */
 	private SNConnectorFactory() { }
 	
 	/**
