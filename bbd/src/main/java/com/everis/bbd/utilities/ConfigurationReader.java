@@ -7,17 +7,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
  * Map for reading and obtaining configuration files.
- * Every line is a parameter <key-value>, unless it starts with the COMMENT_TOKEN.
- * Parameter keys are separated of their values by KEYVALUE_ASSIGN_TOKEN.
- * Parameter values can contain a list of values, with every value separated by LIST_SEPARATOR_TOKEN.
- *
+ * Every line is a parameter <key-value>, unless it starts with {@link ConfigurationReader#COMMENT_TOKEN}.
+ * Parameter keys are separated of their values by {@link ConfigurationReader#KEYVALUE_ASSIGN_TOKEN}.
+ * Parameter values can contain a list of values, with every value separated by {@link ConfigurationReader#LIST_SEPARATOR_TOKEN}.
  */
 public class ConfigurationReader 
 {
+	/**
+	 * Logger.
+	 */
 	private static Logger log = Logger.getLogger(ConfigurationReader.class.getName());
 	
 	/**
@@ -35,21 +38,29 @@ public class ConfigurationReader
 	 */
 	public static char COMMENT_TOKEN = '#';
 	
+	/**
+	 * Path to the configuration file to read.
+	 */
 	private String _filePath;
-	private HashMap<String, List<String>> _configuration;
 	
 	/**
-	 * Creates and initializes a ConfigurationReader.
+	 * Configuration parameters.
+	 */
+	private Map<String, List<String>> _configuration;
+	
+	/**
+	 * Creates a ConfigurationReader.
+	 * 
 	 * @param filePath configuration file path.
 	 */
 	public ConfigurationReader(String filePath)
 	{
 		_filePath = filePath;
-		readConfigurationFile();
 	}
 	
 	/**
 	 * Reads the configuration file in the specified path.
+	 * 
 	 * @return if it has read successfully the configuration file.
 	 */
 	public boolean readConfigurationFile()
@@ -96,6 +107,7 @@ public class ConfigurationReader
 	
 	/**
 	 * Reads the configuration file in the specified path.
+	 * 
 	 * @param filePath configuration file path.
 	 * @return if it has read successfully the configuration file.
 	 */
@@ -108,13 +120,14 @@ public class ConfigurationReader
 	/**
 	 * @return the configuration.
 	 */
-	public HashMap<String, List<String>> getConfiguration()
+	public Map<String, List<String>> getConfiguration()
 	{
 		return _configuration;
 	}
 	
 	/**
 	 * Check if key exists in the configuration and how many values contains.
+	 * 
 	 * @param key String to check.
 	 * @return how many values contains the key (0 if not exists).
 	 */
@@ -129,6 +142,7 @@ public class ConfigurationReader
 	
 	/**
 	 * Get a list with the values in the configuration for key.
+	 * 
 	 * @param key parameter key.
 	 * @return a list with the values. (null if there is no configuration or existing key)
 	 */
@@ -143,31 +157,8 @@ public class ConfigurationReader
 	}
 	
 	/**
-	 * Get the value (if key exists) in the configuration for key.
-	 * @param key parameter key.
-	 * @return a single value (null if there is no configuration or existing key).
-	 */
-	public String getValue(String key)
-	{
-		int number = exists(key);
-		if (number == 1) 
-		{
-			return _configuration.get(key).get(0);
-		}
-		else if (number == 0) 
-		{
-			log.warning("Key "+key+" is empty or does not exist.");
-			return null;
-		}
-		else 
-		{
-			log.warning("Key "+key+" has more than one value.");
-			return _configuration.get(key).get(0);
-		}
-	}
-	
-	/**
 	 * Get the value in the configuration for key. If key does not exist returns the default value.
+	 * 
 	 * @param key parameter key.
 	 * @param defaultValue in case the key does not exist.
 	 * @return a single value.
@@ -177,6 +168,7 @@ public class ConfigurationReader
 		int number = exists(key);
 		if (number == 0) 
 		{
+			log.warning("Key "+key+" has no values.");
 			return defaultValue;
 		}
 		else if (number == 1) 
@@ -188,5 +180,29 @@ public class ConfigurationReader
 			log.warning("Key "+key+" has more than one value.");
 			return _configuration.get(key).get(0);
 		}
+	}
+	
+	/**
+	 * Get the value in the configuration for key as an integer. 
+	 * If key does not exist or is not a parsable integer returns the default value.
+	 * 
+	 * @param key parameter key.
+	 * @param defaultValue in case the key does not exist.
+	 * @return a single value.
+	 */
+	public int getIntValue(String key, int defaultValue)
+	{
+		String value = getValue(key,String.valueOf(defaultValue));
+		int result;
+		try
+		{
+			result = Integer.parseInt(value);
+		} 
+		catch (NumberFormatException  e) 
+		{
+			log.warning("Key "+key+" has not contain a parsable integer. Value = "+value+".");
+			return defaultValue;
+		}
+		return result;
 	}
 }

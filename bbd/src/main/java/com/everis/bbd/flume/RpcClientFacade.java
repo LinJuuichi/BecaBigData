@@ -10,7 +10,6 @@ import org.apache.flume.event.EventBuilder;
 
 /**
  * Facade class for RpcClient to send events to Flume sources.
- *
  */
 public class RpcClientFacade 
 {
@@ -30,6 +29,7 @@ public class RpcClientFacade
 
 	/**
 	 * Creates and connects the client to a hostname and port.
+	 * 
 	 * @param hostname of source.
 	 * @param port of source.
 	 */
@@ -41,6 +41,7 @@ public class RpcClientFacade
 
 	/**
 	 * Connects the client to a hostname and port.
+	 * 
 	 * @param hostname of source.
 	 * @param port of source.
 	 */
@@ -59,6 +60,7 @@ public class RpcClientFacade
 
 	/**
 	 * Sends an event to Flumes source connected.
+	 * 
 	 * @param event to send to the source.
 	 */
 	public void sendEvent(Event event)
@@ -81,6 +83,7 @@ public class RpcClientFacade
 
 	/**
 	 * Sends data to a Flume source as an event.
+	 * 
 	 * @param data String to be sent as an event.
 	 */
 	public void sendData(String data)
@@ -101,6 +104,7 @@ public class RpcClientFacade
 
 	/**
 	 * Sets the source hostname.
+	 * 
 	 * @param hostname source.
 	 */
 	public void setHostname(String hostname)
@@ -118,6 +122,7 @@ public class RpcClientFacade
 
 	/**
 	 * Sets the source port.
+	 * 
 	 * @param port source.
 	 */
 	public void setPort(int port)
