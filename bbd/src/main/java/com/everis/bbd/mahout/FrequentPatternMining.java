@@ -60,8 +60,8 @@ public class FrequentPatternMining
     	 ConfigurationReader cr = new ConfigurationReader(CONFIGURATION_PATH);
          cr.readConfigurationFile();
          
-         _inputPath = cr.getValue("inputPath");
-         _outputPath = cr.getValue("outputPath");
+         _inputPath = cr.getValue("inputPath", "");
+         _outputPath = cr.getValue("outputPath", "");
          _encoding = cr.getValue("encoding", _encoding);
          _splitterPattern = cr.getValue("splitterPattern", _splitterPattern);
          _returnableFeatures = cr.getValues("returnableFeatures");
