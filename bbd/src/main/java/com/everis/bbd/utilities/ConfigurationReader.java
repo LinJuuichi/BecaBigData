@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +26,11 @@ public class ConfigurationReader
 	private static Logger log = Logger.getLogger(ConfigurationReader.class.getName());
 	
 	/**
+	 * Path to the config directory from target directory.
+	 */
+	public static String CONFIG_PATH = "../config/";
+	
+	/**
 	 * Separator for parameter values in lists.
 	 */
 	public static char LIST_SEPARATOR_TOKEN = ' ';
@@ -32,6 +39,11 @@ public class ConfigurationReader
 	 * Separator token for key-value parameters.
 	 */
 	public static char KEYVALUE_ASSIGN_TOKEN = '=';
+	
+	/**
+	 * Starting text token for value parameters.
+	 */
+	public static char KEYVALUE_TEXT_TOKEN = '"';
 	
 	/**
 	 * Starting token for comments.
@@ -55,8 +67,8 @@ public class ConfigurationReader
 	 */
 	public ConfigurationReader(String filePath)
 	{
-		_filePath = filePath;
 		_configuration = new HashMap<String, List<String>>();
+		readConfigurationFile(filePath);
 	}
 	
 	/**
@@ -81,11 +93,20 @@ public class ConfigurationReader
 					String[] var = line.split(String.valueOf(ConfigurationReader.KEYVALUE_ASSIGN_TOKEN));
 					List<String> values = new ArrayList<String>();
 					
-					String[] valuesArray = var[1].split(String.valueOf(ConfigurationReader.LIST_SEPARATOR_TOKEN));
-					for (String v: valuesArray)
+					if (var[1].charAt(0) == ConfigurationReader.KEYVALUE_TEXT_TOKEN)
 					{
-						values.add(v);
+						values.add(var[1].subSequence(1, var[1].length()-1).toString());
 					}
+					else
+					{
+						String[] valuesArray = var[1].split(String.valueOf(ConfigurationReader.LIST_SEPARATOR_TOKEN));
+						for (String v: valuesArray)
+						{
+							values.add(v);
+						}
+					}
+					log.info("Key: "+var[0]);
+					log.info("Values: "+values.toString());
 					_configuration.put(var[0], values);
 				}
 			}
@@ -94,12 +115,12 @@ public class ConfigurationReader
 		} 
 		catch (FileNotFoundException e) 
 		{
-			log.warning("readConfigurationFile() - File "+_filePath+" does not exist.");
+			log.warning("File "+_filePath+" does not exist.");
 			return false;
 		}
 		catch (IOException e) 
 		{
-			log.warning("readConfigurationFile() - Error reading "+_filePath+".");
+			log.warning("Error reading "+_filePath+".");
 			_configuration = new HashMap<String, List<String>>();
 			return false;
 		}
@@ -114,7 +135,16 @@ public class ConfigurationReader
 	 */
 	public boolean readConfigurationFile(String filePath)
 	{
-		_filePath = filePath;
+		_filePath = ConfigurationReader.class.getProtectionDomain().getCodeSource().getLocation().getPath()+CONFIG_PATH+filePath;
+		try 
+		{
+			_filePath = URLDecoder.decode(_filePath, "UTF-8");
+		} 
+		catch (UnsupportedEncodingException e) 
+		{
+			log.severe("Path error:"+_filePath+".");
+		}
+		_configuration = new HashMap<String, List<String>>();
 		return readConfigurationFile();
 	}
 	
