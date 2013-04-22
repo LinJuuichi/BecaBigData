@@ -1,6 +1,5 @@
 package com.everis.bbd.snconnector;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.logging.Logger;
 import org.json.JSONObject;
@@ -26,68 +25,23 @@ public class TwitterConnector extends SNConnector
 	 * Path to default configuration path.
 	 */
 	public static final String DEFAULT_CONFIGURATION_PATH = "";
-	
-	/**
-	 * Key for accessing the tweets count per page in the configuration.
-	 */
-	private static final String CONF_COUNT_KEY = "count";
-	
-	/**
-	 * Key for accessing the date since in the configuration.
-	 */
-	private static final String CONF_SINCE_KEY = "since";
-	
-	/**
-	 * Key for accessing the data until in the configuration.
-	 */
-	private static final String CONF_UNTIL_KEY = "until";
-	
-	/**
-	 * Key for accessing the since tweet ID in the configuration.
-	 */
-	private static final String CONF_SINCEID_KEY = "sinceID";
-	
-	/**
-	 * Key for accessing the maximum tweet ID in the configuration.
-	 */
-	private static final String CONF_MAXID_KEY = "maxId";
-	
-	/**
-	 * Key for accessing the consumer key in the configuration.
-	 */
-	private static final String CONSUMER_KEY = "consumerKey";
-	
-	/**
-	 * Key for accessing the consumer secret in the configuration.
-	 */
-	private static final String CONSUMER_SECRET = "consumerSecret";
-	
-	/**
-	 * Key for accessing the access token in the configuration.
-	 */
-	private static final String ACCESS_TOKEN = "accessToken";
-	
-	/**
-	 * Key for accessing the access token secret in the configuration.
-	 */
-	private static final String ACCESS_TOKEN_SECRET = "accessTokenSecret";
-	
+
 	/**
 	 * Twitter instances for querying.
 	 */
 	private Twitter _twitter;
-	
+
 	/**
 	 * Query.
 	 */
 	private Query _twitterQuery;
-	
-	
+
+
 	/**
 	 * Results for query.
 	 */
 	private QueryResult _queryResults;
-	
+
 	/**
 	 * Default configuration file creator
 	 */
@@ -95,7 +49,7 @@ public class TwitterConnector extends SNConnector
 	{
 		super(DEFAULT_CONFIGURATION_PATH);
 	}
-	
+
 	/**
 	 * Returns a TwitterConnector configured with the properties in
 	 * propertiesFilePath.
@@ -106,7 +60,7 @@ public class TwitterConnector extends SNConnector
 	{
 		super(propertiesFilePath);
 	}
-	
+
 	/**
 	 * Initializes the configuration and the results.
 	 * Also configures the query.
@@ -116,48 +70,62 @@ public class TwitterConnector extends SNConnector
 	{
 		if (super.configure(propertiesFilePath))
 		{
-			_twitterQuery = new Query(_query);
 			
-			if (_configuration.exists(CONF_COUNT_KEY) <= 0)
+			_twitterQuery = new Query();
+			
+			if (_configuration.exists(TwitterConnectorKeys.CONF_QUERY_KEY.getId()) <= 0)
 			{
-				_twitterQuery.setCount(_configuration.getIntValue(CONF_COUNT_KEY, 100));
+				_twitterQuery.setQuery(_configuration.getValue(TwitterConnectorKeys.CONF_QUERY_KEY.getId(), ""));
 			}
-			
-			if (_configuration.exists(CONF_SINCEID_KEY) <= 0)
+			else
 			{
-				_twitterQuery.setSinceId(_configuration.getIntValue(CONF_SINCEID_KEY, -1));
+				log.severe("Query not specified in file "+_propertiesFilePath+".");
+				return false;
 			}
-			
-			if (_configuration.exists(CONF_MAXID_KEY) <= 0)
+
+			if (_configuration.exists(TwitterConnectorKeys.CONF_COUNT_KEY.getId()) <= 0)
 			{
-				_twitterQuery.setMaxId(_configuration.getIntValue(CONF_MAXID_KEY, -1));
+				_twitterQuery.setCount(_configuration.getIntValue(TwitterConnectorKeys.CONF_COUNT_KEY.getId(), 100));
 			}
-			
-			if (_configuration.exists(CONF_SINCE_KEY) <= 0)
+
+			if (_configuration.exists(TwitterConnectorKeys.CONF_SINCEID_KEY.getId()) <= 0)
 			{
-				_twitterQuery.setSince(_configuration.getValue(CONF_SINCE_KEY, ""));
+				_twitterQuery.setSinceId(_configuration.getIntValue(TwitterConnectorKeys.CONF_SINCEID_KEY.getId(), -1));
 			}
-			
-			if (_configuration.exists(CONF_UNTIL_KEY) <= 0)
+
+			if (_configuration.exists(TwitterConnectorKeys.CONF_MAXID_KEY.getId()) <= 0)
 			{
-				_twitterQuery.setUntil(_configuration.getValue(CONF_UNTIL_KEY, ""));
+				_twitterQuery.setMaxId(_configuration.getIntValue(TwitterConnectorKeys.CONF_MAXID_KEY.getId(), -1));
+			}
+
+			if (_configuration.exists(TwitterConnectorKeys.CONF_SINCE_KEY.getId()) <= 0)
+			{
+				_twitterQuery.setSince(_configuration.getValue(TwitterConnectorKeys.CONF_SINCE_KEY.getId(), ""));
+			}
+
+			if (_configuration.exists(TwitterConnectorKeys.CONF_UNTIL_KEY.getId()) <= 0)
+			{
+				_twitterQuery.setUntil(_configuration.getValue(TwitterConnectorKeys.CONF_UNTIL_KEY.getId(), ""));
 			}
 			return true;
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean connect()
 	{
-		this.configure(_propertiesFilePath);
-		
+		if (_configuration == null)
+		{
+			this.configure(_propertiesFilePath);
+		}
+
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true)
-		  .setOAuthConsumerKey(_configuration.getValue(TwitterConnector.CONSUMER_KEY,""))
-		  .setOAuthConsumerSecret(_configuration.getValue(TwitterConnector.CONSUMER_SECRET,""))
-		  .setOAuthAccessToken(_configuration.getValue(TwitterConnector.ACCESS_TOKEN,""))
-		  .setOAuthAccessTokenSecret(_configuration.getValue(TwitterConnector.ACCESS_TOKEN_SECRET,""));
+		.setOAuthConsumerKey(_configuration.getValue(TwitterConnectorKeys.CONSUMER_KEY.getId(),""))
+		.setOAuthConsumerSecret(_configuration.getValue(TwitterConnectorKeys.CONSUMER_SECRET.getId(),""))
+		.setOAuthAccessToken(_configuration.getValue(TwitterConnectorKeys.ACCESS_TOKEN.getId(),""))
+		.setOAuthAccessTokenSecret(_configuration.getValue(TwitterConnectorKeys.ACCESS_TOKEN_SECRET.getId(),""));
 
 		TwitterFactory tf = new TwitterFactory(cb.build());
 		_twitter = tf.getInstance();
@@ -168,7 +136,7 @@ public class TwitterConnector extends SNConnector
 	public void close() 
 	{
 		_twitter.shutdown();
-		_query = null;
+		_twitterQuery = null;
 		_configuration.clearConfiguration();
 		clearResults();
 	}
@@ -178,6 +146,7 @@ public class TwitterConnector extends SNConnector
 	{
 		try 
 		{
+			log.info("Searching: "+_twitterQuery.getQuery());
 			_queryResults = _twitter.search(_twitterQuery);
 			List<Status> statusList = _queryResults.getTweets();
 			int results = 0;
@@ -194,9 +163,17 @@ public class TwitterConnector extends SNConnector
 		} 
 		catch (TwitterException e) 
 		{
+			log.warning("Search failed.");
 			e.printStackTrace();
 		}
 		return -1;
+	}
+
+	@Override
+	public int query(String query, boolean appendResults) 
+	{
+		_twitterQuery.setQuery(query);
+		return this.query(appendResults);
 	}
 
 	@Override
@@ -209,7 +186,7 @@ public class TwitterConnector extends SNConnector
 		}
 		return -1;
 	}
-	
+
 	@Override
 	public boolean hasNextQuery()
 	{
@@ -219,7 +196,7 @@ public class TwitterConnector extends SNConnector
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Creates a JSONObject from a Status.
 	 * 
@@ -228,16 +205,95 @@ public class TwitterConnector extends SNConnector
 	 */
 	private JSONObject statusToJSONObject(Status status)
 	{
-		JSONObject tweet;
-		try 
+		JSONObject jTweet;
+		jTweet = new JSONObject();
+		jTweet.put("id", status.getId());
+		jTweet.put("userId", status.getCurrentUserRetweetId());
+		jTweet.put("username", status.getUser().getName());
+		jTweet.put("source", status.getSource());
+		jTweet.put("posted", status.getCreatedAt());
+		jTweet.put("location", status.getGeoLocation());
+		jTweet.put("text", status.getText());
+		return jTweet;
+	}
+
+	/**
+	 * Enumeration with the values of the keys of the different fields of TwitterConnector-
+	 */
+	public enum TwitterConnectorKeys 
+	{	
+		
+		/**
+		 * Key for accessing the query in the configuration.
+		 */
+		CONF_QUERY_KEY("query"),
+		
+		/**
+		 * Key for accessing the tweets count per page in the configuration.
+		 */
+		CONF_COUNT_KEY("count"),
+
+		/**
+		 * Key for accessing the date since in the configuration.
+		 */
+		CONF_SINCE_KEY("since"),
+
+		/**
+		 * Key for accessing the data until in the configuration.
+		 */
+		CONF_UNTIL_KEY("until"),
+
+		/**
+		 * Key for accessing the since tweet ID in the configuration.
+		 */
+		CONF_SINCEID_KEY("sinceID"),
+
+		/**
+		 * Key for accessing the maximum tweet ID in the configuration.
+		 */
+		CONF_MAXID_KEY("maxId"),
+
+		/**
+		 * Key for accessing the consumer key in the configuration.
+		 */
+		CONSUMER_KEY("consumerKey"),
+
+		/**
+		 * Key for accessing the consumer secret in the configuration.
+		 */
+		CONSUMER_SECRET("consumerSecret"),
+
+		/**
+		 * Key for accessing the access token in the configuration.
+		 */
+		ACCESS_TOKEN("accessToken"),
+
+		/**
+		 * Key for accessing the access token secret in the configuration.
+		 */
+		ACCESS_TOKEN_SECRET("accessTokenSecret");
+
+		/**
+		 * Key value.
+		 */
+		private String _id = null;
+
+		/**
+		 * Creates 
+		 * 
+		 * @param id the identifier 
+		 */
+		private TwitterConnectorKeys(String id) 
 		{
-			tweet = new JSONObject(status.toString());
-			return tweet;
-		} 
-		catch (ParseException e) 
-		{
-			log.severe("Could not parse status.");
+			_id = id;
 		}
-		return null;
+
+		/**
+		 * @return the id
+		 */
+		public String getId() 
+		{
+			return _id;
+		}		
 	}
 }

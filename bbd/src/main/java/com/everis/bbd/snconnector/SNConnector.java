@@ -32,11 +32,6 @@ public abstract class SNConnector
 	protected List<JSONObject> _results;
 	
 	/**
-	 * Word/s to search.
-	 */
-	protected String _query;
-	
-	/**
 	 * Creator initializing attributes and configuration.
 	 * 
 	 * @param propertiesFilePath path to the configuration path.
@@ -54,24 +49,17 @@ public abstract class SNConnector
 	 */
 	public boolean configure(String propertiesFilePath)
 	{
+		_propertiesFilePath = propertiesFilePath;
 		_results = new ArrayList<JSONObject>();
 		_configuration = new ConfigurationReader(propertiesFilePath);
+		
 		if (!_configuration.readConfigurationFile())
 		{
 			log.severe("Could not read file: "+_propertiesFilePath+". Connector don't configured.");
 			return false;
 		}
+		
 		return true;
-	}
-	
-	/**
-	 * Sets the query.
-	 * 
-	 * @param query word/s to search.
-	 */
-	public void setQuery(String query)
-	{
-		_query = query;
 	}
 	
 	/**
@@ -119,11 +107,7 @@ public abstract class SNConnector
 	 * @param appendResults append the results of the new query to existing ones (if exist)
 	 * @return number of results (0 if non and < 0 if error)
 	 */
-	public int query(String query, boolean appendResults)
-	{
-		this.setQuery(query);
-		return this.query(appendResults);
-	}
+	public abstract int query(String query, boolean appendResults);
 	
 	/**
 	 * Executes the query and saves the results.
