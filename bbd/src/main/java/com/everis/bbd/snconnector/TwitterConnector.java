@@ -21,33 +21,56 @@ public class TwitterConnector extends SNConnector
 	 * Logger.
 	 */
 	protected static Logger log = Logger.getLogger(TwitterConnector.class.getName());
-	
+
 	/**
 	 * Path to default configuration path.
 	 */
 	public static final String DEFAULT_CONFIGURATION_PATH = "";
 	
 	/**
+	 * Key for accessing the tweets count per page in the configuration.
+	 */
+	private static final String CONF_COUNT_KEY = "count";
+	
+	/**
+	 * Key for accessing the date since in the configuration.
+	 */
+	private static final String CONF_SINCE_KEY = "since";
+	
+	/**
+	 * Key for accessing the data until in the configuration.
+	 */
+	private static final String CONF_UNTIL_KEY = "until";
+	
+	/**
+	 * Key for accessing the since tweet ID in the configuration.
+	 */
+	private static final String CONF_SINCEID_KEY = "sinceID";
+	
+	/**
+	 * Key for accessing the maximum tweet ID in the configuration.
+	 */
+	private static final String CONF_MAXID_KEY = "maxId";
+	
+	/**
 	 * Key for accessing the consumer key in the configuration.
 	 */
-	private static final String CONSUMER_KEY = "CONSUMER_KEY";
+	private static final String CONSUMER_KEY = "consumerKey";
 	
 	/**
 	 * Key for accessing the consumer secret in the configuration.
 	 */
-	private static final String CONSUMER_SECRET = "CONSUMER_SECRET";
-	
+	private static final String CONSUMER_SECRET = "consumerSecret";
 	
 	/**
 	 * Key for accessing the access token in the configuration.
 	 */
-	private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
-	
+	private static final String ACCESS_TOKEN = "accessToken";
 	
 	/**
 	 * Key for accessing the access token secret in the configuration.
 	 */
-	private static final String ACCESS_TOKEN_SECRET = "ACCESS_TOKEN_SECRET";
+	private static final String ACCESS_TOKEN_SECRET = "accessTokenSecret";
 	
 	/**
 	 * Twitter instances for querying.
@@ -84,14 +107,50 @@ public class TwitterConnector extends SNConnector
 		super(propertiesFilePath);
 	}
 	
+	/**
+	 * Initializes the configuration and the results.
+	 * Also configures the query.
+	 */
+	@Override
+	public boolean configure(String propertiesFilePath)
+	{
+		if (super.configure(propertiesFilePath))
+		{
+			_twitterQuery = new Query(_query);
+			
+			if (_configuration.exists(CONF_COUNT_KEY) <= 0)
+			{
+				_twitterQuery.setCount(_configuration.getIntValue(CONF_COUNT_KEY, 100));
+			}
+			
+			if (_configuration.exists(CONF_SINCEID_KEY) <= 0)
+			{
+				_twitterQuery.setSinceId(_configuration.getIntValue(CONF_SINCEID_KEY, -1));
+			}
+			
+			if (_configuration.exists(CONF_MAXID_KEY) <= 0)
+			{
+				_twitterQuery.setMaxId(_configuration.getIntValue(CONF_MAXID_KEY, -1));
+			}
+			
+			if (_configuration.exists(CONF_SINCE_KEY) <= 0)
+			{
+				_twitterQuery.setSince(_configuration.getValue(CONF_SINCE_KEY, ""));
+			}
+			
+			if (_configuration.exists(CONF_UNTIL_KEY) <= 0)
+			{
+				_twitterQuery.setUntil(_configuration.getValue(CONF_UNTIL_KEY, ""));
+			}
+			return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public boolean connect()
 	{
-		if (_propertiesFilePath.isEmpty())
-		{
-			log.warning("Properties file no specified.");
-			return false;
-		}
+		this.configure(_propertiesFilePath);
 		
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true)
@@ -119,7 +178,6 @@ public class TwitterConnector extends SNConnector
 	{
 		try 
 		{
-			_twitterQuery = new Query(_query);
 			_queryResults = _twitter.search(_twitterQuery);
 			List<Status> statusList = _queryResults.getTweets();
 			int results = 0;

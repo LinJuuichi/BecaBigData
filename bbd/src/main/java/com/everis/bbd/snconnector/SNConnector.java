@@ -58,7 +58,7 @@ public abstract class SNConnector
 		_configuration = new ConfigurationReader(propertiesFilePath);
 		if (!_configuration.readConfigurationFile())
 		{
-			log.severe("Could not read "+_propertiesFilePath+". Connector don't configured.");
+			log.severe("Could not read file: "+_propertiesFilePath+". Connector don't configured.");
 			return false;
 		}
 		return true;
@@ -121,8 +121,8 @@ public abstract class SNConnector
 	 */
 	public int query(String query, boolean appendResults)
 	{
-		_query = query;
-		return query(appendResults);
+		this.setQuery(query);
+		return this.query(appendResults);
 	}
 	
 	/**
