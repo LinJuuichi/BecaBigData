@@ -28,7 +28,7 @@ public class ConfigurationReader
 	/**
 	 * Path to the config directory from target directory.
 	 */
-	public static String CONFIG_PATH = "../config/";
+	public static String CONFIG_PATH = "/../config/";
 	
 	/**
 	 * Separator for parameter values in lists.
@@ -135,7 +135,8 @@ public class ConfigurationReader
 	 */
 	public boolean readConfigurationFile(String filePath)
 	{
-		_filePath = ConfigurationReader.class.getProtectionDomain().getCodeSource().getLocation().getPath()+CONFIG_PATH+filePath;
+		_filePath = ConfigurationReader.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		_filePath = _filePath.substring(0,_filePath.lastIndexOf("/")) + CONFIG_PATH + filePath;
 		try 
 		{
 			_filePath = URLDecoder.decode(_filePath, "UTF-8");

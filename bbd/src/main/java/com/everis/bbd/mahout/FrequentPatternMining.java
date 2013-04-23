@@ -2,6 +2,7 @@ package com.everis.bbd.mahout;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -16,35 +17,73 @@ import org.apache.mahout.fpm.pfpgrowth.convertors.string.TopKStringPatterns;
 import com.everis.bbd.utilities.ConfigurationReader;
 
 /**
- * @author jsabatep
+ * This class makes easier the frequent pattern mining provided by Mahout. It calculates frequent 
+ * patterns of a given file where transactions are stored in different lines.
  *
  */
 public class FrequentPatternMining 
 {
 	
+	/**
+	 * Logger.
+	 */
 	private static Logger log = Logger.getLogger(FrequentPatternMining.class.getName());
 	
-	private static String CONFIGURATION_PATH = "/home/training/Desktop/mahout_fpm.properties";
+	/**
+	 * Name of the configuration file.
+	 */
+	private static String CONFIGURATION_PATH = "mahout_fpm.properties";
 	
+	
+	/**
+	 * Path of the input file.
+	 */
 	private String _inputPath;
 	
+	/**
+	 * Path of the output directory.
+	 */
 	private String _outputPath;
 	
+	
+	/**
+	 * Encoding of the characters.
+	 */
 	private String _encoding = "UTF-8";
 	
+	/**
+	 * Pattern to split features of a transaction. A transaction consist in a set of features, 
+	 * for example each tweet. A feature is a single component for which patterns are mined, for
+	 * example each word in a tweet.
+	 */
 	private String _splitterPattern = " ";
 	
+	/**
+	 * Minimum appearance count that a feature has to have to enter in the processing stage.
+	 */
 	private String _minSupport = "3";
 	
+	/**
+	 * Maximum number of patterns found for each feature. Only _maxHeapSize first most closed 
+	 * patterns will be shown for each feature.
+	 */
 	private String _maxHeapSize = "50";
 	
+	/**
+	 * A list with the keys whose results must be saved. An empty list will save all the 
+	 * results calculated.
+	 */
 	private Collection<String> _returnableFeatures; 
 	
+	/**
+	 * A list containing all the results calculated.
+	 */
 	private List<Pair<String,TopKStringPatterns>> _results;
 	
     /**
-     * @param args
-     * @throws Exception 
+     * Execute all the process of frequent pattern mining.
+     * @param args Not used.
+     * @throws Exception If an exception occurs during a Mahout process.
      */
     public static void main( String[] args ) throws Exception
     {
@@ -55,6 +94,9 @@ public class FrequentPatternMining
        fpm.writeResults();
     }
 	
+    /**
+     * Reads the configuration from the file.
+     */
     private void makeConfiguration() 
     {
     	 ConfigurationReader cr = new ConfigurationReader(CONFIGURATION_PATH);
@@ -69,6 +111,10 @@ public class FrequentPatternMining
          _maxHeapSize = cr.getValue("maxPatternSupport", _maxHeapSize);
     }    
     
+    /**
+     * Execute the PFPGrowth algorithm provided by Mahout.
+     * @throws Exception If an exception occurs during Mahout runPFPGrowth process.
+     */
     private void startPFPGrowth() throws Exception 
     {
     	Parameters params = new Parameters();
@@ -90,6 +136,10 @@ public class FrequentPatternMining
     	PFPGrowth.runPFPGrowth(params);
     }
     
+    /**
+     * Process the result obtained to keep only the desired features.
+     * @throws IOException If an exception occurs during Mahout readFrequentPatterns process.
+     */
     private void processResults() throws IOException
     {
     	Parameters params = new Parameters();
@@ -98,25 +148,37 @@ public class FrequentPatternMining
     	
     	_results = PFPGrowth.readFrequentPattern(params);
     	
-    	for(Pair<String,TopKStringPatterns> p : _results)
+    	if(!_returnableFeatures.isEmpty())
     	{
-    		boolean exists = false;
-    		for(String s : _returnableFeatures) 
-    		{
-    			if(p.getFirst().equalsIgnoreCase(s)) 
-    			{
-    				exists = true;
-    				break;
-    			}
-    		}
-    		if(!exists) _results.remove(p);
+	    	Iterator<Pair<String,TopKStringPatterns>> iter = _results.iterator();
+	    	while(iter.hasNext())
+	    	{
+	    		Pair<String,TopKStringPatterns> p = iter.next();
+	    		boolean exists = false;
+	    		for(String s : _returnableFeatures) 
+	    		{
+	    			if(p.getFirst().equalsIgnoreCase(s)) 
+	    			{
+	    				exists = true;
+	    				break;
+	    			}
+	    		}
+	    		if(!exists) iter.remove();
+	    	}
     	}
     } 
     
+    /**
+     * Write the obtained results in HBase.
+     */
     private void writeResults() {
+    
+    	log.info("Total keys obtained: " + _results.size());
+    	log.info(_results.toString());
+    	
     	for(Pair<String,TopKStringPatterns> p : _results)
     	{
-    		log.info(p.getFirst() + " " + p.swap().toString());
+    		log.info(p.getFirst() + " " + p.getSecond().toString());
     	}
     }
     
