@@ -69,7 +69,6 @@ public class TwitterConnector extends SNConnector
 	{
 		if (super.configure(propertiesFile))
 		{
-			
 			_twitterQuery = new Query();
 			
 			if (_configuration.exists(TwitterConnectorKeys.CONF_QUERY_KEY.getId()) > 0)
