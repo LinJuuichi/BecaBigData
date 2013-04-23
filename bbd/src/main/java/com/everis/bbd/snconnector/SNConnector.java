@@ -19,7 +19,7 @@ public abstract class SNConnector
 	/**
 	 * Path to the configuration file.
 	 */
-	protected String _propertiesFilePath;
+	protected String _propertiesFile;
 
 	/**
 	 * Connector configuration.
@@ -34,28 +34,28 @@ public abstract class SNConnector
 	/**
 	 * Creator initializing attributes and configuration.
 	 * 
-	 * @param propertiesFilePath path to the configuration path.
+	 * @param propertiesFile path to the configuration path.
 	 */
-	public SNConnector(String propertiesFilePath)
+	public SNConnector(String propertiesFile)
 	{
-		_propertiesFilePath = propertiesFilePath;
+		_propertiesFile = propertiesFile;
 	}
 	
 	/**
 	 * Initializes the configuration and the results.
 	 * 
-	 * @param propertiesFilePath path to the configuration path.
+	 * @param propertiesFile path to the configuration path.
 	 * @return initialization success
 	 */
-	public boolean configure(String propertiesFilePath)
+	public boolean configure(String propertiesFile)
 	{
-		_propertiesFilePath = propertiesFilePath;
+		_propertiesFile = propertiesFile;
 		_results = new ArrayList<JSONObject>();
-		_configuration = new ConfigurationReader(propertiesFilePath);
+		_configuration = new ConfigurationReader(propertiesFile);
 		
 		if (!_configuration.readConfigurationFile())
 		{
-			log.severe("Could not read file: "+_propertiesFilePath+". Connector don't configured.");
+			log.severe("Could not read file: "+_propertiesFile+". Connector don't configured.");
 			return false;
 		}
 		

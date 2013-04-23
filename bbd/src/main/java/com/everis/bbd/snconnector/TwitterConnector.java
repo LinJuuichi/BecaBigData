@@ -36,7 +36,6 @@ public class TwitterConnector extends SNConnector
 	 */
 	private Query _twitterQuery;
 
-
 	/**
 	 * Results for query.
 	 */
@@ -52,13 +51,13 @@ public class TwitterConnector extends SNConnector
 
 	/**
 	 * Returns a TwitterConnector configured with the properties in
-	 * propertiesFilePath.
+	 * propertiesFile.
 	 * 
-	 * @param propertiesFilePath file path with the properties (tokens).
+	 * @param propertiesFile file path with the properties (tokens).
 	 */
-	public TwitterConnector(String propertiesFilePath)
+	public TwitterConnector(String propertiesFile)
 	{
-		super(propertiesFilePath);
+		super(propertiesFile);
 	}
 
 	/**
@@ -66,44 +65,44 @@ public class TwitterConnector extends SNConnector
 	 * Also configures the query.
 	 */
 	@Override
-	public boolean configure(String propertiesFilePath)
+	public boolean configure(String propertiesFile)
 	{
-		if (super.configure(propertiesFilePath))
+		if (super.configure(propertiesFile))
 		{
 			
 			_twitterQuery = new Query();
 			
-			if (_configuration.exists(TwitterConnectorKeys.CONF_QUERY_KEY.getId()) <= 0)
+			if (_configuration.exists(TwitterConnectorKeys.CONF_QUERY_KEY.getId()) > 0)
 			{
 				_twitterQuery.setQuery(_configuration.getValue(TwitterConnectorKeys.CONF_QUERY_KEY.getId(), ""));
 			}
 			else
 			{
-				log.severe("Query not specified in file "+_propertiesFilePath+".");
+				log.severe("Query not specified in file "+_propertiesFile+".");
 				return false;
 			}
 
-			if (_configuration.exists(TwitterConnectorKeys.CONF_COUNT_KEY.getId()) <= 0)
+			if (_configuration.exists(TwitterConnectorKeys.CONF_COUNT_KEY.getId()) > 0)
 			{
 				_twitterQuery.setCount(_configuration.getIntValue(TwitterConnectorKeys.CONF_COUNT_KEY.getId(), 100));
 			}
 
-			if (_configuration.exists(TwitterConnectorKeys.CONF_SINCEID_KEY.getId()) <= 0)
+			if (_configuration.exists(TwitterConnectorKeys.CONF_SINCEID_KEY.getId()) > 0)
 			{
 				_twitterQuery.setSinceId(_configuration.getIntValue(TwitterConnectorKeys.CONF_SINCEID_KEY.getId(), -1));
 			}
 
-			if (_configuration.exists(TwitterConnectorKeys.CONF_MAXID_KEY.getId()) <= 0)
+			if (_configuration.exists(TwitterConnectorKeys.CONF_MAXID_KEY.getId()) > 0)
 			{
 				_twitterQuery.setMaxId(_configuration.getIntValue(TwitterConnectorKeys.CONF_MAXID_KEY.getId(), -1));
 			}
 
-			if (_configuration.exists(TwitterConnectorKeys.CONF_SINCE_KEY.getId()) <= 0)
+			if (_configuration.exists(TwitterConnectorKeys.CONF_SINCE_KEY.getId()) > 0)
 			{
 				_twitterQuery.setSince(_configuration.getValue(TwitterConnectorKeys.CONF_SINCE_KEY.getId(), ""));
 			}
 
-			if (_configuration.exists(TwitterConnectorKeys.CONF_UNTIL_KEY.getId()) <= 0)
+			if (_configuration.exists(TwitterConnectorKeys.CONF_UNTIL_KEY.getId()) > 0)
 			{
 				_twitterQuery.setUntil(_configuration.getValue(TwitterConnectorKeys.CONF_UNTIL_KEY.getId(), ""));
 			}
@@ -117,7 +116,7 @@ public class TwitterConnector extends SNConnector
 	{
 		if (_configuration == null)
 		{
-			this.configure(_propertiesFilePath);
+			this.configure(_propertiesFile);
 		}
 
 		ConfigurationBuilder cb = new ConfigurationBuilder();

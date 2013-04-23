@@ -53,7 +53,7 @@ public class ConfigurationReader
 	/**
 	 * Path to the configuration file to read.
 	 */
-	private String _filePath;
+	private String _fileName;
 	
 	/**
 	 * Configuration parameters.
@@ -81,8 +81,8 @@ public class ConfigurationReader
 		_configuration = new HashMap<String, List<String>>();
 		try 
 		{
-			log.info("Reading "+_filePath+".");
-			BufferedReader in = new BufferedReader(new FileReader(_filePath));
+			log.info("Reading "+_fileName+".");
+			BufferedReader in = new BufferedReader(new FileReader(_fileName));
 			
 			String line;
 			while((line = in.readLine()) != null)
@@ -115,12 +115,12 @@ public class ConfigurationReader
 		} 
 		catch (FileNotFoundException e) 
 		{
-			log.warning("File "+_filePath+" does not exist.");
+			log.warning("File "+_fileName+" does not exist.");
 			return false;
 		}
 		catch (IOException e) 
 		{
-			log.warning("Error reading "+_filePath+".");
+			log.warning("Error reading "+_fileName+".");
 			_configuration = new HashMap<String, List<String>>();
 			return false;
 		}
@@ -135,15 +135,15 @@ public class ConfigurationReader
 	 */
 	public boolean readConfigurationFile(String filePath)
 	{
-		_filePath = ConfigurationReader.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-		_filePath = _filePath.substring(0,_filePath.lastIndexOf("/")) + CONFIG_PATH + filePath;
+		_fileName = ConfigurationReader.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		_fileName = _fileName.substring(0,_fileName.lastIndexOf("/")) + CONFIG_PATH + filePath;
 		try 
 		{
-			_filePath = URLDecoder.decode(_filePath, "UTF-8");
+			_fileName = URLDecoder.decode(_fileName, "UTF-8");
 		} 
 		catch (UnsupportedEncodingException e) 
 		{
-			log.severe("Path error:"+_filePath+".");
+			log.severe("Path error:"+_fileName+".");
 		}
 		_configuration = new HashMap<String, List<String>>();
 		return readConfigurationFile();

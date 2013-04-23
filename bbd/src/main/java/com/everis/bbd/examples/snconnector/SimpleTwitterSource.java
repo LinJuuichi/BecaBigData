@@ -6,17 +6,24 @@ import org.json.JSONObject;
 import com.everis.bbd.snconnector.SNConnectorFactory;
 import com.everis.bbd.snconnector.TwitterConnector;
 
-public class SimpleTwitterSource {
+/**
+ * Simple use example for TwitterConnector.
+ */
+public class SimpleTwitterSource 
+{
 
-	private static String _propertiesFilePath = "/home/training/Desktop/simple_twitter_source.props";
+	/**
+	 * Properties file name.
+	 */
+	private static String _propertiesFile = "simple_twitter_source.properties";
 	
 	/**
-	 * @param args
+	 * @param args arguments.
 	 */
 	public static void main(String[] args) 
 	{
 		TwitterConnector twitter = (TwitterConnector) SNConnectorFactory.getConnector(SNConnectorFactory.TWITTER_CONNECTOR);
-		if (twitter.configure(_propertiesFilePath))
+		if (twitter.configure(_propertiesFile))
 		{
 			twitter.connect();
 			int numberResults = twitter.query(false);
