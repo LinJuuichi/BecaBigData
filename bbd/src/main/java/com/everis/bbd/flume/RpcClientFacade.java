@@ -4,9 +4,11 @@ import java.nio.charset.Charset;
 import java.util.logging.Logger;
 import org.apache.flume.Event;
 import org.apache.flume.EventDeliveryException;
+import org.apache.flume.FlumeException;
 import org.apache.flume.api.RpcClient;
 import org.apache.flume.api.RpcClientFactory;
 import org.apache.flume.event.EventBuilder;
+import org.apache.flume.interceptor.TimestampInterceptor;
 
 /**
  * Facade class for RpcClient to send events to Flume sources.
@@ -44,7 +46,7 @@ public class RpcClientFacade
 	}
 
 	/**
-	 * Creates and connects the client to a hostname and port.
+	 * Creates and initializes the client.
 	 * 
 	 * @param hostname of source.
 	 * @param port of source.
@@ -52,16 +54,39 @@ public class RpcClientFacade
 	public RpcClientFacade(String hostname, int port)
 	{
 		_client = null;
-		init(hostname,port);
+		_hostname = hostname;
+		_port = port;
+	}
+	
+	/**
+	 * Connects the client.
+	 * 
+	 * @return connection established.
+	 */
+	public boolean connect()
+	{
+		log.info("Connecting client to "+_hostname+":"+_port+".");
+		try
+		{
+			_client = RpcClientFactory.getDefaultInstance(_hostname, _port);
+		}
+		catch (FlumeException e)
+		{
+			log.severe("Could not connect.");
+			return false;
+		}
+		return true;
 	}
 
 	/**
-	 * Connects the client to a hostname and port.
+	 * Connects the client to hostname and port.
+	 * If there is a connection, closes it.
 	 * 
 	 * @param hostname of source.
 	 * @param port of source.
+	 * @return connection established.
 	 */
-	public void init(String hostname, int port)
+	public boolean connect(String hostname, int port)
 	{
 		if (_client != null)
 		{
@@ -70,8 +95,7 @@ public class RpcClientFacade
 		}
 		_hostname = hostname;
 		_port = port;
-		log.info("Connecting client to"+_hostname+":"+_port+".");
-		_client = RpcClientFactory.getDefaultInstance(_hostname, _port);
+		return connect();
 	}
 
 	/**
@@ -86,7 +110,10 @@ public class RpcClientFacade
 			try
 			{
 				log.info("Sending event "+event.toString()+".");
-				_client.append(event);
+				
+				TimestampInterceptor.Builder b = new TimestampInterceptor.Builder();
+				TimestampInterceptor t = (TimestampInterceptor) b.build();
+				_client.append(t.intercept(event));
 			}
 			catch (EventDeliveryException e) 
 			{

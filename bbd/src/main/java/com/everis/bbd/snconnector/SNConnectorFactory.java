@@ -16,13 +16,45 @@ public class SNConnectorFactory
 	 * Identifier for TwitterConnector.
 	 */
 	public static final int TWITTER_CONNECTOR = 1;
-	//private static final int FACEBOOK_CONNECTOR = 2;
-	//private static final int LINKEDIN_CONNECTOR = 3;
 	
+	/**
+	 * Identifier for FacebookConnector.
+	 */
+	private static final int FACEBOOK_CONNECTOR = 2;
+	
+	/**
+	 * Identifier for LinkedinConnector.
+	 */
+	private static final int LINKEDIN_CONNECTOR = 3;
+	
+
 	/**
 	 * SNConnectorFactory can't be instanciated.
 	 */
 	private SNConnectorFactory() { }
+	
+	/**
+	 * Given a string with the name of a social network it returns the id.
+	 * 
+	 * @param name of the social network.
+	 * @return the identifier.
+	 */
+	public static int getConnectorId(String name)
+	{
+		if (name.equals("Twitter") || name.equals("twitter"))
+		{
+			return SNConnectorFactory.TWITTER_CONNECTOR;
+		}
+		else if (name.equals("Facebook") || name.equals("facebook"))
+		{
+			return SNConnectorFactory.FACEBOOK_CONNECTOR;
+		}
+		else if (name.equals("Linkedin") || name.equals("LinkedIn") || name.equals("linkedin"))
+		{
+			return SNConnectorFactory.LINKEDIN_CONNECTOR;
+		}
+		return 0;
+	}
 	
 	/**
 	 * Returns the connector for the social network type.
