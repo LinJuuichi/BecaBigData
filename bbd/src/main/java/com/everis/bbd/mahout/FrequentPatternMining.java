@@ -1,7 +1,10 @@
 package com.everis.bbd.mahout;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
@@ -14,11 +17,12 @@ import org.apache.mahout.common.Parameters;
 import org.apache.mahout.fpm.pfpgrowth.PFPGrowth;
 import org.apache.mahout.fpm.pfpgrowth.convertors.string.TopKStringPatterns;
 
+import com.everis.bbd.hbase.HBaseWrapper;
 import com.everis.bbd.utilities.ConfigurationReader;
 
 /**
- * This class makes easier the frequent pattern mining provided by Mahout. It calculates frequent 
- * patterns of a given file where transactions are stored in different lines.
+ * This class makes easier the calls to frequent pattern mining provided by Mahout. It calculates 
+ * frequent patterns of a given file where transactions are stored in different lines.
  *
  */
 public class FrequentPatternMining 
@@ -70,6 +74,11 @@ public class FrequentPatternMining
 	private String _maxHeapSize = "50";
 	
 	/**
+	 * Key value to identify the row where the results are inserted in HBase.
+	 */
+	private String _key;
+	
+	/**
 	 * A list with the keys whose results must be saved. An empty list will save all the 
 	 * results calculated.
 	 */
@@ -95,6 +104,17 @@ public class FrequentPatternMining
     }
 	
     /**
+     * Constructor of the class. Key identifier is set by default to yesterday.
+     */
+    public FrequentPatternMining() {
+    	Calendar cal = Calendar.getInstance();
+    	cal.add(Calendar.DATE, -1);   
+    	Date date = cal.getTime();
+    	SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
+    	_key = sdf.format(date); 
+    }
+    
+    /**
      * Reads the configuration from the file.
      */
     private void makeConfiguration() 
@@ -109,6 +129,7 @@ public class FrequentPatternMining
          _returnableFeatures = cr.getValues("returnableFeatures");
          _minSupport = cr.getValue("minSupport", _minSupport);
          _maxHeapSize = cr.getValue("maxPatternSupport", _maxHeapSize);
+         _key = cr.getValue("key", _key);
     }    
     
     /**
@@ -170,16 +191,36 @@ public class FrequentPatternMining
     
     /**
      * Write the obtained results in HBase.
+     * @throws IOException 
      */
-    private void writeResults() {
+    private void writeResults() throws IOException {
     
     	log.info("Total keys obtained: " + _results.size());
     	log.info(_results.toString());
     	
+    	HBaseWrapper hbw = new HBaseWrapper();
+    	
     	for(Pair<String,TopKStringPatterns> p : _results)
     	{
-    		log.info(p.getFirst() + " " + p.getSecond().toString());
+    		String key = p.getFirst();
+    		List<Pair<List<String>, Long>> patterns = p.getSecond().getPatterns();
+    		
+    		for(Pair<List<String>, Long> pattern : patterns) 
+    		{
+    			String qualifier = key;
+    			Long value = pattern.getSecond();
+    			
+    			List<String> features = pattern.getFirst();
+    			for(String feature : features)
+    			{
+    				qualifier = qualifier + "." + feature;
+    			}
+    			
+        		hbw.insertValue("tweets", _key, "patterns", qualifier, value.toString());
+    		}
     	}
+    	
+    	hbw.loadInserts();
     }
     
 }
