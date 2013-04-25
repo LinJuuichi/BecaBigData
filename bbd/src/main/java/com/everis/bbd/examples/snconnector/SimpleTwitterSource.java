@@ -1,9 +1,14 @@
 package com.everis.bbd.examples.snconnector;
 
+import java.security.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.json.JSONObject;
-
 import com.everis.bbd.flume.RpcClientFacade;
 import com.everis.bbd.snconnector.SNConnector;
 import com.everis.bbd.snconnector.SNConnectorFactory;
@@ -51,24 +56,20 @@ public class SimpleTwitterSource
 			while (numberResults > 0)
 			{
 				results.addAll(connector.getResults());
+				for (JSONObject tweet: results)
+				{
+					client.sendData(tweet);
+				}
 				if (connector.hasNextQuery())
 				{
-					numberResults = 0;
-					//numberResults = connector.nextQuery();
+					//numberResults = 0;
+					results.clear();
+					numberResults = connector.nextQuery();
 				}
 				else
 				{
 					numberResults = 0;
 				}
-			}
-			
-			System.out.println("Tweets descargados: "+results.size());
-			System.out.println("-----------------------------------");
-			
-			for (JSONObject tweet: results)
-			{
-				System.out.println(tweet.toString());
-				client.sendData(tweet.toString());
 			}
 		}
 	}

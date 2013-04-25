@@ -122,4 +122,89 @@ public abstract class SNConnector
 	 * @return if last search has more results to query.
 	 */
 	public abstract boolean hasNextQuery();
+	
+	/**
+	 * Enumeration with the values of the keys of the different fields of TwitterConnector-
+	 */
+	public enum SNConnectorKeys 
+	{	
+		
+		/**
+		 * Key for accessing the maximum tweet ID in the configuration.
+		 */
+		POST_ID_KEY("id"),
+		
+		/**
+		 * Key for accessing the maximum tweet ID in the configuration.
+		 */
+		POST_TEXT_KEY("text"),
+		
+		/**
+		 * Key for accessing the maximum tweet ID in the configuration.
+		 */
+		POST_DATE_KEY("posted"),
+		
+		/**
+		 * Key for accessing the maximum tweet ID in the configuration.
+		 */
+		POST_USER_KEY("username"),
+		
+		/**
+		 * Key for accessing the maximum tweet ID in the configuration.
+		 */
+		POST_USERID_KEY("userId"),
+		
+		/**
+		 * Key for accessing the maximum tweet ID in the configuration.
+		 */
+		POST_LOCATION_KEY("location"),
+		
+		/**
+		 * Key for accessing the maximum tweet ID in the configuration.
+		 */
+		POST_SOURCE_KEY("source"),
+
+		/**
+		 * Key for accessing the consumer key in the configuration.
+		 */
+		CONSUMER_KEY("consumerKey"),
+
+		/**
+		 * Key for accessing the consumer secret in the configuration.
+		 */
+		CONSUMER_SECRET("consumerSecret"),
+
+		/**
+		 * Key for accessing the access token in the configuration.
+		 */
+		ACCESS_TOKEN("accessToken"),
+
+		/**
+		 * Key for accessing the access token secret in the configuration.
+		 */
+		ACCESS_TOKEN_SECRET("accessTokenSecret");
+
+		/**
+		 * Key value.
+		 */
+		private String _id = null;
+
+		/**
+		 * Creator.
+		 * 
+		 * @param id the identifier 
+		 */
+		private SNConnectorKeys(String id) 
+		{
+			_id = id;
+		}
+
+		/**
+		 * @return the id
+		 */
+		public String getId() 
+		{
+			return _id;
+		}		
+	}
 }

@@ -1,6 +1,14 @@
 package com.everis.bbd.flume;
 
 import java.nio.charset.Charset;
+import java.security.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 import org.apache.flume.Event;
 import org.apache.flume.EventDeliveryException;
@@ -9,6 +17,9 @@ import org.apache.flume.api.RpcClient;
 import org.apache.flume.api.RpcClientFactory;
 import org.apache.flume.event.EventBuilder;
 import org.apache.flume.interceptor.TimestampInterceptor;
+import org.json.JSONObject;
+
+import com.everis.bbd.snconnector.SNConnector.SNConnectorKeys;
 
 /**
  * Facade class for RpcClient to send events to Flume sources.
@@ -19,6 +30,11 @@ public class RpcClientFacade
 	 * Logger.
 	 */
 	private static Logger log = Logger.getLogger(RpcClientFacade.class.getName());
+	
+	/**
+	 * Key for the header value of the timestamp.
+	 */
+	private static String TIMESTAMP_HEADER = "timestamp";
 	
 	/**
 	 * Client to communicate with Flume source.
@@ -104,16 +120,14 @@ public class RpcClientFacade
 	 * @param event to send to the source.
 	 */
 	public void sendEvent(Event event)
-	{
+	{	
 		if (_client != null)
 		{
 			try
 			{
 				log.info("Sending event "+event.toString()+".");
-				
-				TimestampInterceptor.Builder b = new TimestampInterceptor.Builder();
-				TimestampInterceptor t = (TimestampInterceptor) b.build();
-				_client.append(t.intercept(event));
+
+				_client.append(event);
 			}
 			catch (EventDeliveryException e) 
 			{
@@ -123,16 +137,51 @@ public class RpcClientFacade
 			}
 		}
 	}
-
+	
 	/**
 	 * Sends data to a Flume source as an event.
 	 * 
 	 * @param data String to be sent as an event.
+	 * @param time timestamp to add in the event header.
 	 */
-	public void sendData(String data)
+	public void sendData(String data, Date time)
 	{
 		Event event = EventBuilder.withBody(data,Charset.forName("UTF-8"));
+		
+		Map<String, String> headers = new HashMap<String, String>();
+		headers.put(TIMESTAMP_HEADER, String.valueOf(time.getTime()));
+		event.setHeaders(headers);
+		
 		this.sendEvent(event);
+	}
+
+	/**
+	 * Sends data to a Flume source as an event with a timestamp value in the header.
+	 * JSONObject should have a parameter with key {@link SNConnectorKeys#POST_DATE_KEY} that represents the posted date of data.
+	 * If not, timestamp will be set to the execution date.
+	 * 
+	 * @param data JSONObject to be sent as an event.
+	 */
+	public void sendData(JSONObject data)
+	{
+		DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy");
+		Date date = new Date();
+		try 
+		{
+			date = dateFormat.parse(data.getString(SNConnectorKeys.POST_DATE_KEY.getId()));
+		} 
+		catch (NoSuchElementException e)
+		{
+			log.warning("Date not found in data.");
+		} 
+		catch (ParseException e) 
+		{
+			log.warning("Date not found in data.");
+		}
+		finally
+		{
+			this.sendData(data.toString(),date);
+		}
 	}
 
 	/**

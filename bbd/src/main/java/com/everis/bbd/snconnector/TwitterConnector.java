@@ -120,10 +120,10 @@ public class TwitterConnector extends SNConnector
 
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true)
-		.setOAuthConsumerKey(_configuration.getValue(TwitterConnectorKeys.CONSUMER_KEY.getId(),""))
-		.setOAuthConsumerSecret(_configuration.getValue(TwitterConnectorKeys.CONSUMER_SECRET.getId(),""))
-		.setOAuthAccessToken(_configuration.getValue(TwitterConnectorKeys.ACCESS_TOKEN.getId(),""))
-		.setOAuthAccessTokenSecret(_configuration.getValue(TwitterConnectorKeys.ACCESS_TOKEN_SECRET.getId(),""));
+		.setOAuthConsumerKey(_configuration.getValue(SNConnectorKeys.CONSUMER_KEY.getId(),""))
+		.setOAuthConsumerSecret(_configuration.getValue(SNConnectorKeys.CONSUMER_SECRET.getId(),""))
+		.setOAuthAccessToken(_configuration.getValue(SNConnectorKeys.ACCESS_TOKEN.getId(),""))
+		.setOAuthAccessTokenSecret(_configuration.getValue(SNConnectorKeys.ACCESS_TOKEN_SECRET.getId(),""));
 
 		TwitterFactory tf = new TwitterFactory(cb.build());
 		_twitter = tf.getInstance();
@@ -205,13 +205,13 @@ public class TwitterConnector extends SNConnector
 	{
 		JSONObject jTweet;
 		jTweet = new JSONObject();
-		jTweet.put("id", status.getId());
-		jTweet.put("userId", status.getCurrentUserRetweetId());
-		jTweet.put("username", status.getUser().getName());
-		jTweet.put("source", status.getSource());
-		jTweet.put("posted", status.getCreatedAt());
-		jTweet.put("location", status.getGeoLocation());
-		jTweet.put("text", status.getText());
+		jTweet.put(SNConnectorKeys.POST_ID_KEY.getId(), status.getId());
+		jTweet.put(SNConnectorKeys.POST_USERID_KEY.getId(), status.getCurrentUserRetweetId());
+		jTweet.put(SNConnectorKeys.POST_USER_KEY.getId(), status.getUser().getName());
+		jTweet.put(SNConnectorKeys.POST_SOURCE_KEY.getId(), status.getSource());
+		jTweet.put(SNConnectorKeys.POST_DATE_KEY.getId(), status.getCreatedAt());
+		jTweet.put(SNConnectorKeys.POST_LOCATION_KEY.getId(), status.getGeoLocation());
+		jTweet.put(SNConnectorKeys.POST_TEXT_KEY.getId(), status.getText());
 		return jTweet;
 	}
 
@@ -249,27 +249,7 @@ public class TwitterConnector extends SNConnector
 		/**
 		 * Key for accessing the maximum tweet ID in the configuration.
 		 */
-		CONF_MAXID_KEY("maxId"),
-
-		/**
-		 * Key for accessing the consumer key in the configuration.
-		 */
-		CONSUMER_KEY("consumerKey"),
-
-		/**
-		 * Key for accessing the consumer secret in the configuration.
-		 */
-		CONSUMER_SECRET("consumerSecret"),
-
-		/**
-		 * Key for accessing the access token in the configuration.
-		 */
-		ACCESS_TOKEN("accessToken"),
-
-		/**
-		 * Key for accessing the access token secret in the configuration.
-		 */
-		ACCESS_TOKEN_SECRET("accessTokenSecret");
+		CONF_MAXID_KEY("maxId");
 
 		/**
 		 * Key value.
@@ -277,7 +257,7 @@ public class TwitterConnector extends SNConnector
 		private String _id = null;
 
 		/**
-		 * Creates 
+		 * Creator. 
 		 * 
 		 * @param id the identifier 
 		 */
