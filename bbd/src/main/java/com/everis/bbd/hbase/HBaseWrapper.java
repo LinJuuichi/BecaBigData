@@ -1,7 +1,8 @@
 package com.everis.bbd.hbase;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.hadoop.conf.Configuration;
@@ -16,89 +17,76 @@ import com.everis.bbd.mahout.FrequentPatternMining;
  * HBaseWrapper is a wrapper of HBase API which makes easier the calls to HBase.
  */
 public class HBaseWrapper {
-
+	
 	/**
 	 * Logger.
 	 */
 	private static Logger log = Logger.getLogger(FrequentPatternMining.class.getName());
 	
 	/**
-	 * Tables which we are working with. Creating HTable is a really expensive process
+	 * In this list are stored all the pending inserts until the function flushInserts is 
+	 * executed.
+	 */
+	private List<Put> _puts = new ArrayList<Put>();
+	
+	/**
+	 * Table which we are working with. Creating HTable is a really expensive process
 	 * and should be executed only once for table.
 	 */
-	private static HashMap<String, HTable> _tables = new HashMap<String, HTable>();
+	private  HTable _table;
 	
 	/**
-	 * Rows which we are inserting into a specific table. The values inserted won't be stored 
-	 * in HBase until the execution of loadInserts method.
-	 */
-	private HashMap<String, HashMap<String, Put>> _puts = new HashMap<String, HashMap<String, Put>>();
-	
-	/**
-	 * It returns the HTable with the name table or will create a new one if it doesn't exists.
-	 * Creating HTable is a really expensive process and should be executed only once for table.
-	 * @param table name of the HBase table.
-	 * @return HBase table with the specified name.
-	 * @throws IOException Exception during the creation of HTable.
-	 */
-	private static HTable searchTable(String table) throws IOException 
+	 * Constructor.
+	 */	
+	public HBaseWrapper()
 	{
-		if(_tables.containsKey(table)) return _tables.get(table);
-		else 
-		{
-			Configuration conf = HBaseConfiguration.create();
-			HTable t = new HTable(conf, table);
-			_tables.put(table, t);
-			return t;
-		}
+		
 	}
 	
 	/**
-	 * It returns the present row where we are inserting values.
-	 * @param table name of the HBase table.
-	 * @param key key value of the row.
-	 * @return Put representing the row which we are inserting values.
+	 * Select the HBase table to work with.
+	 * @param table The HBase table.
+	 * @return True if the connector is correctly created. False otherwise.
 	 */
-	private Put searchPut(String table, String key) 
+	public boolean selectTable(String table)
 	{
-		if(!_puts.containsKey(table)) _puts.put(table, new HashMap<String, Put>());
-		if(_puts.get(table).containsKey(key)) return _puts.get(table).get(key);
-		else 
-		{
-			byte[] keyB = Bytes.toBytes(key);
-			Put p = new Put(keyB);
-			_puts.get(table).put(key, p);
-			return p;
+		Configuration conf = HBaseConfiguration.create();
+		try {
+			_table = new HTable(conf, table);
+			_table.setAutoFlush(false);
+		} catch (IOException e) {
+			log.severe("Failed to create the HBase table connector.");
+			return false;
 		}
+		return true;
 	}
 	
 	/**
 	 * Insert a new value in HBase. The values inserted won't be stored in HBase until the 
-	 * execution of loadInserts method.
-	 * @param table name of the HBase table.
-	 * @param key value of the row.
-	 * @param family name of the family column where insert the new value.
-	 * @param qualifier name of the qualifier.
+	 * execution of flushInserts method.
+	 * @param key value of the row key identifier.
+	 * @param family family column where insert the new value.
+	 * @param qualifier qualifier.
 	 * @param value value to be stored.
 	 */
-	public void insertValue(String table, String key, String family, String qualifier, String value)
+	public void insertValue(String key, String family, String qualifier, String value)
 	{
-		insertValue(table, key, family, qualifier, value, null);
+		insertValue(key, family, qualifier, value, null);
 	}
 	
 	/**
 	 * Insert a new value in HBase. The values inserted won't be stored in HBase until the 
-	 * execution of loadInserts method.
-	 * @param table name of the HBase table.
-	 * @param key value of the row.
-	 * @param family name of the family column where insert the new value.
-	 * @param qualifier name of the qualifier.
+	 * execution of flushInserts method.
+	 * @param key value of the row key identifier.
+	 * @param family family column where insert the new value.
+	 * @param qualifier qualifier.
 	 * @param value value to be stored.
 	 * @param ts timestamp of the new insertion.
 	 */
-	public void insertValue(String table, String key, String family, String qualifier, String value, Long ts)  
+	public void insertValue(String key, String family, String qualifier, String value, Long ts)  
 	{
-		Put p = searchPut(table, key);
+		byte[] keyB = Bytes.toBytes(key);
+		Put p = new Put(keyB);
 		
 		byte[] familyB = Bytes.toBytes(family);
 		byte[] qualifierB = Bytes.toBytes(qualifier);
@@ -116,25 +104,49 @@ public class HBaseWrapper {
 		else {
 			p.add(familyB, qualifierB, ts.longValue(), valueB);
 		}
-	}
 		
-	/**
-	 * Make all the current changes in HBase.
-	 * @throws IOException Exception during the creation of the table or the insertion.
-	 */
-	public void loadInserts() throws IOException
-	{
-		for(String table : _puts.keySet())
-		{
-			HTable ht = searchTable(table);
-			for(Put put : _puts.get(table).values())
-			{
-				ht.put(put);
-			}
-		}
+		_puts.add(p);
 	}
 		
 
+	/**
+	 * Make all the current changes in HBase.
+	 * @return True if all changes have been correctly made. False otherwise.
+	 */
+	public boolean flushInserts()
+	{
+		if(_table == null) 
+		{
+			log.severe("First select a correct table.");
+			return false;
+		}
+		try {
+			_table.put(_puts);
+			_table.flushCommits();
+		} catch (IOException e) {
+			log.severe("Failed to flush the changes.");
+			return false;
+		}
+		_puts.clear();
+		return true;
+	}
+	
+
+	/**
+	 * Close the current HBase table connector.
+	 * @return True if the close is successful. False otherwise.
+	 */
+	public boolean closeTable()
+	{
+		try {
+			_table.close();
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
+	}
+		
+			//seria una buena idea cerrar las HTable cuando ya no se usen con un close().
 			//boolean has(byte[] family, byte[] qualifier)
 			//boolean has(byte[] family, byte[] qualifier, long ts)
 			//boolean has(byte[] family, byte[] qualifier, byte[] value)

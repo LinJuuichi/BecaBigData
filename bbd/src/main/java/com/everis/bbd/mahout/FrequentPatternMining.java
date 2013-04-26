@@ -199,6 +199,7 @@ public class FrequentPatternMining
     	log.info(_results.toString());
     	
     	HBaseWrapper hbw = new HBaseWrapper();
+    	hbw.selectTable("tweets");
     	
     	for(Pair<String,TopKStringPatterns> p : _results)
     	{
@@ -216,11 +217,11 @@ public class FrequentPatternMining
     				qualifier = qualifier + "." + feature;
     			}
     			
-        		hbw.insertValue("tweets", _key, "patterns", qualifier, value.toString());
+        		hbw.insertValue(_key, "patterns", qualifier, value.toString());
     		}
     	}
     	
-    	hbw.loadInserts();
+    	hbw.flushInserts();
     }
     
 }
