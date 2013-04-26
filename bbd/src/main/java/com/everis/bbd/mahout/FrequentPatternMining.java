@@ -222,6 +222,7 @@ public class FrequentPatternMining
     	}
     	
     	hbw.flushInserts();
+    	hbw.closeTable();
     }
     
 }
