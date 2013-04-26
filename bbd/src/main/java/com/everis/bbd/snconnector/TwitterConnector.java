@@ -42,11 +42,11 @@ public class TwitterConnector extends SNConnector
 	private QueryResult _queryResults;
 
 	/**
-	 * Default configuration file creator
+	 * Default configuration file constructor.
 	 */
 	public TwitterConnector()
 	{
-		super(DEFAULT_CONFIGURATION_PATH);
+		this(DEFAULT_CONFIGURATION_PATH);
 	}
 
 	/**

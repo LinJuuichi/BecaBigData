@@ -32,7 +32,7 @@ public abstract class SNConnector
 	protected List<JSONObject> _results;
 	
 	/**
-	 * Creator initializing attributes and configuration.
+	 * Constructor initializing attributes and configuration.
 	 * 
 	 * @param propertiesFile path to the configuration path.
 	 */

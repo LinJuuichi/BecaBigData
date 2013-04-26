@@ -1,7 +1,6 @@
 package com.everis.bbd.flume;
 
 import java.nio.charset.Charset;
-import java.security.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,7 +15,6 @@ import org.apache.flume.FlumeException;
 import org.apache.flume.api.RpcClient;
 import org.apache.flume.api.RpcClientFactory;
 import org.apache.flume.event.EventBuilder;
-import org.apache.flume.interceptor.TimestampInterceptor;
 import org.json.JSONObject;
 
 import com.everis.bbd.snconnector.SNConnector.SNConnectorKeys;
