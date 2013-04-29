@@ -8,8 +8,14 @@ INSERT_IN_LIST=1
 # Inserts word into dictionary.
 function insert_word()
 {
-	# Inserting word.
-	echo $WORD >> $DICTIONARY_PATH
+	EXISTS=`cat $DICTIONARY_PATH | grep -w $WORD`
+	if [ "$EXISTS" = "" ]
+	then
+		# Inserting word.
+		echo $WORD >> $DICTIONARY_PATH
+	else
+		echo "Word $WORD already exists."
+	fi
 }
 
 # Inserts word into dictionary in list.
@@ -26,16 +32,22 @@ function insert_in_list()
 		# Creates the list at the end of the file.
 		echo "$LIST=$WORD" >> $DICTIONARY_PATH
 	else # The list exists.
-		# -i: modifies the file
-		# ^${LIST}: the lines that beggin with ${LINE}
-		# / s/$/ ${WORD}/: substitute the end of the line ($) by $WORD (aka append $WORD to the line)
-		sed -i  "/^"${LIST}"/ s/$/ "$WORD"/" $DICTIONARY_PATH
+		EXISTS=`cat $DICTIONARY_PATH | grep ^$LIST= | grep -w $WORD`
+		if [ "$EXISTS" == "" ] # Word does not exist.
+		then
+			# -i: modifies the file
+			# ^${LIST}: the lines that beggin with ${LINE}
+			# / s/$/ ${WORD}/: substitute the end of the line ($) by $WORD (aka append $WORD to the line, comma separated)
+			sed -i  "/^"${LIST}"/ s/$/",$WORD"/" $DICTIONARY_PATH
+		else
+			echo "Word $WORD already exists in list $LIST."
+		fi
 	fi
 }
 
 function insert()
 {
-	INSERT_MODE=$1
+	INSERT_TYPE=$1
 	DICTIONARY=$2
 	WORD=$3
 	LIST=$4
@@ -46,10 +58,10 @@ function insert()
 	cp $DICTIONARY_PATH $BACKUP_DICTIONARY_PATH
 
 	# Inserting mode.
-	if [ $INSERT_MODE -eq $INSERT_WORD
+	if [ $INSERT_TYPE -eq $INSERT_WORD ]
 	then
 		insert_word
-	elif  [ $INSERT_MODE -eq $INSERT_IN_LIST]
+	elif  [ $INSERT_TYPE -eq $INSERT_IN_LIST ]
 	then
 		insert_in_list
 	fi

@@ -35,7 +35,7 @@ function exists_in_list()
 `
 	if [  "$LWORD" == "" ]
 	then
-		echo "Word $WORD does NOT exists in list $LIST."
+		echo "Word $WORD does NOT exist in list $LIST."
 		return 1
 	else
 		echo "Word $WORD exists in list $LIST."
@@ -55,7 +55,7 @@ function exists_list()
 `
 	if [  "$LINE" == "" ]
 	then
-		echo "List $LIST does NOT exists."
+		echo "List $LIST does NOT exist."
 		return 1
 	else
 		echo "List $LIST exists."

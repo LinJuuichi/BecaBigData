@@ -3,25 +3,25 @@
 # usage function
 function usage()
 {
-	echo "To Do"	
+	echo "To Do"
 }
 
 # Include|imports
 . environment.sh		# Variables
 . dictionary_exists.sh	# Exist functions
-. dictionary_insert.sh	# Insert functions
-. dictionary_remove.sh	# Remove functions
+. dictionary_insert.sh	# INSERT_MODE functions
+. dictionary_remove.sh	# REMOVE_MODE functions
 
 # Modes
-EXISTS=1
-INSERT=2
-REMOVE=3
-REMOVE_LIST=4
-PRINT=0
+PRINT_MODE=0
+EXISTS_MODE=1
+INSERT_MODE=2
+REMOVE_MODE=3
+REMOVE_LIST_MODE=4
 
 # Execute getopt
 SHORT_OPT="x:puhe:i:d:l:r:"
-LONG_OPT="remove-list:,print,usage,help,exists:,insert:,dictionary:,list:,remove:"
+LONG_OPT="REMOVE_MODE-list:,PRINT_MODE,usage,help,EXISTS_MODE:,INSERT_MODE:,dictionary:,list:,REMOVE_MODE:"
 
 ARGS=`getopt -o $SHORT_OPT -l $LONG_OPT -n "getopt.sh" -- "$@"`
 # Bad arguments
@@ -39,19 +39,19 @@ do
 		-h|--help|-u|--usage)
 	      		usage
 	      		shift;;
-		-p|--print)
-			MODE=$PRINT
+		-p|--PRINT_MODE)
+			MODE=$PRINT_MODE
 			shift;;
-		-x|--remove-list)
-			MODE=$REMOVE_LIST
+		-x|--REMOVE_MODE-list)
+			MODE=$REMOVE_LIST_MODE
 			LIST=$2
 			shift 2;;
-		-e|--exists)
-			MODE=$EXISTS
+		-e|--EXISTS_MODE)
+			MODE=$EXISTS_MODE
 			WORD=$2
 			shift 2;;
-		-i|--insert)
-			MODE=$INSERT
+		-i|--INSERT_MODE)
+			MODE=$INSERT_MODE
 			WORD=$2
 			shift 2;;
 		-d|--dictionary)
@@ -67,8 +67,8 @@ do
 		-l|--list)
 			LIST=$2
 			shift 2;;
-		-r|--remove)
-			MODE=$REMOVE
+		-r|--REMOVE_MODE)
+			MODE=$REMOVE_MODE
 			WORD=$2
 			shift 2;;
 		--)
@@ -78,7 +78,7 @@ do
 done
 
 # Arguments checking
-# If someone is missing, forces bad execution and usage printing.
+# If someone is missing, forces bad execution and usage PRINT_MODEing.
 if [ -z "$MODE" ]
 then
 	echo "Mode not specified."
@@ -93,8 +93,8 @@ then
         exit 1
 fi
 
-# Printing $DICTIONARY
-if [ $MODE -eq $PRINT ]
+# PRINT_MODEing $DICTIONARY
+if [ $MODE -eq $PRINT_MODE ]
 then
 	if [ $DICTIONARY == $WORD_SUBS_DICTIONARY_NAME ]
 	then
@@ -109,9 +109,9 @@ then
 fi
 
 # Removing a list from the dictionary $DICTIONARY
-if [ $MODE -eq $REMOVE_LIST ]
+if [ $MODE -eq $REMOVE_LIST_MODE ]
 then
-	remove $REMOVE_A_LIST $DICTIONARY $LIST
+	remove $REMOVE_MODE_A_LIST $DICTIONARY $LIST
 	exit
 fi
 
@@ -124,8 +124,8 @@ then
 fi
 
 # Operations
-# Inserting $WORD into $DICTIONARY
-if [ $MODE -eq $INSERT ]
+# INSERT_MODEing $WORD into $DICTIONARY
+if [ $MODE -eq $INSERT_MODE ]
 then
 	if [ $DICTIONARY == $WORD_SUBS_DICTIONARY_NAME ]
 	then
@@ -141,8 +141,8 @@ then
 	fi
 fi
 
-# Check if $WORD exists in $DICTIONARY
-if [ $MODE -eq $EXISTS ]
+# Check if $WORD EXISTS_MODE in $DICTIONARY
+if [ $MODE -eq $EXISTS_MODE ]
 then
 	if [ $DICTIONARY == $WORD_SUBS_DICTIONARY_NAME ]
 	then
@@ -163,7 +163,7 @@ then
 fi
 
 # Removing $WORD from $DICTIONARY
-if [ $MODE -eq $REMOVE ]
+if [ $MODE -eq $REMOVE_MODE ]
 then
 	if [ "$DICTIONARY" == "$WORD_SUBS_DICTIONARY_NAME" ]
 	then
