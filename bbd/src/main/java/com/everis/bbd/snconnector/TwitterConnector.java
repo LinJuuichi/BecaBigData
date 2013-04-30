@@ -3,6 +3,8 @@ package com.everis.bbd.snconnector;
 import java.util.List;
 import java.util.logging.Logger;
 import org.json.JSONObject;
+
+import twitter4j.GeoLocation;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -205,12 +207,22 @@ public class TwitterConnector extends SNConnector
 	{
 		JSONObject jTweet;
 		jTweet = new JSONObject();
-		jTweet.put(SNConnectorKeys.POST_ID_KEY.getId(), status.getId());
-		jTweet.put(SNConnectorKeys.POST_USERID_KEY.getId(), status.getCurrentUserRetweetId());
+		jTweet.put(SNConnectorKeys.POST_ID_KEY.getId(), String.valueOf(status.getId()));
+		jTweet.put(SNConnectorKeys.POST_USERID_KEY.getId(), String.valueOf(status.getCurrentUserRetweetId()));
 		jTweet.put(SNConnectorKeys.POST_USER_KEY.getId(), status.getUser().getName());
 		jTweet.put(SNConnectorKeys.POST_SOURCE_KEY.getId(), status.getSource());
-		jTweet.put(SNConnectorKeys.POST_DATE_KEY.getId(), status.getCreatedAt());
-		jTweet.put(SNConnectorKeys.POST_LOCATION_KEY.getId(), status.getGeoLocation());
+		jTweet.put(SNConnectorKeys.POST_DATE_KEY.getId(), status.getCreatedAt().toString());
+
+		GeoLocation geo = status.getGeoLocation();
+		String latitude, longitude;
+		latitude = longitude = null;
+		if (geo != null)
+		{
+			latitude = String.valueOf(geo.getLatitude());
+			longitude = String.valueOf(geo.getLongitude());
+		}
+		jTweet.put(SNConnectorKeys.POST_LATITUDE_KEY.getId(), latitude);
+		jTweet.put(SNConnectorKeys.POST_LONGITUDE_KEY.getId(), longitude);
 		jTweet.put(SNConnectorKeys.POST_TEXT_KEY.getId(), status.getText());
 		return jTweet;
 	}

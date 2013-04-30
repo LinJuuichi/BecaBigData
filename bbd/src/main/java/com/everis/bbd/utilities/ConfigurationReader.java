@@ -115,7 +115,7 @@ public class ConfigurationReader
 			while((line = in.readLine()) != null)
 			{
 				log.info("Line - "+line+".");
-				if (line.charAt(0) != ConfigurationReader.COMMENT_TOKEN)
+				if (!line.isEmpty() && line.charAt(0) != ConfigurationReader.COMMENT_TOKEN)
 				{
 					String[] var = line.split(String.valueOf(ConfigurationReader.KEYVALUE_ASSIGN_TOKEN));
 					List<String> values = new ArrayList<String>();

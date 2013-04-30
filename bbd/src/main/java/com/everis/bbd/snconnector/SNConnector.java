@@ -130,37 +130,42 @@ public abstract class SNConnector
 	{	
 		
 		/**
-		 * Key for accessing the maximum tweet ID in the configuration.
+		 * ID key.
 		 */
 		POST_ID_KEY("id"),
 		
 		/**
-		 * Key for accessing the maximum tweet ID in the configuration.
+		 * text key.
 		 */
 		POST_TEXT_KEY("text"),
 		
 		/**
-		 * Key for accessing the maximum tweet ID in the configuration.
+		 * Timestamp/date key.
 		 */
 		POST_DATE_KEY("posted"),
 		
 		/**
-		 * Key for accessing the maximum tweet ID in the configuration.
+		 * Username key.
 		 */
 		POST_USER_KEY("username"),
 		
 		/**
-		 * Key for accessing the maximum tweet ID in the configuration.
+		 * UserID key.
 		 */
 		POST_USERID_KEY("userId"),
 		
 		/**
-		 * Key for accessing the maximum tweet ID in the configuration.
+		 * Longitude key.
 		 */
-		POST_LOCATION_KEY("location"),
+		POST_LONGITUDE_KEY("longitude"),
 		
 		/**
-		 * Key for accessing the maximum tweet ID in the configuration.
+		 * Latitude key.
+		 */
+		POST_LATITUDE_KEY("latitude"),
+		
+		/**
+		 * Source key.
 		 */
 		POST_SOURCE_KEY("source"),
 
