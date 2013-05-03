@@ -21,7 +21,7 @@ REMOVE_LIST_MODE=4
 
 # Execute getopt
 SHORT_OPT="x:puhe:i:d:l:r:"
-LONG_OPT="REMOVE_MODE-list:,PRINT_MODE,usage,help,EXISTS_MODE:,INSERT_MODE:,dictionary:,list:,REMOVE_MODE:"
+LONG_OPT="remove-list:,print,usage,help,exists:,insert:,dictionary:,list:,remove:"
 
 ARGS=`getopt -o $SHORT_OPT -l $LONG_OPT -n "getopt.sh" -- "$@"`
 # Bad arguments

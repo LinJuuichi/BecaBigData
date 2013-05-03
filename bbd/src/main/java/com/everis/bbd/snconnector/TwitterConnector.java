@@ -1,9 +1,7 @@
 package com.everis.bbd.snconnector;
 
-import java.util.List;
 import java.util.logging.Logger;
 import org.json.JSONObject;
-
 import twitter4j.GeoLocation;
 import twitter4j.Query;
 import twitter4j.QueryResult;
@@ -75,7 +73,8 @@ public class TwitterConnector extends SNConnector
 			
 			if (_configuration.exists(TwitterConnectorKeys.CONF_QUERY_KEY.getId()) > 0)
 			{
-				_twitterQuery.setQuery(_configuration.getValue(TwitterConnectorKeys.CONF_QUERY_KEY.getId(), ""));
+				_search = _configuration.getValue(TwitterConnectorKeys.CONF_QUERY_KEY.getId(), "");
+				_twitterQuery.setQuery(_search);
 			}
 			else
 			{
@@ -148,16 +147,11 @@ public class TwitterConnector extends SNConnector
 		{
 			log.info("Searching: "+_twitterQuery.getQuery());
 			_queryResults = _twitter.search(_twitterQuery);
-			List<Status> statusList = _queryResults.getTweets();
 			int results = 0;
-			for (Status status: statusList)
+			for (Status status: _queryResults.getTweets())
 			{
-				JSONObject object = statusToJSONObject(status);
-				if (object != null)
-				{
-					_results.add(object);
-					results++;
-				}
+				_results.add(statusToJSONObject(status,_search));
+				results++;
 			}
 			return results;
 		} 
@@ -172,6 +166,7 @@ public class TwitterConnector extends SNConnector
 	@Override
 	public int query(String query, boolean appendResults) 
 	{
+		_search = query;
 		_twitterQuery.setQuery(query);
 		return this.query(appendResults);
 	}
@@ -201,28 +196,26 @@ public class TwitterConnector extends SNConnector
 	 * Creates a JSONObject from a Status.
 	 * 
 	 * @param status tweet to convert to JSONObject.
+	 * @param search query executed for getting the tweet.
 	 * @return the tweet formatted.
 	 */
-	private JSONObject statusToJSONObject(Status status)
+	private JSONObject statusToJSONObject(Status status, String search)
 	{
 		JSONObject jTweet;
 		jTweet = new JSONObject();
-		jTweet.put(SNConnectorKeys.POST_ID_KEY.getId(), String.valueOf(status.getId()));
-		jTweet.put(SNConnectorKeys.POST_USERID_KEY.getId(), String.valueOf(status.getCurrentUserRetweetId()));
+		jTweet.put(SNConnectorKeys.POST_QUERY_KEY.getId(), search);
+		jTweet.put(SNConnectorKeys.POST_ID_KEY.getId(), status.getId());
+		jTweet.put(SNConnectorKeys.POST_USERID_KEY.getId(), status.getUser().getId());
 		jTweet.put(SNConnectorKeys.POST_USER_KEY.getId(), status.getUser().getName());
 		jTweet.put(SNConnectorKeys.POST_SOURCE_KEY.getId(), status.getSource());
 		jTweet.put(SNConnectorKeys.POST_DATE_KEY.getId(), status.getCreatedAt().toString());
 
 		GeoLocation geo = status.getGeoLocation();
-		String latitude, longitude;
-		latitude = longitude = null;
 		if (geo != null)
 		{
-			latitude = String.valueOf(geo.getLatitude());
-			longitude = String.valueOf(geo.getLongitude());
+			jTweet.put(SNConnectorKeys.POST_LATITUDE_KEY.getId(), geo.getLatitude());
+			jTweet.put(SNConnectorKeys.POST_LONGITUDE_KEY.getId(), geo.getLongitude());
 		}
-		jTweet.put(SNConnectorKeys.POST_LATITUDE_KEY.getId(), latitude);
-		jTweet.put(SNConnectorKeys.POST_LONGITUDE_KEY.getId(), longitude);
 		jTweet.put(SNConnectorKeys.POST_TEXT_KEY.getId(), status.getText());
 		return jTweet;
 	}

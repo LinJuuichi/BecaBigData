@@ -12,7 +12,7 @@ import com.everis.bbd.utilities.ConfigurationReader;
  * Simple use example for TwitterConnector.
  */
 public class SimpleTwitterSource 
-{	
+{	 
 	/**
 	 * Properties file name.
 	 */

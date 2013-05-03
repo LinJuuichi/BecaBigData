@@ -56,9 +56,9 @@ public class ConfigurationReader
 	private String _configPath;
 	
 	/**
-	 * Path to the configuration file to read.
+	 * Name of the configuration file to read.
 	 */
-	private String _filePath;
+	private String _fileName;
 	
 	/**
 	 * Configuration parameters.
@@ -84,11 +84,12 @@ public class ConfigurationReader
 	 */
 	public boolean setFile(String fileName)
 	{
+		_fileName = fileName;
 		_configPath = ConfigurationReader.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 		_configPath = _configPath.substring(0,_configPath.lastIndexOf("/")) + CONFIG_PATH + fileName;
 		try 
 		{
-			_filePath = URLDecoder.decode(_configPath, "UTF-8");
+			_configPath = URLDecoder.decode(_configPath, "UTF-8");
 		} 
 		catch (UnsupportedEncodingException e) 
 		{
@@ -108,8 +109,8 @@ public class ConfigurationReader
 		_configuration = new HashMap<String, List<String>>();
 		try 
 		{
-			log.info("Reading "+_filePath+".");
-			BufferedReader in = new BufferedReader(new FileReader(_filePath));
+			log.info("Reading "+_configPath+".");
+			BufferedReader in = new BufferedReader(new FileReader(_configPath));
 			
 			String line;
 			while((line = in.readLine()) != null)
@@ -262,5 +263,13 @@ public class ConfigurationReader
 			return defaultValue;
 		}
 		return result;
+	}
+	
+	/**
+	 * @return properties file path.
+	 */
+	public String getConfigFileName()
+	{
+		return _fileName;
 	}
 }

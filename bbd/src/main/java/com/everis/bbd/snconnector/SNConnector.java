@@ -32,6 +32,11 @@ public abstract class SNConnector
 	protected List<JSONObject> _results;
 	
 	/**
+	 * Terms to query.
+	 */
+	protected String _search;
+	
+	/**
 	 * Constructor initializing attributes and configuration.
 	 * 
 	 * @param propertiesFile path to the configuration path.
@@ -59,6 +64,20 @@ public abstract class SNConnector
 			return false;
 		}
 		
+		return true;
+	}
+	
+	/**
+	 * Initializes the configuration and the results.
+	 * 
+	 * @param configuration configuration.
+	 * @return initialization success
+	 */
+	public boolean configure(ConfigurationReader configuration)
+	{
+		_results = new ArrayList<JSONObject>();
+		_configuration = configuration;
+		_propertiesFile = _configuration.getConfigFileName();
 		return true;
 	}
 	
@@ -168,6 +187,11 @@ public abstract class SNConnector
 		 * Source key.
 		 */
 		POST_SOURCE_KEY("source"),
+		
+		/**
+		 * Search key.
+		 */
+		POST_QUERY_KEY("query"),
 
 		/**
 		 * Key for accessing the consumer key in the configuration.
