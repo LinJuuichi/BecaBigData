@@ -126,6 +126,7 @@ public class Dictionary
 			{
 				dictionary.add(line);
 			}
+			in.close();
 		} 
 		catch (FileNotFoundException e) 
 		{
@@ -163,6 +164,7 @@ public class Dictionary
 					dictionary.put(v, var[0]);
 				}
 			}
+			in.close();
 		} 
 		catch (FileNotFoundException e) 
 		{
