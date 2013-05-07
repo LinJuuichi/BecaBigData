@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -14,7 +16,7 @@ import java.util.logging.Logger;
  * Contains three dictionaries:
  * Characters dictionary: lists characters.
  * Words dictionary: lists strings.
- * List dictionary: is set from a file containin lists like <key>=<word1,word2...wordN>. For each wordN, returns key. 
+ * List dictionary: is set from a file containing lists like <key>=<word1,word2...wordN>. For each wordN, returns key. 
  */
 public class Dictionary 
 {
@@ -24,19 +26,24 @@ public class Dictionary
 	private static Logger log = Logger.getLogger(Dictionary.class.getName());
 	
 	/**
+	 * Path to the config directory from target directory.
+	 */
+	public static String CONFIG_PATH = "/../config/dictionaries/";
+	
+	/**
 	 * Default path for character dictionary.
 	 */
-	public static String CHAR_DICTIONARY_PATH = "";
+	public static String CHAR_DICTIONARY_NAME = "char.dictionary";
 	
 	/**
 	 * Default path for word dictionary.
 	 */
-	public static String WORD_DICTIONARY_PATH = "";
+	public static String WORD_DICTIONARY_NAME = "word.dictionary";
 	
 	/**
 	 * Default path for list dictionary.
 	 */
-	public static String LIST_DICTIONARY_PATH = "";
+	public static String LIST_DICTIONARY_NAME = "list.dictionary";
 	
 	/**
 	 * Separator token for key-value parameters in lists.
@@ -51,17 +58,17 @@ public class Dictionary
 	/**
 	 * Character dictionary.
 	 */
-	private Set<String> _charDictionary;
+	protected Set<String> _charDictionary;
 	
 	/**
 	 * Word dictionary.
 	 */
-	private Set<String> _wordDictionary;
+	protected Set<String> _wordDictionary;
 	
 	/**
 	 * List dictionary.
 	 */
-	private Map<String,String> _listDictionary;
+	protected Map<String,String> _listDictionary;
 	
 	/**
 	 * Constructor.
@@ -88,9 +95,28 @@ public class Dictionary
 	 */
 	public boolean readDictionaries()
 	{
-		return readDictionary(_charDictionary,CHAR_DICTIONARY_PATH) 
-				&& readDictionary(_wordDictionary,WORD_DICTIONARY_PATH)
-				&& readListDictionary(_listDictionary,LIST_DICTIONARY_PATH);
+		String basePath = ConfigurationReader.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		basePath = basePath.substring(0,basePath.lastIndexOf("/"));
+		
+		String charPath = basePath + CONFIG_PATH + CHAR_DICTIONARY_NAME;
+		String wordPath = basePath + CONFIG_PATH + WORD_DICTIONARY_NAME;
+		String listPath = basePath + CONFIG_PATH + LIST_DICTIONARY_NAME;
+		
+		try 
+		{
+			charPath = URLDecoder.decode(charPath, "UTF-8");
+			wordPath = URLDecoder.decode(wordPath, "UTF-8");
+			listPath = URLDecoder.decode(listPath, "UTF-8");
+		} 
+		catch (UnsupportedEncodingException e) 
+		{
+			log.severe("Path error:"+basePath+".");
+			return false;
+		}
+		
+		return readDictionary(_charDictionary,charPath) 
+				&& readDictionary(_wordDictionary,wordPath)
+				&& readListDictionary(_listDictionary,listPath);
 	}
 	
 	/**
@@ -102,6 +128,22 @@ public class Dictionary
 	 * @return if succeeded.
 	 */
 	public boolean readDictionaries(String charPath, String wordPath, String listPath)
+	{		
+		LIST_DICTIONARY_NAME = listPath;
+		WORD_DICTIONARY_NAME = wordPath;
+		CHAR_DICTIONARY_NAME = charPath;
+		return readDictionaries();
+	}
+	
+	/**
+	 * Reads the dictionaries from the specific paths.
+	 * 
+	 * @param charPath path for character dictionary.
+	 * @param wordPath path for word dictionary.
+	 * @param listPath path for list dictionary.
+	 * @return if succeeded.
+	 */
+	public boolean readDictionariesFromPath(String charPath, String wordPath, String listPath)
 	{
 		return readDictionary(_charDictionary,charPath) 
 				&& readDictionary(_wordDictionary,wordPath)
