@@ -18,14 +18,19 @@ public class SNConnectorFactory
 	public static final int TWITTER_CONNECTOR = 1;
 	
 	/**
+	 * Identifier for TwitterConnector.
+	 */
+	public static final int TWITTER_STREAM_CONNECTOR = 2;
+	
+	/**
 	 * Identifier for FacebookConnector.
 	 */
-	private static final int FACEBOOK_CONNECTOR = 2;
+	private static final int FACEBOOK_CONNECTOR = 3;
 	
 	/**
 	 * Identifier for LinkedinConnector.
 	 */
-	private static final int LINKEDIN_CONNECTOR = 3;
+	private static final int LINKEDIN_CONNECTOR = 4;
 	
 
 	/**
@@ -44,6 +49,11 @@ public class SNConnectorFactory
 		if (name.equals("Twitter") || name.equals("twitter"))
 		{
 			return SNConnectorFactory.TWITTER_CONNECTOR;
+		}
+		if (name.equals("TwitterStream") || name.equals("twitterstream") 
+				|| name.equals("twitterstreaming") || name.equals("TwitterStreaming"))
+		{
+			return SNConnectorFactory.TWITTER_STREAM_CONNECTOR;
 		}
 		else if (name.equals("Facebook") || name.equals("facebook"))
 		{
@@ -69,6 +79,31 @@ public class SNConnectorFactory
 		case TWITTER_CONNECTOR:
 			connector = new TwitterConnector();
 			break;
+		case TWITTER_STREAM_CONNECTOR:
+			connector = new TwitterStreamConnector();
+		default:
+			log.warning("Connector type does not exist");
+			break;
+		}
+		return connector;
+	}
+	
+	/**
+	 * Returns the connector for the social network type.
+	 * 
+	 * @param type social network.
+	 * @param propertiesFile connector properties file.
+	 * @return connector (SNConnector).
+	 */
+	public static SNConnector getConnector(int type, String propertiesFile)
+	{
+		SNConnector connector = null;
+		switch (type) {
+		case TWITTER_CONNECTOR:
+			connector = new TwitterConnector(propertiesFile);
+			break;
+		case TWITTER_STREAM_CONNECTOR:
+			connector = new TwitterStreamConnector(propertiesFile);
 		default:
 			log.warning("Connector type does not exist");
 			break;

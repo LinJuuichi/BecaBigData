@@ -15,6 +15,11 @@ public abstract class SNConnector
 	 * Logger.
 	 */
 	protected static Logger log;
+
+	/**
+	 * Path to default configuration path.
+	 */
+	public static final String DEFAULT_CONFIGURATION_PATH = "";
 	
 	/**
 	 * Path to the configuration file.
@@ -86,17 +91,38 @@ public abstract class SNConnector
 	 * 
 	 * @return a list with the results query.
 	 */
-	public List<JSONObject> getResults()
+	public synchronized List<JSONObject> getResults()
 	{
-		return _results;
+		return _results;	
+	}
+	
+	/**
+	 * @return the number of the results stored.
+	 */
+	public synchronized int getResultSize()
+	{
+		return _results.size();
 	}
 	
 	/**
 	 * Clears the results obtained.
 	 */
-	public void clearResults()
+	public synchronized void clearResults()
 	{
 		_results.clear();
+	}
+	
+	/**
+	 * Return the results and then clear.
+	 * 
+	 * @return the results in JSON format.
+	 */
+	public synchronized List<JSONObject> getAndClearResults()
+	{
+		List<JSONObject> results = new ArrayList<JSONObject>();
+		results.addAll(_results);
+		_results.clear();
+		return results;
 	}
 	
 	/**
