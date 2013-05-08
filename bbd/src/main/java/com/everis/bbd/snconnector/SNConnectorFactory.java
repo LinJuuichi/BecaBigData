@@ -34,7 +34,7 @@ public class SNConnectorFactory
 	
 
 	/**
-	 * SNConnectorFactory can't be instanciated.
+	 * SNConnectorFactory can't be instantiated.
 	 */
 	private SNConnectorFactory() { }
 	
@@ -50,7 +50,7 @@ public class SNConnectorFactory
 		{
 			return SNConnectorFactory.TWITTER_CONNECTOR;
 		}
-		if (name.equals("TwitterStream") || name.equals("twitterstream") 
+		else if (name.equals("TwitterStream") || name.equals("twitterstream") 
 				|| name.equals("twitterstreaming") || name.equals("TwitterStreaming"))
 		{
 			return SNConnectorFactory.TWITTER_STREAM_CONNECTOR;
