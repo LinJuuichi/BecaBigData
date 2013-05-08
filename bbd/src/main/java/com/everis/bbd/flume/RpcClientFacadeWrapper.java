@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 /**
  * RpcClientFacade wrapper for avoiding connection to any port.
- * Prints the events instead of sending them through a client. 
+ * Prints/logs the events instead of sending them through a client. 
  */
 public class RpcClientFacadeWrapper extends RpcClientFacade 
 {
@@ -25,7 +25,7 @@ public class RpcClientFacadeWrapper extends RpcClientFacade
 	 * Default constructor.
 	 * 
 	 * @param hostname does nothing.
-	 * @param port dos nothing.
+	 * @param port does nothing.
 	 */
 	public RpcClientFacadeWrapper(String hostname, int port) {}
 	
@@ -54,7 +54,7 @@ public class RpcClientFacadeWrapper extends RpcClientFacade
 	}
 
 	/**
-	 * Prints the event.
+	 * Prints/logs the event.
 	 * 
 	 * @param event to be printed.
 	 */
@@ -66,7 +66,7 @@ public class RpcClientFacadeWrapper extends RpcClientFacade
 	}
 	
 	/**
-	 * Prints the event.
+	 * Prints/logs the event.
 	 * 
 	 * @param data to be printed.
 	 * @param time does nothing.
@@ -79,7 +79,7 @@ public class RpcClientFacadeWrapper extends RpcClientFacade
 	}
 
 	/**
-	 * Prints the event.
+	 * Prints/logs the event.
 	 * 
 	 * @param data to be printed.
 	 */

@@ -1,6 +1,9 @@
 package com.everis.bbd.snconnector;
 
 import java.util.logging.Logger;
+
+import com.everis.bbd.utilities.ConfigurationReader;
+
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -52,6 +55,54 @@ public class TwitterConnector extends AbstractTwitterConnector
 	{
 		super(propertiesFile);
 	}
+	
+	/**
+	 * Configures the query.
+	 * 
+	 * @return query configured successfully.
+	 */
+	private boolean configureQuery()
+	{
+		_twitterQuery = new Query();
+		
+		if (_configuration.exists(TwitterConnectorKeys.CONF_QUERY_KEY.getId()) > 0)
+		{
+			_search = _configuration.getValue(TwitterConnectorKeys.CONF_QUERY_KEY.getId(), "");
+			_twitterQuery.setQuery(_search);
+		}
+		else
+		{
+			log.severe("Query not specified in file "+_propertiesFile+".");
+			return false;
+		}
+
+		if (_configuration.exists(TwitterConnectorKeys.CONF_COUNT_KEY.getId()) > 0)
+		{
+			_twitterQuery.setCount(_configuration.getIntValue(TwitterConnectorKeys.CONF_COUNT_KEY.getId(), 100));
+		}
+
+		if (_configuration.exists(TwitterConnectorKeys.CONF_SINCEID_KEY.getId()) > 0)
+		{
+			_twitterQuery.setSinceId(_configuration.getIntValue(TwitterConnectorKeys.CONF_SINCEID_KEY.getId(), -1));
+		}
+
+		if (_configuration.exists(TwitterConnectorKeys.CONF_MAXID_KEY.getId()) > 0)
+		{
+			_twitterQuery.setMaxId(_configuration.getIntValue(TwitterConnectorKeys.CONF_MAXID_KEY.getId(), -1));
+		}
+
+		if (_configuration.exists(TwitterConnectorKeys.CONF_SINCE_KEY.getId()) > 0)
+		{
+			_twitterQuery.setSince(_configuration.getValue(TwitterConnectorKeys.CONF_SINCE_KEY.getId(), ""));
+		}
+
+		if (_configuration.exists(TwitterConnectorKeys.CONF_UNTIL_KEY.getId()) > 0)
+		{
+			_twitterQuery.setUntil(_configuration.getValue(TwitterConnectorKeys.CONF_UNTIL_KEY.getId(), ""));
+		}
+		return true;
+	}
+	
 
 	/**
 	 * Initializes the configuration and the results.
@@ -62,44 +113,23 @@ public class TwitterConnector extends AbstractTwitterConnector
 	{
 		if (super.configure(propertiesFile))
 		{
-			_twitterQuery = new Query();
-			
-			if (_configuration.exists(TwitterConnectorKeys.CONF_QUERY_KEY.getId()) > 0)
-			{
-				_search = _configuration.getValue(TwitterConnectorKeys.CONF_QUERY_KEY.getId(), "");
-				_twitterQuery.setQuery(_search);
-			}
-			else
-			{
-				log.severe("Query not specified in file "+_propertiesFile+".");
-				return false;
-			}
-
-			if (_configuration.exists(TwitterConnectorKeys.CONF_COUNT_KEY.getId()) > 0)
-			{
-				_twitterQuery.setCount(_configuration.getIntValue(TwitterConnectorKeys.CONF_COUNT_KEY.getId(), 100));
-			}
-
-			if (_configuration.exists(TwitterConnectorKeys.CONF_SINCEID_KEY.getId()) > 0)
-			{
-				_twitterQuery.setSinceId(_configuration.getIntValue(TwitterConnectorKeys.CONF_SINCEID_KEY.getId(), -1));
-			}
-
-			if (_configuration.exists(TwitterConnectorKeys.CONF_MAXID_KEY.getId()) > 0)
-			{
-				_twitterQuery.setMaxId(_configuration.getIntValue(TwitterConnectorKeys.CONF_MAXID_KEY.getId(), -1));
-			}
-
-			if (_configuration.exists(TwitterConnectorKeys.CONF_SINCE_KEY.getId()) > 0)
-			{
-				_twitterQuery.setSince(_configuration.getValue(TwitterConnectorKeys.CONF_SINCE_KEY.getId(), ""));
-			}
-
-			if (_configuration.exists(TwitterConnectorKeys.CONF_UNTIL_KEY.getId()) > 0)
-			{
-				_twitterQuery.setUntil(_configuration.getValue(TwitterConnectorKeys.CONF_UNTIL_KEY.getId(), ""));
-			}
-			return true;
+			return configureQuery();
+		}
+		return false;
+	}
+	
+	/**
+	 * Initializes the configuration and the results.
+	 * 
+	 * @param configuration configuration.
+	 * @return initialization success
+	 */
+	@Override
+	public boolean configure(ConfigurationReader configuration)
+	{
+		if (super.configure(configuration))
+		{
+			return configureQuery();
 		}
 		return false;
 	}

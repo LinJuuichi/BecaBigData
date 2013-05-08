@@ -22,7 +22,6 @@ public class RpcClientFacadeFactory
 	 */
 	public static final int RPC_CLIENT_FACADE_WRAPPER = 2;
 	
-
 	/**
 	 * RpcClientFacadeFactory can't be instantiated.
 	 */
@@ -48,7 +47,7 @@ public class RpcClientFacadeFactory
 	}
 	
 	/**
-	 * Returns the connector for the social network type.
+	 * Returns the client for the client type.
 	 * 
 	 * @param type client.
 	 * @return client.
@@ -56,6 +55,29 @@ public class RpcClientFacadeFactory
 	public static RpcClientFacade getClient(int type)
 	{
 		RpcClientFacade client = null;
+		switch (type) {
+		case RPC_CLIENT_FACADE:
+			client = new RpcClientFacade();
+			break;
+		case RPC_CLIENT_FACADE_WRAPPER:
+			client = new RpcClientFacadeWrapper();
+		default:
+			log.warning("Client type does not exist");
+			break;
+		}
+		return client;
+	}
+	
+	/**
+	 * Returns the client for the client type name.
+	 * 
+	 * @param name client type.
+	 * @return client.
+	 */
+	public static RpcClientFacade getClient(String name)
+	{
+		RpcClientFacade client = null;
+		int type = RpcClientFacadeFactory.getClientId(name);
 		switch (type) {
 		case RPC_CLIENT_FACADE:
 			client = new RpcClientFacade();
