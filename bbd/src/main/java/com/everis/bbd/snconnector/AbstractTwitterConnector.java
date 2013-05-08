@@ -1,27 +1,38 @@
 package com.everis.bbd.snconnector;
 
 import org.json.JSONObject;
-
-import com.everis.bbd.snconnector.SNConnector.SNConnectorKeys;
-
 import twitter4j.GeoLocation;
 import twitter4j.Status;
-import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
+/**
+ * Abstract implementation for Twitter connectors with common functions.
+ */
 public abstract class AbstractTwitterConnector extends SNConnector
 {
 
+	/**
+	 * Default constructor.
+	 */
 	public AbstractTwitterConnector() 
 	{
 		this(DEFAULT_CONFIGURATION_PATH);
 	}
 	
+	/**
+	 * @param propertiesFile path to the configuration path.
+	 */
 	public AbstractTwitterConnector(String propertiesFile) 
 	{
 		super(propertiesFile);
 	}
 	
+	/**
+	 * Connects the Twitter connector to Twitter.
+	 * 
+	 * @param cb configuration builder (with the OAuth tokens set).
+	 * @return if the connection has been established.
+	 */
 	public abstract boolean connectToTwitter(ConfigurationBuilder cb);
 	
 	@Override

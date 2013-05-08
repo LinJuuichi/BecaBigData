@@ -7,8 +7,6 @@ import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.StatusListener;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.ConfigurationBuilder;
@@ -28,8 +26,14 @@ public class TwitterStreamConnector extends AbstractTwitterConnector
 	 */
 	private TwitterStream _twitter;
 
+	/**
+	 * Filtering options for tracking tweets.
+	 */
 	private FilterQuery _twitterQuery;
 	
+	/**
+	 * List of words to be tracked in Twitter.
+	 */
 	private List<String> _tracks;
 	
 	/**
@@ -66,6 +70,7 @@ public class TwitterStreamConnector extends AbstractTwitterConnector
 			{
 				_tracks = _configuration.getValues(TwitterConnectorKeys.CONF_QUERY_KEY.getId());
 				String[] tracks = _tracks.toArray(new String[_tracks.size()]);
+				_search = tracks.toString();
 				_twitterQuery.track(tracks);
 			}
 			else
@@ -122,10 +127,7 @@ public class TwitterStreamConnector extends AbstractTwitterConnector
 				ex.printStackTrace();
 			}
 
-			public void onStallWarning(StallWarning arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void onStallWarning(StallWarning arg0) {}
 		};
 		_twitter.addListener(listener);
 		

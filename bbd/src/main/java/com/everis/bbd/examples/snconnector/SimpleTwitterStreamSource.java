@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
-
-import com.everis.bbd.flume.RpcClientFacade;
 import com.everis.bbd.snconnector.SNConnector;
-import com.everis.bbd.snconnector.SNConnector.SNConnectorKeys;
+import com.everis.bbd.snconnector.SNConnectorKeys;
 import com.everis.bbd.snconnector.SNConnectorFactory;
 import com.everis.bbd.utilities.ConfigurationReader;
 
