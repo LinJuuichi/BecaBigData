@@ -16,8 +16,7 @@ import org.apache.flume.api.RpcClient;
 import org.apache.flume.api.RpcClientFactory;
 import org.apache.flume.event.EventBuilder;
 import org.json.JSONObject;
-
-import com.everis.bbd.snconnector.SNConnector.SNConnectorKeys;
+import com.everis.bbd.snconnector.SNConnectorKeys;
 
 /**
  * Facade class for RpcClient to send events to Flume sources.
