@@ -66,9 +66,9 @@ public class TwitterStreamConnector extends AbstractTwitterConnector
 		{
 			_twitterQuery = new FilterQuery();
 			
-			if (_configuration.exists(TwitterConnectorKeys.CONF_QUERY_KEY.getId()) > 0)
+			if (_configuration.exists(SNConnectorKeys.CONF_QUERY_KEY.getId()) > 0)
 			{
-				_tracks = _configuration.getValues(TwitterConnectorKeys.CONF_QUERY_KEY.getId());
+				_tracks = _configuration.getValues(SNConnectorKeys.CONF_QUERY_KEY.getId());
 				String[] tracks = _tracks.toArray(new String[_tracks.size()]);
 				_search = tracks.toString();
 				_twitterQuery.track(tracks);

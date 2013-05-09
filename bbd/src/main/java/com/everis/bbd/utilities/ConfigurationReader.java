@@ -264,9 +264,41 @@ public class ConfigurationReader
 		}
 		return result;
 	}
+
+	/**
+	 * Get the value in the configuration for key as a long. 
+	 * If key does not exist or is not a parsable long returns the default value.
+	 * 
+	 * @param key parameter key.
+	 * @param defaultValue in case the key does not exist.
+	 * @return a single value.
+	 */
+	public long getLongValue(String key, long defaultValue) 
+	{
+		String value = getValue(key,String.valueOf(defaultValue));
+		long result;
+		try
+		{
+			result = Long.parseLong(value);
+		} 
+		catch (NumberFormatException  e) 
+		{
+			log.info("Key "+key+" has not contain a parsable integer. Value = "+value+".");
+			return defaultValue;
+		}
+		return result;
+	}
 	
 	/**
 	 * @return properties file path.
+	 */
+	public String getConfigFilePath()
+	{
+		return _configPath;
+	}
+	
+	/**
+	 * @return properties file name.
 	 */
 	public String getConfigFileName()
 	{

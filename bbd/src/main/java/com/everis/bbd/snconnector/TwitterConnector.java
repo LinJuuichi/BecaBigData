@@ -65,9 +65,9 @@ public class TwitterConnector extends AbstractTwitterConnector
 	{
 		_twitterQuery = new Query();
 		
-		if (_configuration.exists(TwitterConnectorKeys.CONF_QUERY_KEY.getId()) > 0)
+		if (_configuration.exists(SNConnectorKeys.CONF_QUERY_KEY.getId()) > 0)
 		{
-			_search = _configuration.getValue(TwitterConnectorKeys.CONF_QUERY_KEY.getId(), "");
+			_search = _configuration.getValue(SNConnectorKeys.CONF_QUERY_KEY.getId(), "");
 			_twitterQuery.setQuery(_search);
 		}
 		else
@@ -76,29 +76,29 @@ public class TwitterConnector extends AbstractTwitterConnector
 			return false;
 		}
 
-		if (_configuration.exists(TwitterConnectorKeys.CONF_COUNT_KEY.getId()) > 0)
+		if (_configuration.exists(SNConnectorKeys.CONF_COUNT_KEY.getId()) > 0)
 		{
-			_twitterQuery.setCount(_configuration.getIntValue(TwitterConnectorKeys.CONF_COUNT_KEY.getId(), 100));
+			_twitterQuery.setCount(_configuration.getIntValue(SNConnectorKeys.CONF_COUNT_KEY.getId(), 100));
 		}
 
-		if (_configuration.exists(TwitterConnectorKeys.CONF_SINCEID_KEY.getId()) > 0)
+		if (_configuration.exists(SNConnectorKeys.CONF_SINCEID_KEY.getId()) > 0)
 		{
-			_twitterQuery.setSinceId(_configuration.getIntValue(TwitterConnectorKeys.CONF_SINCEID_KEY.getId(), -1));
+			_twitterQuery.setSinceId(_configuration.getIntValue(SNConnectorKeys.CONF_SINCEID_KEY.getId(), -1));
 		}
 
-		if (_configuration.exists(TwitterConnectorKeys.CONF_MAXID_KEY.getId()) > 0)
+		if (_configuration.exists(SNConnectorKeys.CONF_MAXID_KEY.getId()) > 0)
 		{
-			_twitterQuery.setMaxId(_configuration.getIntValue(TwitterConnectorKeys.CONF_MAXID_KEY.getId(), -1));
+			_twitterQuery.setMaxId(_configuration.getIntValue(SNConnectorKeys.CONF_MAXID_KEY.getId(), -1));
 		}
 
-		if (_configuration.exists(TwitterConnectorKeys.CONF_SINCE_KEY.getId()) > 0)
+		if (_configuration.exists(SNConnectorKeys.CONF_SINCE_KEY.getId()) > 0)
 		{
-			_twitterQuery.setSince(_configuration.getValue(TwitterConnectorKeys.CONF_SINCE_KEY.getId(), ""));
+			_twitterQuery.setSince(_configuration.getValue(SNConnectorKeys.CONF_SINCE_KEY.getId(), ""));
 		}
 
-		if (_configuration.exists(TwitterConnectorKeys.CONF_UNTIL_KEY.getId()) > 0)
+		if (_configuration.exists(SNConnectorKeys.CONF_UNTIL_KEY.getId()) > 0)
 		{
-			_twitterQuery.setUntil(_configuration.getValue(TwitterConnectorKeys.CONF_UNTIL_KEY.getId(), ""));
+			_twitterQuery.setUntil(_configuration.getValue(SNConnectorKeys.CONF_UNTIL_KEY.getId(), ""));
 		}
 		return true;
 	}

@@ -45,10 +45,10 @@ public abstract class AbstractTwitterConnector extends SNConnector
 
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true)
-			.setOAuthConsumerKey(_configuration.getValue(SNConnectorKeys.CONSUMER_KEY.getId(),""))
-			.setOAuthConsumerSecret(_configuration.getValue(SNConnectorKeys.CONSUMER_SECRET.getId(),""))
-			.setOAuthAccessToken(_configuration.getValue(SNConnectorKeys.ACCESS_TOKEN.getId(),""))
-			.setOAuthAccessTokenSecret(_configuration.getValue(SNConnectorKeys.ACCESS_TOKEN_SECRET.getId(),""));
+			.setOAuthConsumerKey(_configuration.getValue(SNConnectorKeys.OAUTH_CONSUMER_KEY.getId(),""))
+			.setOAuthConsumerSecret(_configuration.getValue(SNConnectorKeys.OAUTH_CONSUMER_SECRET.getId(),""))
+			.setOAuthAccessToken(_configuration.getValue(SNConnectorKeys.OAUTH_ACCESS_TOKEN.getId(),""))
+			.setOAuthAccessTokenSecret(_configuration.getValue(SNConnectorKeys.OAUTH_ACCESS_TOKEN_SECRET.getId(),""));
 
 		return connectToTwitter(cb);
 	}
