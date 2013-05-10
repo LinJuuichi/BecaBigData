@@ -109,13 +109,13 @@ public class ConfigurationReader
 		_configuration = new HashMap<String, List<String>>();
 		try 
 		{
-			log.info("Reading "+_configPath+".");
+			//log.info("Reading "+_configPath+".");
 			BufferedReader in = new BufferedReader(new FileReader(_configPath));
 			
 			String line;
 			while((line = in.readLine()) != null)
 			{
-				log.info("Line - "+line+".");
+				//log.info("Line - "+line+".");
 				if (!line.isEmpty() && line.charAt(0) != ConfigurationReader.COMMENT_TOKEN)
 				{
 					String[] var = line.split(String.valueOf(ConfigurationReader.KEYVALUE_ASSIGN_TOKEN));
@@ -133,8 +133,8 @@ public class ConfigurationReader
 							values.add(v);
 						}
 					}
-					log.info("Key: "+var[0]);
-					log.info("Values: "+values.toString());
+					//log.info("Key: "+var[0]);
+					//log.info("Values: "+values.toString());
 					_configuration.put(var[0], values);
 				}
 			}

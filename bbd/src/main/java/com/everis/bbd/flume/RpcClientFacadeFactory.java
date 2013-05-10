@@ -16,17 +16,17 @@ public class RpcClientFacadeFactory
 	 * Identifier for RpcClientFacade.
 	 */
 	public static final int RPC_CLIENT_FACADE = 1;
-	
+
 	/**
 	 * Identifier for RpcClientFacadeWrapper.
 	 */
 	public static final int RPC_CLIENT_FACADE_WRAPPER = 2;
-	
+
 	/**
 	 * RpcClientFacadeFactory can't be instantiated.
 	 */
 	private RpcClientFacadeFactory() { }
-	
+
 	/**
 	 * Given a string with the name of a RpcClientFacade it returns the id.
 	 * 
@@ -45,7 +45,7 @@ public class RpcClientFacadeFactory
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * Returns the client for the client type.
 	 * 
@@ -67,7 +67,7 @@ public class RpcClientFacadeFactory
 		}
 		return client;
 	}
-	
+
 	/**
 	 * Returns the client for the client type name.
 	 * 

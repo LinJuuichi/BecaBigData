@@ -61,14 +61,12 @@ public class SNApplication
 		}
 		File folder = new File(configuration.getConfigFilePath().substring(0,configuration.getConfigFilePath().lastIndexOf("/")) + "/" + queriesPropertiesDir);
 		String[] queriesPropertiesFiles = folder.list(null);
-		
-		System.out.println("Files: "+configuration.getConfigFilePath()+"/"+queriesPropertiesDir);
 
 		// creating a connectorThread for each file read and starting it.
 		List<SNApplicationThread> connectors = new ArrayList<SNApplicationThread>();
 		for(String configFile: queriesPropertiesFiles)
 		{
-			SNApplicationThread connectorThread = new SNApplicationThread(configFile);
+			SNApplicationThread connectorThread = new SNApplicationThread(_propertiesDir+"/"+queriesPropertiesDir+"/"+configFile);
 			boolean configured = false;
 			if (generalClient)
 			{

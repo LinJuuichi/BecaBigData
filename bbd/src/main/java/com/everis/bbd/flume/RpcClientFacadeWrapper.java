@@ -1,5 +1,8 @@
 package com.everis.bbd.flume;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.logging.Logger;
 import org.apache.flume.Event;
@@ -7,7 +10,7 @@ import org.json.JSONObject;
 
 /**
  * RpcClientFacade wrapper for avoiding connection to any port.
- * Prints/logs the events instead of sending them through a client. 
+ * Writes to a file the events instead of sending them through a client. 
  */
 public class RpcClientFacadeWrapper extends RpcClientFacade 
 {
@@ -16,6 +19,16 @@ public class RpcClientFacadeWrapper extends RpcClientFacade
 	 */
 	private static Logger log = Logger.getLogger(RpcClientFacadeWrapper.class.getName());
 
+	/**
+	 * Default path to the file.
+	 */
+	private static String DEFAULT_FILE = "events.txt";
+	
+	/**
+	 * Writer.
+	 */
+	PrintWriter _writer;
+	
 	/**
 	 * Default constructor.
 	 */
@@ -30,18 +43,42 @@ public class RpcClientFacadeWrapper extends RpcClientFacade
 	public RpcClientFacadeWrapper(String hostname, int port) {}
 	
 	/**
-	 * Does nothing, returns true.
+	 * Open the file.
 	 * 
 	 * @return always true.
 	 */
 	@Override
 	public boolean connect()
 	{
+		try 
+		{
+			_writer = new PrintWriter(DEFAULT_FILE, "UTF-8");
+		} 
+		catch (FileNotFoundException e) 
+		{
+			log.severe("File not found");
+			return false;
+		} 
+		catch (UnsupportedEncodingException e) 
+		{
+			log.severe("Encoding not suported");
+			return false;
+		}
 		return true;
+	}
+	
+	/**
+	 * Closes the file.
+	 */
+	@Override
+	public void cleanUp()
+	{
+		log.warning("Closing  file.");
+		_writer.close();
 	}
 
 	/**
-	 * Does nothing, returns true.
+	 * Open the file.
 	 * 
 	 * @param hostname does nothing.
 	 * @param port does nothing.
@@ -50,23 +87,23 @@ public class RpcClientFacadeWrapper extends RpcClientFacade
 	@Override
 	public boolean connect(String hostname, int port)
 	{
+		this.connect();
 		return true;
 	}
 
 	/**
-	 * Prints/logs the event.
+	 * Writes to a file the event.
 	 * 
 	 * @param event to be printed.
 	 */
 	@Override
 	public void sendEvent(Event event)
 	{	
-		log.info("Event: ");
-		log.info(event.toString());
+		_writer.println(event.toString());
 	}
 	
 	/**
-	 * Prints/logs the event.
+	 * Writes to a file the event.
 	 * 
 	 * @param data to be printed.
 	 * @param time does nothing.
@@ -74,19 +111,17 @@ public class RpcClientFacadeWrapper extends RpcClientFacade
 	@Override
 	public void sendData(String data, Date time)
 	{
-		log.info("Event: ");
-		log.info(data);
+		_writer.println(data.toString());
 	}
 
 	/**
-	 * Prints/logs the event.
+	 * Writes to a file the event.
 	 * 
 	 * @param data to be printed.
 	 */
 	@Override
 	public void sendData(JSONObject data)
 	{
-		log.info("Event: ");
-		log.info(data.toString());
+		_writer.println(data.toString());
 	}
 }
