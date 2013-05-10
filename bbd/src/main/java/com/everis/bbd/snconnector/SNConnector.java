@@ -59,17 +59,17 @@ public abstract class SNConnector
 	 */
 	public boolean configure(String propertiesFile)
 	{
-		_propertiesFile = propertiesFile;
 		_results = new ArrayList<JSONObject>();
-		_configuration = new ConfigurationReader(propertiesFile);
+		_propertiesFile = propertiesFile;
 		
+		_configuration = new ConfigurationReader(propertiesFile);
 		if (!_configuration.readConfigurationFile())
 		{
 			log.severe("Could not read file: "+_propertiesFile+". Connector don't configured.");
 			return false;
 		}
 		
-		return true;
+		return configureQuery();
 	}
 	
 	/**
@@ -83,8 +83,29 @@ public abstract class SNConnector
 		_results = new ArrayList<JSONObject>();
 		_configuration = configuration;
 		_propertiesFile = _configuration.getConfigFileName();
-		return true;
+
+		return configureQuery();
 	}
+	
+	/**
+	 * Return the results and then clear.
+	 * 
+	 * @return the results in JSON format.
+	 */
+	public synchronized List<JSONObject> getAndClearResults()
+	{
+		List<JSONObject> results = new ArrayList<JSONObject>();
+		results.addAll(_results);
+		_results.clear();
+		return results;
+	}
+	
+	/**
+	 * Configures the query.
+	 * 
+	 * @return if query has been correctly configured
+	 */
+	protected abstract boolean configureQuery();
 	
 	/**
 	 * Return the results.
@@ -110,19 +131,6 @@ public abstract class SNConnector
 	public synchronized void clearResults()
 	{
 		_results.clear();
-	}
-	
-	/**
-	 * Return the results and then clear.
-	 * 
-	 * @return the results in JSON format.
-	 */
-	public synchronized List<JSONObject> getAndClearResults()
-	{
-		List<JSONObject> results = new ArrayList<JSONObject>();
-		results.addAll(_results);
-		_results.clear();
-		return results;
 	}
 	
 	/**

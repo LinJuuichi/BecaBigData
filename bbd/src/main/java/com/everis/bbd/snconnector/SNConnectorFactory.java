@@ -36,7 +36,7 @@ public class SNConnectorFactory
 	/**
 	 * SNConnectorFactory can't be instantiated.
 	 */
-	private SNConnectorFactory() { }
+	private SNConnectorFactory() {}
 	
 	/**
 	 * Given a string with the name of a social network it returns the id.
@@ -81,6 +81,7 @@ public class SNConnectorFactory
 			break;
 		case TWITTER_STREAM_CONNECTOR:
 			connector = new TwitterStreamConnector();
+			break;
 		default:
 			log.warning("Connector type does not exist");
 			break;
@@ -104,6 +105,7 @@ public class SNConnectorFactory
 			break;
 		case TWITTER_STREAM_CONNECTOR:
 			connector = new TwitterStreamConnector(propertiesFile);
+			break;
 		default:
 			log.warning("Connector type does not exist");
 			break;

@@ -1,9 +1,6 @@
 package com.everis.bbd.snconnector;
 
 import java.util.logging.Logger;
-
-import com.everis.bbd.utilities.ConfigurationReader;
-
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -56,12 +53,8 @@ public class TwitterConnector extends AbstractTwitterConnector
 		super(propertiesFile);
 	}
 	
-	/**
-	 * Configures the query.
-	 * 
-	 * @return query configured successfully.
-	 */
-	private boolean configureQuery()
+	@Override
+	protected boolean configureQuery()
 	{
 		_twitterQuery = new Query();
 		
@@ -101,37 +94,6 @@ public class TwitterConnector extends AbstractTwitterConnector
 			_twitterQuery.setUntil(_configuration.getValue(SNConnectorKeys.CONF_UNTIL_KEY.getId(), ""));
 		}
 		return true;
-	}
-	
-
-	/**
-	 * Initializes the configuration and the results.
-	 * Also configures the query.
-	 */
-	@Override
-	public boolean configure(String propertiesFile)
-	{
-		if (super.configure(propertiesFile))
-		{
-			return configureQuery();
-		}
-		return false;
-	}
-	
-	/**
-	 * Initializes the configuration and the results.
-	 * 
-	 * @param configuration configuration.
-	 * @return initialization success
-	 */
-	@Override
-	public boolean configure(ConfigurationReader configuration)
-	{
-		if (super.configure(configuration))
-		{
-			return configureQuery();
-		}
-		return false;
 	}
 
 	@Override

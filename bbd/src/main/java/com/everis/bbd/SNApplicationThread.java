@@ -94,6 +94,10 @@ public class SNApplicationThread extends Thread
 	{
 		String clientType = _configuration.getValue(RpcClientFacadeKeys.CONF_CLIENT_TYPE_KEY.getId(), "");
 		_client = RpcClientFacadeFactory.getClient(clientType);
+		if (_client == null)
+		{
+			return false;
+		}
 		
 		String hostname = _configuration.getValue(RpcClientFacadeKeys.CONF_HOSTNAME_KEY.getId(), DEFAULT_HOSTNAME);
 		_client.setHostname(hostname);
@@ -119,6 +123,7 @@ public class SNApplicationThread extends Thread
 		
 		int connectorType = SNConnectorFactory.getConnectorId(_configuration.getValue(SNConnectorKeys.CONF_APPLICATION_KEY.getId(), ""));
 		_connector = SNConnectorFactory.getConnector(connectorType);
+		
 		if (!_connector.configure(_configuration))
 		{
 			return false;
@@ -128,6 +133,7 @@ public class SNApplicationThread extends Thread
 		{
 			return false;
 		}
+		
 		return true;
 	}
 	
@@ -201,6 +207,9 @@ public class SNApplicationThread extends Thread
 		// Sets how many events must have received to start sending the data.
 		int eventsThreshold = _configuration.getIntValue(SNConnectorKeys.CONF_EVENTS_THRESHOLD_KEY.getId(), DEFAULT_THRESHOLD);
 		//TODO: Add a condition to end the streaming.
+		
+		_connector.query(false);
+		
 		while(true)
 		{
 			// If there are enough results, send them via client.
@@ -244,6 +253,7 @@ public class SNApplicationThread extends Thread
 			results.addAll(_connector.getAndClearResults());
 			for (JSONObject event: results)
 			{
+				log.info("Sending event");
 				_client.sendData(event);
 			}
 			// If there are more results (pages), then executes the query.
@@ -267,11 +277,13 @@ public class SNApplicationThread extends Thread
 		if (type.equals(PAGINATION_KEY))
 		{
 			// Launches pagination.
+			log.info("Starting connector thread in pagination mode.");
 			this.pagination();
 		}
 		else if (type.equals(STREAMING_KEY))
 		{
 			// Launches streaming.
+			log.info("Starting connector thread in streaming mode.");
 			this.streaming();
 		}
 		else

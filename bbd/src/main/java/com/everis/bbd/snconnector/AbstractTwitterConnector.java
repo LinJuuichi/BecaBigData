@@ -40,7 +40,11 @@ public abstract class AbstractTwitterConnector extends SNConnector
 	{
 		if (_configuration == null)
 		{
-			this.configure(_propertiesFile);
+			if (!this.configure(_propertiesFile))
+			{
+				log.severe("Could not configure the connector. Stop connecting.");
+				return false;
+			}
 		}
 
 		ConfigurationBuilder cb = new ConfigurationBuilder();

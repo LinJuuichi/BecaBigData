@@ -54,33 +54,24 @@ public class TwitterStreamConnector extends AbstractTwitterConnector
 	{
 		super(propertiesFile);
 	}
-
-	/**
-	 * Initializes the configuration and the results.
-	 * Also configures the query.
-	 */
+	
 	@Override
-	public boolean configure(String propertiesFile)
+	public boolean configureQuery()
 	{
-		if (super.configure(propertiesFile))
+		_twitterQuery = new FilterQuery();
+		if (_configuration.exists(SNConnectorKeys.CONF_QUERY_KEY.getId()) > 0)
 		{
-			_twitterQuery = new FilterQuery();
-			
-			if (_configuration.exists(SNConnectorKeys.CONF_QUERY_KEY.getId()) > 0)
-			{
-				_tracks = _configuration.getValues(SNConnectorKeys.CONF_QUERY_KEY.getId());
-				String[] tracks = _tracks.toArray(new String[_tracks.size()]);
-				_search = tracks.toString();
-				_twitterQuery.track(tracks);
-			}
-			else
-			{
-				log.severe("Query not specified in file "+_propertiesFile+".");
-				return false;
-			}
-			return true;
+			_tracks = _configuration.getValues(SNConnectorKeys.CONF_QUERY_KEY.getId());
+			String[] tracks = _tracks.toArray(new String[_tracks.size()]);
+			_search = tracks.toString();
+			_twitterQuery.track(tracks);
 		}
-		return false;
+		else
+		{
+			log.severe("Query not specified in file "+_propertiesFile+".");
+			return false;
+		}
+		return true;
 	}
 	
 	@Override
@@ -131,8 +122,16 @@ public class TwitterStreamConnector extends AbstractTwitterConnector
 		};
 		_twitter.addListener(listener);
 		
-		log.info("Starting to sample tweets.");
-		_twitter.filter(_twitterQuery);
+		if (_twitterQuery != null)
+		{
+			log.info("Starting to sample tweets.");
+			_twitter.filter(_twitterQuery);
+		}
+		else
+		{
+			log.severe("The twitter query has not been set. ");
+		}
+		
 		return 0;
 	}
 

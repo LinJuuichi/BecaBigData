@@ -76,6 +76,7 @@ public class SNApplication
 			{
 				configured = connectorThread.configure();
 			}
+			
 			if(configured)
 			{
 				connectors.add(connectorThread);

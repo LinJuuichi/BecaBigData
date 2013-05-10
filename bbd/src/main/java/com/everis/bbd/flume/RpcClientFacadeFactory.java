@@ -61,6 +61,7 @@ public class RpcClientFacadeFactory
 			break;
 		case RPC_CLIENT_FACADE_WRAPPER:
 			client = new RpcClientFacadeWrapper();
+			break;
 		default:
 			log.warning("Client type does not exist");
 			break;
@@ -84,6 +85,7 @@ public class RpcClientFacadeFactory
 			break;
 		case RPC_CLIENT_FACADE_WRAPPER:
 			client = new RpcClientFacadeWrapper();
+			break;
 		default:
 			log.warning("Client type does not exist");
 			break;
