@@ -1,6 +1,10 @@
-package com.everis.bbd.snconnector;
+package com.everis.bbd.snconnector.twitter;
 
 import org.json.JSONObject;
+
+import com.everis.bbd.snconnector.SNConnector;
+import com.everis.bbd.snconnector.SNConnectorKeys;
+
 import twitter4j.GeoLocation;
 import twitter4j.Status;
 import twitter4j.conf.ConfigurationBuilder;
@@ -66,8 +70,7 @@ public abstract class AbstractTwitterConnector extends SNConnector
 	 */
 	protected JSONObject statusToJSONObject(Status status, String search)
 	{
-		JSONObject jTweet;
-		jTweet = new JSONObject();
+		JSONObject jTweet = new JSONObject();
  		jTweet.put(SNConnectorKeys.POST_ID_KEY.getId(), status.getId());
 		jTweet.put(SNConnectorKeys.POST_USERID_KEY.getId(), status.getUser().getId());
 		jTweet.put(SNConnectorKeys.POST_USER_KEY.getId(), status.getUser().getName());

@@ -34,9 +34,24 @@ public class RpcClientFacade
 	private static String TIMESTAMP_HEADER = "timestamp";
 	
 	/**
+	 * Key for the header value of the output directory.
+	 */
+	private static String OUTPUT_DIR_HEADER = "outputDirectory";
+	
+	/**
+	 * Default output directory.
+	 */
+	private static String DEFAULT_OUTPUT_DIRECTORY = "/user/bbd/";
+	
+	/**
 	 * Client to communicate with Flume source.
 	 */
 	private RpcClient _client;
+	
+	/**
+	 * Output directory where flume agent will store the events.
+	 */
+	private String _outputDirectory;
 	
 	
 	/**
@@ -56,6 +71,15 @@ public class RpcClientFacade
 	public RpcClientFacade() 
 	{ 
 		_client = null;
+		_outputDirectory = DEFAULT_OUTPUT_DIRECTORY;
+	}
+	
+	/**
+	 * @param outputDirectory new output directory.
+	 */
+	public void setOutputDirectory(String outputDirectory)
+	{
+		_outputDirectory = outputDirectory;
 	}
 
 	/**
@@ -147,6 +171,7 @@ public class RpcClientFacade
 		
 		Map<String, String> headers = new HashMap<String, String>();
 		headers.put(TIMESTAMP_HEADER, String.valueOf(time.getTime()));
+		headers.put(OUTPUT_DIR_HEADER, _outputDirectory);
 		event.setHeaders(headers);
 		
 		this.sendEvent(event);

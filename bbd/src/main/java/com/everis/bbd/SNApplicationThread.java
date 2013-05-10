@@ -105,6 +105,12 @@ public class SNApplicationThread extends Thread
 		int port = _configuration.getIntValue(RpcClientFacadeKeys.CONF_PORT_KEY.getId(), DEFAULT_PORT);
 		_client.setPort(port);
 		
+		String outputDir = _configuration.getValue(RpcClientFacadeKeys.CONF_OUTPUT_DIRECTORY_KEY.getId(), "");
+		if (!outputDir.equals(""))
+		{
+			_client.setHostname(outputDir);
+		}
+		
 		return _client.connect();
 	}
 	

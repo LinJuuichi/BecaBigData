@@ -122,6 +122,7 @@ public class RpcClientFacadeWrapper extends RpcClientFacade
 	@Override
 	public void sendData(JSONObject data)
 	{
+		System.out.println(data.toString());
 		_writer.println(data.toString());
 	}
 }

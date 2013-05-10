@@ -1,7 +1,10 @@
-package com.everis.bbd.snconnector;
+package com.everis.bbd.snconnector.twitter;
 
 import java.util.List;
 import java.util.logging.Logger;
+
+import com.everis.bbd.snconnector.SNConnectorKeys;
+
 import twitter4j.FilterQuery;
 import twitter4j.StallWarning;
 import twitter4j.Status;

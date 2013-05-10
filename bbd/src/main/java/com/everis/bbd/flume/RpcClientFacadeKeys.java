@@ -20,6 +20,11 @@ public enum RpcClientFacadeKeys
 	/**
 	 * Key for accessing the events threshold in the configuration.
 	 */
+	CONF_OUTPUT_DIRECTORY_KEY("outputDirectory"),
+	
+	/**
+	 * Key for accessing the events threshold in the configuration.
+	 */
 	CONF_PORT_KEY("port");
 	
 	/**

@@ -23,7 +23,6 @@ public class TextProcessDictionary extends Dictionary
 			line = line.replaceAll("\\"+s, " ");
 		}
 		
-
 		for (Object o: _wordDictionary.toArray())
 		{
 			String s = (String) o;

@@ -45,6 +45,13 @@ public class SNApplication
 			client = RpcClientFacadeFactory.getClient(clientType);
 			client.setHostname(configuration.getValue(RpcClientFacadeKeys.CONF_HOSTNAME_KEY.getId(), "localhost"));
 			client.setPort(configuration.getIntValue(RpcClientFacadeKeys.CONF_PORT_KEY.getId(), 0));
+			
+			String outputDir = configuration.getValue(RpcClientFacadeKeys.CONF_OUTPUT_DIRECTORY_KEY.getId(), "");
+			if (!outputDir.equals(""))
+			{
+				client.setHostname(outputDir);
+			}
+			
 			if (!client.connect())
 			{
 				System.out.println("Failed in connect the client.");

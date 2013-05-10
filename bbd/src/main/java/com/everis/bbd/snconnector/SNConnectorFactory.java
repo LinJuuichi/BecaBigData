@@ -2,6 +2,10 @@ package com.everis.bbd.snconnector;
 
 import java.util.logging.Logger;
 
+import com.everis.bbd.snconnector.linkedin.LinkedInConnector;
+import com.everis.bbd.snconnector.twitter.TwitterConnector;
+import com.everis.bbd.snconnector.twitter.TwitterStreamConnector;
+
 /**
  * Factory for social network connectors.
  */
@@ -75,12 +79,16 @@ public class SNConnectorFactory
 	public static SNConnector getConnector(int type)
 	{
 		SNConnector connector = null;
-		switch (type) {
+		switch (type) 
+		{
 		case TWITTER_CONNECTOR:
 			connector = new TwitterConnector();
 			break;
 		case TWITTER_STREAM_CONNECTOR:
 			connector = new TwitterStreamConnector();
+			break;
+		case LINKEDIN_CONNECTOR:
+			connector = new LinkedInConnector();
 			break;
 		default:
 			log.warning("Connector type does not exist");
@@ -99,12 +107,16 @@ public class SNConnectorFactory
 	public static SNConnector getConnector(int type, String propertiesFile)
 	{
 		SNConnector connector = null;
-		switch (type) {
+		switch (type) 
+		{
 		case TWITTER_CONNECTOR:
 			connector = new TwitterConnector(propertiesFile);
 			break;
 		case TWITTER_STREAM_CONNECTOR:
 			connector = new TwitterStreamConnector(propertiesFile);
+			break;
+		case LINKEDIN_CONNECTOR:
+			connector = new LinkedInConnector(propertiesFile);
 			break;
 		default:
 			log.warning("Connector type does not exist");

@@ -1,6 +1,9 @@
-package com.everis.bbd.snconnector;
+package com.everis.bbd.snconnector.twitter;
 
 import java.util.logging.Logger;
+
+import com.everis.bbd.snconnector.SNConnectorKeys;
+
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;

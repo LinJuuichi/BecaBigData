@@ -55,7 +55,8 @@ public class RpcClientFacadeFactory
 	public static RpcClientFacade getClient(int type)
 	{
 		RpcClientFacade client = null;
-		switch (type) {
+		switch (type) 
+		{
 		case RPC_CLIENT_FACADE:
 			client = new RpcClientFacade();
 			break;
@@ -79,7 +80,8 @@ public class RpcClientFacadeFactory
 	{
 		RpcClientFacade client = null;
 		int type = RpcClientFacadeFactory.getClientId(name);
-		switch (type) {
+		switch (type) 
+		{
 		case RPC_CLIENT_FACADE:
 			client = new RpcClientFacade();
 			break;
