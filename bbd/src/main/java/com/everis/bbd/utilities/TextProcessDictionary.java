@@ -16,6 +16,7 @@ public class TextProcessDictionary extends Dictionary
 	 */
 	public String preProcess(String line)
 	{
+		line = line.toLowerCase();
 		for (Object o: _charDictionary.toArray())
 		{
 			String s = (String) o;
@@ -37,6 +38,7 @@ public class TextProcessDictionary extends Dictionary
 				line = line.replace(" "+s, " "+replaceWord);
 			}
 		}
+		
 		return line;
 	}
 }
