@@ -25,5 +25,12 @@
 			</includes>
 			<outputDirectory>lib</outputDirectory>
 		</fileSet>
+		<fileSet>
+			<directory>target/dependencies</directory>
+			<includes>
+				<include>*.jar</include>
+			</includes>
+			<outputDirectory>lib</outputDirectory>
+		</fileSet>
 	</fileSets>
 </assembly>
