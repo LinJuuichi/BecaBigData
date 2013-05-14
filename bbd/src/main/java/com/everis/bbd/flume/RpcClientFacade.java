@@ -15,7 +15,7 @@ import org.apache.flume.FlumeException;
 import org.apache.flume.api.RpcClient;
 import org.apache.flume.api.RpcClientFactory;
 import org.apache.flume.event.EventBuilder;
-import org.json.JSONObject;
+import com.everis.bbd.snconnector.SNObject;
 import com.everis.bbd.snconnector.SNObjectKeys;
 
 /**
@@ -184,7 +184,7 @@ public class RpcClientFacade
 	 * 
 	 * @param data JSONObject to be sent as an event.
 	 */
-	public void sendData(JSONObject data)
+	public void sendData(SNObject data)
 	{
 		DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy");
 		Date date = new Date();

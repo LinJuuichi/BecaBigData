@@ -1,11 +1,10 @@
 package com.everis.bbd.snconnector.twitter;
 
-import org.json.JSONObject;
-
 import com.everis.bbd.snconnector.SNConnector;
 import com.everis.bbd.snconnector.SNConnectorKeys;
+import com.everis.bbd.snconnector.SNObject;
+import com.everis.bbd.snconnector.SNObjectComment;
 import com.everis.bbd.snconnector.SNObjectKeys;
-
 import twitter4j.GeoLocation;
 import twitter4j.Status;
 import twitter4j.conf.ConfigurationBuilder;
@@ -69,22 +68,23 @@ public abstract class AbstractTwitterConnector extends SNConnector
 	 * @param search query executed for getting the tweet.
 	 * @return the tweet formatted.
 	 */
-	protected JSONObject statusToJSONObject(Status status, String search)
+	protected SNObject statusToSNObject(Status status, String search)
 	{
-		JSONObject jTweet = new JSONObject();
- 		jTweet.put(SNObjectKeys.POST_ID_KEY.getId(), status.getId());
-		jTweet.put(SNObjectKeys.POST_USERID_KEY.getId(), status.getUser().getId());
-		jTweet.put(SNObjectKeys.POST_USER_KEY.getId(), status.getUser().getName());
-		jTweet.put(SNObjectKeys.POST_SOURCE_KEY.getId(), status.getSource());
-		jTweet.put(SNObjectKeys.POST_DATE_KEY.getId(), status.getCreatedAt().toString());
-
+		SNObject tweet = new SNObjectComment();
+		tweet.setLong(SNObjectKeys.POST_ID_KEY.getId(), status.getId());
+		tweet.setLong(SNObjectKeys.POST_USERID_KEY.getId(), status.getUser().getId());
+		tweet.setString(SNObjectKeys.POST_USER_KEY.getId(), status.getUser().getName());
+		tweet.setString(SNObjectKeys.POST_SOURCE_KEY.getId(), status.getSource());
+		tweet.setString(SNObjectKeys.POST_DATE_KEY.getId(), status.getCreatedAt().toString());
+		tweet.setString(SNObjectKeys.POST_QUERY_KEY.getId(), search);
+		
 		GeoLocation geo = status.getGeoLocation();
 		if (geo != null)
 		{
-			jTweet.put(SNObjectKeys.POST_LATITUDE_KEY.getId(), geo.getLatitude());
-			jTweet.put(SNObjectKeys.POST_LONGITUDE_KEY.getId(), geo.getLongitude());
+			tweet.setDouble(SNObjectKeys.POST_LATITUDE_KEY.getId(), geo.getLatitude());
+			tweet.setDouble(SNObjectKeys.POST_LONGITUDE_KEY.getId(), geo.getLongitude());
 		}
-		jTweet.put(SNObjectKeys.POST_TEXT_KEY.getId(), status.getText());
-		return jTweet;
+		tweet.setString(SNObjectKeys.POST_TEXT_KEY.getId(), status.getText());
+		return tweet;
 	}
 }

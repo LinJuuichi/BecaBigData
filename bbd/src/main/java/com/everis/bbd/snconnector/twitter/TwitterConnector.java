@@ -126,7 +126,7 @@ public class TwitterConnector extends AbstractTwitterConnector
 			int results = 0;
 			for (Status status: _queryResults.getTweets())
 			{
-				_results.add(statusToJSONObject(status,_search));
+				_results.add(statusToSNObject(status,_search));
 				results++;
 			}
 			return results;

@@ -2,12 +2,10 @@ package com.everis.bbd.examples.snconnector;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.json.JSONObject;
-
 import com.everis.bbd.flume.RpcClientFacade;
 import com.everis.bbd.snconnector.SNConnector;
 import com.everis.bbd.snconnector.SNConnectorFactory;
+import com.everis.bbd.snconnector.SNObject;
 import com.everis.bbd.utilities.ConfigurationReader;
 
 /**
@@ -56,11 +54,11 @@ class SNConnectorThread extends Thread
 			if (_connector.connect())
 			{
 				int numberResults = _connector.query(false);
-				List<JSONObject> results = new ArrayList<JSONObject>();
+				List<SNObject> results = new ArrayList<SNObject>();
 				while (numberResults > 0)
 				{
 					results.addAll(_connector.getResults());
-					for (JSONObject tweet: results)
+					for (SNObject tweet: results)
 					{
 						_client.sendData(tweet);
 					}

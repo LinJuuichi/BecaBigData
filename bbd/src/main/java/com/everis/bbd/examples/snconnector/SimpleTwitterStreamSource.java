@@ -2,10 +2,9 @@ package com.everis.bbd.examples.snconnector;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.json.JSONObject;
 import com.everis.bbd.snconnector.SNConnector;
 import com.everis.bbd.snconnector.SNConnectorFactory;
+import com.everis.bbd.snconnector.SNObject;
 import com.everis.bbd.snconnector.SNObjectKeys;
 import com.everis.bbd.utilities.ConfigurationReader;
 
@@ -38,16 +37,16 @@ public class SimpleTwitterStreamSource
 		if (connector.configure(twitterPropertiesFile))
 		{
 			connector.connect();
-			List<JSONObject> results = new ArrayList<JSONObject>();
+			List<SNObject> results = new ArrayList<SNObject>();
 			connector.query(true);
 			while(true)
 			{
 				while (connector.getResultSize() >= 1)
 				{
 					results = connector.getAndClearResults();
-					for(JSONObject tweet: results)
+					for(SNObject tweet: results)
 					{
-						System.out.println(tweet.get(SNObjectKeys.POST_TEXT_KEY.getId()));
+						System.out.println(tweet.getString(SNObjectKeys.POST_TEXT_KEY.getId()));
 					}
 				}
 			}

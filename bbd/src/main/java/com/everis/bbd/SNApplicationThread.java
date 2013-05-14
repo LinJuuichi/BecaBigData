@@ -3,13 +3,13 @@ package com.everis.bbd;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import org.json.JSONObject;
 import com.everis.bbd.flume.RpcClientFacade;
 import com.everis.bbd.flume.RpcClientFacadeFactory;
 import com.everis.bbd.flume.RpcClientFacadeKeys;
 import com.everis.bbd.snconnector.SNConnector;
 import com.everis.bbd.snconnector.SNConnectorFactory;
 import com.everis.bbd.snconnector.SNConnectorKeys;
+import com.everis.bbd.snconnector.SNObject;
 import com.everis.bbd.utilities.ConfigurationReader;
 
 /**
@@ -221,8 +221,8 @@ public class SNApplicationThread extends Thread
 			// If there are enough results, send them via client.
 			if (_connector.getResultSize() >= eventsThreshold)
 			{
-				List<JSONObject> results = _connector.getAndClearResults();
-				for(JSONObject event: results)
+				List<SNObject> results = _connector.getAndClearResults();
+				for(SNObject event: results)
 				{
 					_client.sendData(event);
 				}
@@ -249,7 +249,7 @@ public class SNApplicationThread extends Thread
 	private void pagination()
 	{
 		// List to store the results.
-		List<JSONObject> results = new ArrayList<JSONObject>();
+		List<SNObject> results = new ArrayList<SNObject>();
 		// Executes the query.
 		int numberResults = _connector.query(false);
 		// While there are results, keeps getting the query pages.
@@ -257,7 +257,7 @@ public class SNApplicationThread extends Thread
 		{
 			// Gets and sends the events through the client.
 			results.addAll(_connector.getAndClearResults());
-			for (JSONObject event: results)
+			for (SNObject event: results)
 			{
 				log.info("Sending event");
 				_client.sendData(event);

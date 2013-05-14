@@ -4,9 +4,10 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.logging.Logger;
-import org.json.JSONObject;
 import com.everis.bbd.snconnector.SNConnector;
 import com.everis.bbd.snconnector.SNConnectorKeys;
+import com.everis.bbd.snconnector.SNObject;
+import com.everis.bbd.snconnector.SNObjectPerson;
 import com.google.code.linkedinapi.client.CompaniesApiClient;
 import com.google.code.linkedinapi.client.LinkedInApiClientFactory;
 import com.google.code.linkedinapi.client.PeopleApiClient;
@@ -176,13 +177,13 @@ public class LinkedInConnector extends SNConnector
 		{
 		case COMPANY_QUERY:
 			Company company = _companyClient.getCompanyById("162479",EnumSet.allOf(CompanyField.class));
-			_results.add(companyToJsonObject(company));
+			_results.add(companyToSNObject(company));
 			break;
 		case PEOPLE_QUERY:
 			People people = _peopleClient.searchPeople(_queryParameters);
 			for (Person person: people.getPersonList())
 			{
-				_results.add(personToJsonObject(person));
+				_results.add(personToSNObject(person));
 			}
 			break;
 		default:
@@ -198,48 +199,48 @@ public class LinkedInConnector extends SNConnector
 	 * @param company information.
 	 * @return company information in JSON format.
 	 */
-	public JSONObject companyToJsonObject(Company company)
+	public SNObject companyToSNObject(Company company)
 	{
-		JSONObject jCompany = new JSONObject();
+		SNObject snCompany = new SNObjectCompany();
 		
 		/** String values **/
-		jCompany.put(LinkedInCompanyKeys.ID_KEY.getId(), company.getId());
-		jCompany.put(LinkedInCompanyKeys.NAME_KEY.getId(), company.getName());
-		jCompany.put(LinkedInCompanyKeys.UNIVERSAL_NAME_KEY.getId(), company.getUniversalName());
-		jCompany.put(LinkedInCompanyKeys.DESCRIPTION_KEY.getId(), company.getDescription());
-		jCompany.put(LinkedInCompanyKeys.SIZE_KEY.getId(), company.getSize());
-		jCompany.put(LinkedInCompanyKeys.EMPLOYEE_COUNT_RANGE_KEY.getId(), company.getEmployeeCountRange().getName());
-		jCompany.put(LinkedInCompanyKeys.CURRENT_STATUS_KEY.getId(), company.getStatus().getName());
-		jCompany.put(LinkedInCompanyKeys.TWITTER_ID_KEY.getId(), company.getTwitterId());
-		jCompany.put(LinkedInCompanyKeys.END_YEAR_KEY.getId(), company.getEndYear());
-		jCompany.put(LinkedInCompanyKeys.INDUSTRY_KEY.getId(), company.getIndustry());
-		jCompany.put(LinkedInCompanyKeys.TICKER_KEY.getId(), company.getTicker());
+		snCompany.setString(LinkedInCompanyKeys.ID_KEY.getId(), company.getId());
+		snCompany.setString(LinkedInCompanyKeys.NAME_KEY.getId(), company.getName());
+		snCompany.setString(LinkedInCompanyKeys.UNIVERSAL_NAME_KEY.getId(), company.getUniversalName());
+		snCompany.setString(LinkedInCompanyKeys.DESCRIPTION_KEY.getId(), company.getDescription());
+		snCompany.setString(LinkedInCompanyKeys.SIZE_KEY.getId(), company.getSize());
+		snCompany.setString(LinkedInCompanyKeys.EMPLOYEE_COUNT_RANGE_KEY.getId(), company.getEmployeeCountRange().getName());
+		snCompany.setString(LinkedInCompanyKeys.CURRENT_STATUS_KEY.getId(), company.getStatus().getName());
+		snCompany.setString(LinkedInCompanyKeys.TWITTER_ID_KEY.getId(), company.getTwitterId());
+		snCompany.setLong(LinkedInCompanyKeys.END_YEAR_KEY.getId(), company.getEndYear());
+		snCompany.setString(LinkedInCompanyKeys.INDUSTRY_KEY.getId(), company.getIndustry());
+		snCompany.setString(LinkedInCompanyKeys.TICKER_KEY.getId(), company.getTicker());
 		//jCompany.put(LinkedInCompanyKeys.STOCK_EXCHANGE_KEY.getId(), company.getStockExchange().getName());
 		
 		/** Numeric values **/
-		jCompany.put(LinkedInCompanyKeys.NUMBER_OF_FOLLOWERS_KEY.getId(), company.getNumFollowers());
-		jCompany.put(LinkedInCompanyKeys.FOUNDED_YEAR_KEY.getId(), company.getFoundedYear());
-		jCompany.put(LinkedInCompanyKeys.END_YEAR_KEY.getId(), company.getEndYear());
+		snCompany.setLong(LinkedInCompanyKeys.NUMBER_OF_FOLLOWERS_KEY.getId(), company.getNumFollowers());
+		snCompany.setLong(LinkedInCompanyKeys.FOUNDED_YEAR_KEY.getId(), company.getFoundedYear());
+		snCompany.setLong(LinkedInCompanyKeys.END_YEAR_KEY.getId(), company.getEndYear());
 				
 		/** Iterable values **/
-		JSONObject jEmailDomains = new JSONObject();
+		SNObject snEmailDomains = new SNObject();
 		for (String email: company.getEmailDomains().getEmailDomainList())
 		{
-			jEmailDomains.put(LinkedInCompanyKeys.EMAIL_DOMAIN_KEY.getId(),email);
+			snEmailDomains.setString(LinkedInCompanyKeys.EMAIL_DOMAIN_KEY.getId(),email);
 		}
-		jCompany.put(LinkedInCompanyKeys.EMAIL_DOMAINS_KEY.getId(), jEmailDomains);
+		snCompany.setSNObject(LinkedInCompanyKeys.EMAIL_DOMAINS_KEY.getId(), snEmailDomains);
 		
-		JSONObject jLocations = new JSONObject();
+		SNObject snLocations = new SNObject();
 		for (Location location: company.getLocations().getLocationList())
 		{
 			if (location != null)
 			{
-				jLocations.put(LinkedInCompanyKeys.LOCATION_KEY.getId(),location.getDescription());
+				snLocations.setString(LinkedInCompanyKeys.LOCATION_KEY.getId(),location.getDescription());
 			}
 		}
-		jCompany.put(LinkedInCompanyKeys.LOCATIONS_KEY.getId(), jLocations);
+		snCompany.setSNObject(LinkedInCompanyKeys.LOCATIONS_KEY.getId(), snLocations);
 		
-		return jCompany;
+		return snCompany;
 	}
 	
 	/**
@@ -248,50 +249,50 @@ public class LinkedInConnector extends SNConnector
 	 * @param person information.
 	 * @return person information in JSON format.
 	 */
-	public JSONObject personToJsonObject(Person person)
+	public SNObject personToSNObject(Person person)
 	{
-		JSONObject jPerson = new JSONObject();
+		SNObject snPerson = new SNObjectPerson();
 		
 		/** String values **/
-		jPerson.put(LinkedInPersonKeys.ID_KEY.getId(), person.getId());
-		jPerson.put(LinkedInPersonKeys.ASSOCIATIONS_KEY.getId(), person.getAssociations());
-		jPerson.put(LinkedInPersonKeys.HONORS_KEY.getId(), person.getHonors());
-		jPerson.put(LinkedInPersonKeys.CURRENT_STATUS_KEY.getId(), person.getCurrentStatus());
-		jPerson.put(LinkedInPersonKeys.FIRST_NAME_KEY.getId(), person.getFirstName());
-		jPerson.put(LinkedInPersonKeys.LAST_NAME_KEY.getId(), person.getLastName());
-		jPerson.put(LinkedInPersonKeys.INDUSTRY_KEY.getId(), person.getIndustry());
-		jPerson.put(LinkedInPersonKeys.INTERESTS_KEY.getId(), person.getInterests());
-		jPerson.put(LinkedInPersonKeys.BIRTH_KEY.getId(), person.getDateOfBirth().toString());
-		jPerson.put(LinkedInPersonKeys.LOCATION_KEY.getId(), person.getLocation().getDescription());
+		snPerson.setString(LinkedInPersonKeys.ID_KEY.getId(), person.getId());
+		snPerson.setString(LinkedInPersonKeys.ASSOCIATIONS_KEY.getId(), person.getAssociations());
+		snPerson.setString(LinkedInPersonKeys.HONORS_KEY.getId(), person.getHonors());
+		snPerson.setString(LinkedInPersonKeys.CURRENT_STATUS_KEY.getId(), person.getCurrentStatus());
+		snPerson.setString(LinkedInPersonKeys.FIRST_NAME_KEY.getId(), person.getFirstName());
+		snPerson.setString(LinkedInPersonKeys.LAST_NAME_KEY.getId(), person.getLastName());
+		snPerson.setString(LinkedInPersonKeys.INDUSTRY_KEY.getId(), person.getIndustry());
+		snPerson.setString(LinkedInPersonKeys.INTERESTS_KEY.getId(), person.getInterests());
+		snPerson.setString(LinkedInPersonKeys.BIRTH_KEY.getId(), person.getDateOfBirth().toString());
+		snPerson.setString(LinkedInPersonKeys.LOCATION_KEY.getId(), person.getLocation().getDescription());
 		
 		/** Numeric values **/
-		jPerson.put(LinkedInPersonKeys.DISTANCE_KEY.getId(), person.getDistance());
-		jPerson.put(LinkedInPersonKeys.NUMBER_OF_RECOMMENDERS_KEY.getId(), person.getNumRecommenders());
-		jPerson.put(LinkedInPersonKeys.NUMBER_OF_CONNECTIONS_KEY.getId(), person.getNumConnections());
+		snPerson.setLong(LinkedInPersonKeys.DISTANCE_KEY.getId(), person.getDistance());
+		snPerson.setLong(LinkedInPersonKeys.NUMBER_OF_RECOMMENDERS_KEY.getId(), person.getNumRecommenders());
+		snPerson.setLong(LinkedInPersonKeys.NUMBER_OF_CONNECTIONS_KEY.getId(), person.getNumConnections());
 		
 		/** Iterable values **/
-		JSONObject jCerts = new JSONObject();
+		SNObject snCerts = new SNObject();
 		for (Certification cert: person.getCertifications().getCertificationList())
 		{
-			jCerts.put(cert.getId(),cert.getName());
+			snCerts.setString(cert.getId(),cert.getName());
 		}
-		jPerson.put(LinkedInPersonKeys.CERTIFICATIONS_KEY.getId(), jCerts);
+		snPerson.setSNObject(LinkedInPersonKeys.CERTIFICATIONS_KEY.getId(), snCerts);
 		
-		JSONObject jEdu = new JSONObject();
+		SNObject snEdu = new SNObject();
 		for (Education edu: person.getEducations().getEducationList())
 		{
-			jEdu.put(edu.getId(),edu.getSchoolName());
+			snEdu.setString(edu.getId(),edu.getSchoolName());
 		}
-		jPerson.put(LinkedInPersonKeys.EDUCATIONS_KEY.getId(), jEdu);
+		snPerson.setSNObject(LinkedInPersonKeys.EDUCATIONS_KEY.getId(), snEdu);
 		
-		JSONObject jLan = new JSONObject();
+		SNObject snLan = new SNObject();
 		for (Language lan: person.getLanguages().getLanguageList())
 		{
-			jLan.put(lan.getId(), lan.getLanguage().getName());
+			snLan.setString(lan.getId(), lan.getLanguage().getName());
 		}
-		jPerson.put(LinkedInPersonKeys.LANGUAGES_KEY.getId(), jLan);
+		snPerson.setSNObject(LinkedInPersonKeys.LANGUAGES_KEY.getId(), snLan);
 					
-		return jPerson;
+		return snPerson;
 	}
 	
 	/**

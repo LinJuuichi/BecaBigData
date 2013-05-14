@@ -6,7 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.logging.Logger;
 import org.apache.flume.Event;
-import org.json.JSONObject;
+import com.everis.bbd.snconnector.SNObject;
 
 /**
  * RpcClientFacade wrapper for avoiding connection to any port.
@@ -120,7 +120,7 @@ public class RpcClientFacadeWrapper extends RpcClientFacade
 	 * @param data to be printed.
 	 */
 	@Override
-	public void sendData(JSONObject data)
+	public void sendData(SNObject data)
 	{
 		System.out.println(data.toString());
 		_writer.println(data.toString());

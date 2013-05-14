@@ -6,7 +6,8 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 /**
- * Object that contains and embeds the information of a single post of a social network.
+ * Object that contains and embeds the information of a single object of a social network.
+ * Like comments, profiles, etc.
  */
 public class SNObject 
 {
@@ -26,7 +27,7 @@ public class SNObject
 	Map<String, Object> _information;
 	
 	/**
-	 * 
+	 * Contructor.
 	 */
 	public SNObject()
 	{
@@ -125,7 +126,29 @@ public class SNObject
 	 * @param key of the value.
 	 * @param value double value.
 	 */
-	public void setdouble(String key, double value)
+	public void setDouble(String key, double value)
+	{
+		_information.put(key, value);
+	}
+	
+	/**
+	 * @param key of the value
+	 * @return a SNObject with the value
+	 */
+	public SNObject getSNObject(String key)
+	{
+		if (!_information.containsKey(key))
+		{
+			return (SNObject) null;
+		}
+		return ((SNObject)_information.get(key));
+	}
+	
+	/**
+	 * @param key of the value.
+	 * @param value SNObject value.
+	 */
+	public void setSNObject(String key, SNObject value)
 	{
 		_information.put(key, value);
 	}
@@ -157,96 +180,6 @@ public class SNObject
 	 */
 	public String toString()
 	{
-		String value = "";
-		if (this.hasValue(SNObjectKeys.POST_ID_KEY.getId()))
-		{
-			value.concat(this.getString(SNObjectKeys.POST_ID_KEY.getId()));
-		}
-		else
-		{
-			return null;
-		}
-		value.concat(FIELD_SEPARATOR);
-		
-		if (this.hasValue(SNObjectKeys.POST_TEXT_KEY.getId()))
-		{
-			value.concat(this.getString(SNObjectKeys.POST_TEXT_KEY.getId()));
-		}
-		else
-		{
-			return null;
-		}
-		value.concat(FIELD_SEPARATOR);
-		
-		if (this.hasValue(SNObjectKeys.POST_USERID_KEY.getId()))
-		{
-			value.concat(Integer.toString(this.getInt(SNObjectKeys.POST_USERID_KEY.getId())));
-		}
-		else
-		{
-			value.concat("NULL");
-		}
-		value.concat(FIELD_SEPARATOR);
-		
-		if (this.hasValue(SNObjectKeys.POST_USER_KEY.getId()))
-		{
-			value.concat(this.getString(SNObjectKeys.POST_USER_KEY.getId()));
-		}
-		else
-		{
-			value.concat("NULL");
-		}
-		value.concat(FIELD_SEPARATOR);
-		
-		if (this.hasValue(SNObjectKeys.POST_LATITUDE_KEY.getId()))
-		{
-			value.concat(Double.toString(this.getDouble(SNObjectKeys.POST_LATITUDE_KEY.getId())));
-		}
-		else
-		{
-			value.concat("NULL");
-		}
-		value.concat(FIELD_SEPARATOR);
-		
-		if (this.hasValue(SNObjectKeys.POST_LONGITUDE_KEY.getId()))
-		{
-			value.concat(Double.toString(this.getDouble(SNObjectKeys.POST_LONGITUDE_KEY.getId())));
-		}
-		else
-		{
-			value.concat("NULL");
-		}
-		value.concat(FIELD_SEPARATOR);
-		
-		if (this.hasValue(SNObjectKeys.POST_DATE_KEY.getId()))
-		{
-			value.concat(this.getTimestamp(SNObjectKeys.POST_DATE_KEY.getId()).toString());
-		}
-		else
-		{
-			value.concat("NULL");
-		}
-		value.concat(FIELD_SEPARATOR);
-		
-		if (this.hasValue(SNObjectKeys.POST_SOURCE_KEY.getId()))
-		{
-			value.concat(this.getString(SNObjectKeys.POST_SOURCE_KEY.getId()));
-		}
-		else
-		{
-			value.concat("NULL");
-		}
-		value.concat(FIELD_SEPARATOR);
-		
-		if (this.hasValue(SNObjectKeys.POST_QUERY_KEY.getId()))
-		{
-			value.concat(this.getString(SNObjectKeys.POST_QUERY_KEY.getId()));
-		}
-		else
-		{
-			value.concat("NULL");
-		}
-		value.concat(FIELD_SEPARATOR);
-		return null;	
+		return null;
 	}
 }

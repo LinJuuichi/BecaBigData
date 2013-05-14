@@ -3,7 +3,6 @@ package com.everis.bbd.snconnector;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import org.json.JSONObject;
 import com.everis.bbd.utilities.ConfigurationReader;
 
 /**
@@ -34,7 +33,7 @@ public abstract class SNConnector
 	/**
 	 * List containing the queries results.
 	 */
-	protected List<JSONObject> _results;
+	protected List<SNObject> _results;
 	
 	/**
 	 * Terms to query.
@@ -59,7 +58,7 @@ public abstract class SNConnector
 	 */
 	public boolean configure(String propertiesFile)
 	{
-		_results = new ArrayList<JSONObject>();
+		_results = new ArrayList<SNObject>();
 		_propertiesFile = propertiesFile;
 		
 		_configuration = new ConfigurationReader(propertiesFile);
@@ -80,7 +79,7 @@ public abstract class SNConnector
 	 */
 	public boolean configure(ConfigurationReader configuration)
 	{
-		_results = new ArrayList<JSONObject>();
+		_results = new ArrayList<SNObject>();
 		_configuration = configuration;
 		_propertiesFile = _configuration.getConfigFileName();
 
@@ -92,9 +91,9 @@ public abstract class SNConnector
 	 * 
 	 * @return the results in JSON format.
 	 */
-	public synchronized List<JSONObject> getAndClearResults()
+	public synchronized List<SNObject> getAndClearResults()
 	{
-		List<JSONObject> results = new ArrayList<JSONObject>();
+		List<SNObject> results = new ArrayList<SNObject>();
 		results.addAll(_results);
 		_results.clear();
 		return results;
@@ -112,7 +111,7 @@ public abstract class SNConnector
 	 * 
 	 * @return a list with the results query.
 	 */
-	public synchronized List<JSONObject> getResults()
+	public synchronized List<SNObject> getResults()
 	{
 		return _results;	
 	}
