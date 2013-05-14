@@ -41,7 +41,7 @@ public class RpcClientFacade
 	/**
 	 * Default output directory.
 	 */
-	private static String DEFAULT_OUTPUT_DIRECTORY = "/user/bbd/";
+	private static String DEFAULT_OUTPUT_DIRECTORY = "bbd";
 	
 	/**
 	 * Client to communicate with Flume source.

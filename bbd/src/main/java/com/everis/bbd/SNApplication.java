@@ -49,7 +49,7 @@ public class SNApplication
 			String outputDir = configuration.getValue(RpcClientFacadeKeys.CONF_OUTPUT_DIRECTORY_KEY.getId(), "");
 			if (!outputDir.equals(""))
 			{
-				client.setHostname(outputDir);
+				client.setOutputDirectory(outputDir);
 			}
 			
 			if (!client.connect())
