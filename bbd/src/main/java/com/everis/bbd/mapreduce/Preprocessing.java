@@ -57,7 +57,7 @@ public class Preprocessing extends Configured implements Tool
 
 	public int run(String[] args) throws Exception 
 	{
-		Job job = new Job();
+		Job job = new Job(super.getConf());
 
 	    job.setOutputKeyClass(Text.class);
 	    job.setOutputValueClass(NullWritable.class);
@@ -68,8 +68,8 @@ public class Preprocessing extends Configured implements Tool
 	    job.setInputFormatClass(TextInputFormat.class);
 	    job.setOutputFormatClass(TextOutputFormat.class);
 
-	    FileInputFormat.setInputPaths(job, new Path("hdfs://localhost/user/training/mapred/text"));
-	    FileOutputFormat.setOutputPath(job, new Path("hdfs://localhost/user/training/mapred/textout"));
+	    FileInputFormat.setInputPaths(job, new Path("hdfs://localhost/user/cloudera/mapred"));
+	    FileOutputFormat.setOutputPath(job, new Path("hdfs://localhost/user/cloudera/mahout"));
 
 	    job.setJarByClass(Preprocessing.class);
 
@@ -85,11 +85,11 @@ public class Preprocessing extends Configured implements Tool
 	{
 		//FileUtils.deleteDirectory(new File("/user/training/mapred/textout"));
 		Configuration configuration = new Configuration();
-		String[] otherArgs;
+		//String[] otherArgs;
 		int res = 0;
 		try {
-			otherArgs = new GenericOptionsParser(configuration, args).getRemainingArgs();
-			res = ToolRunner.run(configuration, new Preprocessing(), otherArgs);
+			//otherArgs = new GenericOptionsParser(configuration, args).getRemainingArgs();
+			res = ToolRunner.run(configuration, new Preprocessing(), args);
 		} catch (Exception e) {
 			
 		}
