@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.json.JSONObject;
 import com.everis.bbd.snconnector.SNConnector;
-import com.everis.bbd.snconnector.SNConnectorKeys;
 import com.everis.bbd.snconnector.SNConnectorFactory;
+import com.everis.bbd.snconnector.SNObjectKeys;
 import com.everis.bbd.utilities.ConfigurationReader;
 
 /**
@@ -47,7 +47,7 @@ public class SimpleTwitterStreamSource
 					results = connector.getAndClearResults();
 					for(JSONObject tweet: results)
 					{
-						System.out.println(tweet.get(SNConnectorKeys.POST_TEXT_KEY.getId()));
+						System.out.println(tweet.get(SNObjectKeys.POST_TEXT_KEY.getId()));
 					}
 				}
 			}

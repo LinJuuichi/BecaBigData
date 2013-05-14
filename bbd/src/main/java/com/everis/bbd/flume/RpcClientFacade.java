@@ -16,7 +16,7 @@ import org.apache.flume.api.RpcClient;
 import org.apache.flume.api.RpcClientFactory;
 import org.apache.flume.event.EventBuilder;
 import org.json.JSONObject;
-import com.everis.bbd.snconnector.SNConnectorKeys;
+import com.everis.bbd.snconnector.SNObjectKeys;
 
 /**
  * Facade class for RpcClient to send events to Flume sources.
@@ -179,7 +179,7 @@ public class RpcClientFacade
 
 	/**
 	 * Sends data to a Flume source as an event with a timestamp value in the header.
-	 * JSONObject should have a parameter with key {@link SNConnectorKeys#POST_DATE_KEY} that represents the posted date of data.
+	 * JSONObject should have a parameter with key {@link SNObjectKeys#POST_DATE_KEY} that represents the posted date of data.
 	 * If not, timestamp will be set to the execution date.
 	 * 
 	 * @param data JSONObject to be sent as an event.
@@ -190,7 +190,7 @@ public class RpcClientFacade
 		Date date = new Date();
 		try 
 		{
-			date = dateFormat.parse(data.getString(SNConnectorKeys.POST_DATE_KEY.getId()));
+			date = dateFormat.parse(data.getString(SNObjectKeys.POST_DATE_KEY.getId()));
 		} 
 		catch (NoSuchElementException e)
 		{

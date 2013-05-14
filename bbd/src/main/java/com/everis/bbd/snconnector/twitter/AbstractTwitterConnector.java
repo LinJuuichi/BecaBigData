@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import com.everis.bbd.snconnector.SNConnector;
 import com.everis.bbd.snconnector.SNConnectorKeys;
+import com.everis.bbd.snconnector.SNObjectKeys;
 
 import twitter4j.GeoLocation;
 import twitter4j.Status;
@@ -71,19 +72,19 @@ public abstract class AbstractTwitterConnector extends SNConnector
 	protected JSONObject statusToJSONObject(Status status, String search)
 	{
 		JSONObject jTweet = new JSONObject();
- 		jTweet.put(SNConnectorKeys.POST_ID_KEY.getId(), status.getId());
-		jTweet.put(SNConnectorKeys.POST_USERID_KEY.getId(), status.getUser().getId());
-		jTweet.put(SNConnectorKeys.POST_USER_KEY.getId(), status.getUser().getName());
-		jTweet.put(SNConnectorKeys.POST_SOURCE_KEY.getId(), status.getSource());
-		jTweet.put(SNConnectorKeys.POST_DATE_KEY.getId(), status.getCreatedAt().toString());
+ 		jTweet.put(SNObjectKeys.POST_ID_KEY.getId(), status.getId());
+		jTweet.put(SNObjectKeys.POST_USERID_KEY.getId(), status.getUser().getId());
+		jTweet.put(SNObjectKeys.POST_USER_KEY.getId(), status.getUser().getName());
+		jTweet.put(SNObjectKeys.POST_SOURCE_KEY.getId(), status.getSource());
+		jTweet.put(SNObjectKeys.POST_DATE_KEY.getId(), status.getCreatedAt().toString());
 
 		GeoLocation geo = status.getGeoLocation();
 		if (geo != null)
 		{
-			jTweet.put(SNConnectorKeys.POST_LATITUDE_KEY.getId(), geo.getLatitude());
-			jTweet.put(SNConnectorKeys.POST_LONGITUDE_KEY.getId(), geo.getLongitude());
+			jTweet.put(SNObjectKeys.POST_LATITUDE_KEY.getId(), geo.getLatitude());
+			jTweet.put(SNObjectKeys.POST_LONGITUDE_KEY.getId(), geo.getLongitude());
 		}
-		jTweet.put(SNConnectorKeys.POST_TEXT_KEY.getId(), status.getText());
+		jTweet.put(SNObjectKeys.POST_TEXT_KEY.getId(), status.getText());
 		return jTweet;
 	}
 }
