@@ -1,9 +1,7 @@
 package com.everis.bbd.snconnector.linkedin;
 
 import java.util.logging.Logger;
-
 import com.everis.bbd.snconnector.SNObject;
-import com.everis.bbd.snconnector.SNObjectComment;
 
 /**
  * SNObject for company information from LinkedIn.
