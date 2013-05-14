@@ -1,4 +1,6 @@
-package com.everis.bbd.snconnector;
+package com.everis.bbd.snconnector.linkedin;
+
+import com.everis.bbd.snconnector.SNObject;
 
 /**
  * SNObject for person information from LinkedIn.

@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 import com.everis.bbd.snconnector.SNConnector;
 import com.everis.bbd.snconnector.SNConnectorKeys;
 import com.everis.bbd.snconnector.SNObject;
-import com.everis.bbd.snconnector.SNObjectPerson;
 import com.google.code.linkedinapi.client.CompaniesApiClient;
 import com.google.code.linkedinapi.client.LinkedInApiClientFactory;
 import com.google.code.linkedinapi.client.PeopleApiClient;
