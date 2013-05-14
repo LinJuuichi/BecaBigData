@@ -99,6 +99,7 @@ public class RpcClientFacadeWrapper extends RpcClientFacade
 	@Override
 	public void sendEvent(Event event)
 	{	
+		System.out.println(event.toString());
 		_writer.println(event.toString());
 	}
 	
@@ -111,7 +112,8 @@ public class RpcClientFacadeWrapper extends RpcClientFacade
 	@Override
 	public void sendData(String data, Date time)
 	{
-		_writer.println(data.toString());
+		System.out.println(data);
+		_writer.println(data);
 	}
 
 	/**
