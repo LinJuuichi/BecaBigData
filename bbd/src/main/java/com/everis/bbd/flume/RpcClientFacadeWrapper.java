@@ -3,7 +3,6 @@ package com.everis.bbd.flume;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.Date;
 import java.util.logging.Logger;
 import org.apache.flume.Event;
 import com.everis.bbd.snconnector.SNObject;
@@ -110,7 +109,7 @@ public class RpcClientFacadeWrapper extends RpcClientFacade
 	 * @param time does nothing.
 	 */
 	@Override
-	public void sendData(String data, Date time)
+	public void sendData(String data, long time)
 	{
 		System.out.println(data);
 		_writer.println(data);

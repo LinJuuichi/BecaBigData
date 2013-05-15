@@ -1,13 +1,8 @@
 package com.everis.bbd.flume;
 
 import java.nio.charset.Charset;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 import org.apache.flume.Event;
 import org.apache.flume.EventDeliveryException;
@@ -163,14 +158,14 @@ public class RpcClientFacade
 	 * Sends data to a Flume source as an event.
 	 * 
 	 * @param data String to be sent as an event.
-	 * @param time timestamp to add in the event header.
+	 * @param date date to add in the event header.
 	 */
-	public void sendData(String data, Date time)
+	public void sendData(String data, long date)
 	{
 		Event event = EventBuilder.withBody(data,Charset.forName("UTF-8"));
 		
 		Map<String, String> headers = new HashMap<String, String>();
-		headers.put(TIMESTAMP_HEADER, String.valueOf(time.getTime()));
+		headers.put(TIMESTAMP_HEADER, Long.toString(date));
 		headers.put(OUTPUT_DIR_HEADER, _outputDirectory);
 		event.setHeaders(headers);
 		
@@ -186,24 +181,7 @@ public class RpcClientFacade
 	 */
 	public void sendData(SNObject data)
 	{
-		DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy");
-		Date date = new Date();
-		try 
-		{
-			date = dateFormat.parse(data.getString(SNObjectKeys.POST_DATE_KEY.getId()));
-		} 
-		catch (NoSuchElementException e)
-		{
-			log.warning("Date not found in data.");
-		} 
-		catch (ParseException e) 
-		{
-			log.warning("Date not found in data.");
-		}
-		finally
-		{
-			this.sendData(data.toString(),date);
-		}
+		this.sendData(data.toString(),data.getTimestamp(SNObjectKeys.POST_DATE_KEY.getId()).getTime());
 	}
 
 	/**
