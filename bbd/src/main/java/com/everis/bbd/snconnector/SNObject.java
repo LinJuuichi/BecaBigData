@@ -1,6 +1,6 @@
 package com.everis.bbd.snconnector;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;

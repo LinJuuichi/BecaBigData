@@ -85,8 +85,7 @@ public class SNObjectComment extends SNObject
 		
 		if (this.hasValue(SNObjectKeys.POST_DATE_KEY.getId()))
 		{
-			//value.concat(this.getTimestamp(SNObjectKeys.POST_DATE_KEY.getId()).getTimestamp().toString());
-			value = value.concat("NULL");
+			value = value.concat(this.getTimestamp(SNObjectKeys.POST_DATE_KEY.getId()).toString());
 		}
 		else
 		{

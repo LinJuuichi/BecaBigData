@@ -1,5 +1,6 @@
 package com.everis.bbd.snconnector.twitter;
 
+import java.sql.Timestamp;
 import com.everis.bbd.snconnector.SNConnector;
 import com.everis.bbd.snconnector.SNConnectorKeys;
 import com.everis.bbd.snconnector.SNObject;
@@ -75,7 +76,8 @@ public abstract class AbstractTwitterConnector extends SNConnector
 		tweet.setLong(SNObjectKeys.POST_USERID_KEY.getId(), status.getUser().getId());
 		tweet.setString(SNObjectKeys.POST_USER_KEY.getId(), status.getUser().getName());
 		tweet.setString(SNObjectKeys.POST_SOURCE_KEY.getId(), status.getSource());
-		tweet.setString(SNObjectKeys.POST_DATE_KEY.getId(), status.getCreatedAt().toString());
+		Timestamp date = new Timestamp(status.getCreatedAt().getTime());
+		tweet.setTimestamp(SNObjectKeys.POST_DATE_KEY.getId(), date);
 		tweet.setString(SNObjectKeys.POST_QUERY_KEY.getId(), search);
 		
 		GeoLocation geo = status.getGeoLocation();
@@ -84,7 +86,7 @@ public abstract class AbstractTwitterConnector extends SNConnector
 			tweet.setDouble(SNObjectKeys.POST_LATITUDE_KEY.getId(), geo.getLatitude());
 			tweet.setDouble(SNObjectKeys.POST_LONGITUDE_KEY.getId(), geo.getLongitude());
 		}
-		tweet.setString(SNObjectKeys.POST_TEXT_KEY.getId(), status.getText());
+		tweet.setString(SNObjectKeys.POST_TEXT_KEY.getId(), status.getText().replaceAll("\t", "").replaceAll("\n", ""));
 		return tweet;
 	}
 }
