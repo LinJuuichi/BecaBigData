@@ -121,7 +121,7 @@ public class TwitterConnector extends AbstractTwitterConnector
 	{
 		try 
 		{
-			log.info("Querying: "+_twitterQuery.getQuery());
+			log.info("Querying: "+_search);
 			_queryResults = _twitter.search(_twitterQuery);
 			int results = 0;
 			for (Status status: _queryResults.getTweets())

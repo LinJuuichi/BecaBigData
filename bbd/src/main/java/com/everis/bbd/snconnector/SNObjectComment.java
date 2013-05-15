@@ -15,6 +15,7 @@ public class SNObjectComment extends SNObject
 	
 	/**
 	 * Column order:
+	 * comment_id, text, userid, username, latitude, longitude, date, source, query
 	 * COMMENT_ID	TEXT	
 	 */
 	@Override
@@ -84,7 +85,7 @@ public class SNObjectComment extends SNObject
 		
 		if (this.hasValue(SNObjectKeys.POST_DATE_KEY.getId()))
 		{
-			//value.concat(this.getTimestamp(SNObjectKeys.POST_DATE_KEY.getId()).toString());
+			//value.concat(this.getTimestamp(SNObjectKeys.POST_DATE_KEY.getId()).getTimestamp().toString());
 			value = value.concat("NULL");
 		}
 		else
@@ -101,7 +102,7 @@ public class SNObjectComment extends SNObject
 		{
 			value = value.concat("NULL");
 		}
-		value.concat(FIELD_SEPARATOR);
+		value = value.concat(FIELD_SEPARATOR);
 		
 		if (this.hasValue(SNObjectKeys.POST_QUERY_KEY.getId()))
 		{
