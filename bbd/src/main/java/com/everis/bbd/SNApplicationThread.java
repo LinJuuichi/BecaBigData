@@ -108,7 +108,7 @@ public class SNApplicationThread extends Thread
 		String outputDir = _configuration.getValue(RpcClientFacadeKeys.CONF_OUTPUT_DIRECTORY_KEY.getId(), "");
 		if (!outputDir.equals(""))
 		{
-			_client.setHostname(outputDir);
+			_client.setOutputDirectory(outputDir);
 		}
 		
 		return _client.connect();
