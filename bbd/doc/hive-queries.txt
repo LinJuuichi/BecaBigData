@@ -1,0 +1,39 @@
+=============================================
+==============HIVE Queries===================
+=============================================
+TABLE CREATION
+==============================================================
+create external table if not exists comments
+(
+id double,
+text string,
+userId double,
+username string,
+latitude double,
+longitude double,
+posted timestamp,
+source string,
+query string
+)
+row format delimited fields terminated by '\t'
+location '/user/cloudera/hive'
+==============================================================
+This creates a table called "comments" with several columns 
+and which the column delimitation token is '\t'.
+==============================================================
+==============================================================
+INSERTING DATA TO THE TABLE
+==============================================================
+load data [local] inpath '${COMPLETE_FILE_PATH}' [overwrite] into table tweets
+==============================================================
+Inserts data (overwrites the existing if it's tell so)
+from ${COMPLETE_FILE_PATH} (HDFS path if no local option).
+==============================================================
+==============================================================
+Select tweets from a day
+==============================================================
+select * 
+from comments 
+where posted >= cast('2013-05-13 00:00:00' as timestamp)
+and posted <= cast('2013-05-14 00:00:00' as timestamp)
+==============================================================
