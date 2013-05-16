@@ -26,4 +26,7 @@ if [ -L "$BBD_LINK" ]; then
 	sudo unlink "$BBD_LINK"
 fi
 
-sudo ln -s "${BBD_INSTALL_DIR}/${BBD_VERSION}/bin/run.sh" "$BBD_LINK"
+sudo ln -s "${BBD_INSTALL_DIR}/${BBD_VERSION}" "${BBD_VERSION_LINK}"
+
+sudo ln -s "${BBD_VERSION_LINK}/bin/run.sh" "$BBD_LINK"
+

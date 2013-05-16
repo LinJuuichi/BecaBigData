@@ -1,8 +1,7 @@
 #! /bin/bash
 
-#Move to app directory.
-BASEDIR="$(dirname "$(readlink -f "$0")")"
-cd "$BASEDIR"
+# Include
+. /opt/bbd/bbd/bin/variables.sh		# Variables.
 
 # usage function
 function usage()
@@ -10,8 +9,11 @@ function usage()
 	echo "To Do"
 }
 
-# Include|imports
-. variables.sh		# Variables.
+#Move to app directory.
+BASEDIR="${BBD_VERSION_LINK}/bin"
+cd "$BASEDIR"
+
+
 . uninstall.sh 	# Uninstall.
 . flume.sh	# Flume functions.
 . snconnector.sh 	# SNClient functions.
@@ -21,7 +23,7 @@ function usage()
 
 # Execute getopt
 SHORT_OPT="s:"
-LONG_OPT="step:,uninstall"
+LONG_OPT="step:,uninstall,upgrade"
 
 ARGS=`getopt -o $SHORT_OPT -l $LONG_OPT -n "getopt.sh" -- "$@"`
 # Bad arguments
@@ -47,6 +49,9 @@ do
 			shift 2;;
 		--uninstall)
 			uninstall
+			exit 1;;
+		--upgrade)
+			usage
 			exit 1;;
 		--)
 			shift

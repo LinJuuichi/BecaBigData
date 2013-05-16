@@ -67,8 +67,8 @@ public class Preprocessing extends Configured implements Tool
 	    job.setInputFormatClass(TextInputFormat.class);
 	    job.setOutputFormatClass(TextOutputFormat.class);
 
-	    FileInputFormat.setInputPaths(job, new Path("hdfs://localhost/user/cloudera/mapred"));
-	    FileOutputFormat.setOutputPath(job, new Path("hdfs://localhost/user/cloudera/mahout"));
+	    FileInputFormat.setInputPaths(job, new Path("hdfs://localhost/user/training/mapreduce"));
+	    FileOutputFormat.setOutputPath(job, new Path("hdfs://localhost/user/training/mahout"));
 
 	    job.setJarByClass(Preprocessing.class);
 
