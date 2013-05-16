@@ -1,6 +1,8 @@
 package com.everis.bbd.mapreduce;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -17,7 +19,8 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
-import com.everis.bbd.utilities.TextProcessDictionary;
+import com.everis.bbd.utilities.TextProcessor;
+import com.everis.bbd.utilities.dictionary.DictionaryFactory;
 
 /**
  *
@@ -35,13 +38,20 @@ public class Preprocessing extends Configured implements Tool
 		/**
 		 * 
 		 */
-		private static TextProcessDictionary _tpd;
+		private static TextProcessor _tp;
 	    
 		@Override
 	    protected void setup(Context context) throws IOException 
 	    {
-	    	_tpd = new TextProcessDictionary();
-	    	_tpd.readDictionariesFromPath("char.dictionary", "word.dictionary", "words.dictionary");
+	    	_tp = new TextProcessor();
+			Map<String, Integer> dictionaries = new HashMap<String, Integer>();
+			dictionaries.put("char.dictionary", DictionaryFactory.CHAR_DICTIONARY);
+			dictionaries.put("word.dictionary", DictionaryFactory.WORD_DICTIONARY);
+			dictionaries.put("words.dictionary", DictionaryFactory.WORD_LIST_DICTIONARY);
+			if (!_tp.readDictionaries(dictionaries, true))
+			{
+				//some error.
+			}
 	    }
 
 		@Override
@@ -49,7 +59,7 @@ public class Preprocessing extends Configured implements Tool
 	    {
 	        Text processed = new Text();
 	        String line = value.toString();
-	        processed.set(_tpd.preProcess(line));
+	        processed.set(_tp.preProcess(line));
 	        context.write(processed, NullWritable.get());
 	    }
 	}
