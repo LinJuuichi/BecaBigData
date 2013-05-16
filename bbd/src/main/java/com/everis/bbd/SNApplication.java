@@ -67,27 +67,32 @@ public class SNApplication
 			return;
 		}
 		File folder = new File(configuration.getConfigFilePath().substring(0,configuration.getConfigFilePath().lastIndexOf("/")) + "/" + queriesPropertiesDir);
-		String[] queriesPropertiesFiles = folder.list(null);
+		File[] queriesPropertiesFiles = folder.listFiles();
+		
 
 		// creating a connectorThread for each file read and starting it.
 		List<SNApplicationThread> connectors = new ArrayList<SNApplicationThread>();
-		for(String configFile: queriesPropertiesFiles)
+		for(File configFile: queriesPropertiesFiles)
 		{
-			SNApplicationThread connectorThread = new SNApplicationThread(_propertiesDir+"/"+queriesPropertiesDir+"/"+configFile);
-			boolean configured = false;
-			if (generalClient)
+			String configFileName = configFile.getName();
+			if (configFileName.endsWith(".properties"))
 			{
-				configured = connectorThread.configure(client);
-			}
-			else
-			{
-				configured = connectorThread.configure();
-			}
-			
-			if(configured)
-			{
-				connectors.add(connectorThread);
-				connectorThread.start();
+				SNApplicationThread connectorThread = new SNApplicationThread(_propertiesDir+"/"+queriesPropertiesDir+"/"+configFileName);
+				boolean configured = false;
+				if (generalClient)
+				{
+					configured = connectorThread.configure(client);
+				}
+				else
+				{
+					configured = connectorThread.configure();
+				}
+				
+				if(configured)
+				{
+					connectors.add(connectorThread);
+					connectorThread.start();
+				}
 			}
 		}
 	}
