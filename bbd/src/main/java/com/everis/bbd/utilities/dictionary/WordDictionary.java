@@ -36,7 +36,7 @@ public class WordDictionary extends Dictionary
 		text = text.toLowerCase();
 		for (String word: _dictionary.keySet())
 		{
-			text = text.replaceAll(" "+word+" ", " ");
+			text = replaceWord(text, word, "");
 		}
 		return text;
 	}

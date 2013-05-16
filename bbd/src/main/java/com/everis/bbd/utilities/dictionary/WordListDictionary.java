@@ -95,7 +95,7 @@ public class WordListDictionary extends Dictionary
 			String replaceWord = _dictionary.get(word);
 			if (replaceWord != null)
 			{
-				text = text.replace(" "+word, " "+replaceWord);
+				text = replaceWord(text, word, replaceWord);
 			}
 		}
 		return text;

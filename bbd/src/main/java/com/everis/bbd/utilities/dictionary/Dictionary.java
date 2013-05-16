@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
 import com.everis.bbd.utilities.ConfigurationReader;
@@ -96,12 +97,20 @@ public abstract class Dictionary
 	}
 	
 	/**
+	 * @param path path to the dictionary.
+	 */
+	public void setPath(String path)
+	{
+		_dictionaryPath = path;
+	}
+	
+	/**
 	 * Sets the path of the dictionary to the specified dictionary.
 	 * 
 	 * @param name of the dictionary file.
 	 * @return if path is correct.
 	 */
-	public boolean setPath(String name)
+	public boolean setDictionaryName(String name)
 	{
 		_dictionaryName = name;
 		return setPath();
@@ -125,7 +134,7 @@ public abstract class Dictionary
 		BufferedReader in;
 		try 
 		{
-			//A File must be opened in order to be able to access Distributed Cache.
+			// A File must be opened in order to be able to access Distributed Cache.
 			in = new BufferedReader(new InputStreamReader(new FileInputStream(new File(_dictionaryPath))));
 			String line;
 			while((line = in.readLine()) != null)
@@ -153,6 +162,34 @@ public abstract class Dictionary
 	public Map<String, String> getDictionary()
 	{
 		return _dictionary;
+	}
+	
+	/**
+	 * Replaces word in text with replaceWord.
+	 * 
+	 * @param text to process.
+	 * @param word to replace.
+	 * @param replaceWord to replace with.
+	 * @return the resulting text.
+	 */
+	protected String replaceWord(String text, String word, String replaceWord)
+	{
+		String result = "";
+	    String delimiters = "+-*/(),. ";
+	    StringTokenizer st = new StringTokenizer(text, delimiters, true);
+	    while (st.hasMoreTokens()) 
+	    {
+	        String w = st.nextToken();
+	        if (w.equals(word))
+	        {
+	            result = result + replaceWord;
+	        } 
+	        else 
+	        {
+	            result = result + w;
+	        }
+	    }
+	    return result;
 	}
 	
 	/**

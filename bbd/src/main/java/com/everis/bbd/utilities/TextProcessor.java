@@ -36,13 +36,18 @@ public class TextProcessor
 	 * Read all the dictionaries specified.
 	 * 
 	 * @param dictionaries map where the key is the dictionary name and value is the dictionary type.
+	 * @param nameIsPath if the dictionaries names are the path to the dictionaries themselves.
 	 * @return if all dictionaries have been read.
 	 */
-	public boolean readDictionaries(Map<String,Integer> dictionaries)
+	public boolean readDictionaries(Map<String,Integer> dictionaries, boolean nameIsPath)
 	{
 		for (Entry<String, Integer> dictionary: dictionaries.entrySet())
 		{
 			Dictionary newDictionary = DictionaryFactory.getDictionary(dictionary.getKey(),dictionary.getValue());
+			if (nameIsPath)
+			{
+				newDictionary.setPath(dictionary.getKey());
+			}
 			if (newDictionary.readDictionary())
 			{
 				_dictionaries.add(newDictionary);
@@ -54,6 +59,18 @@ public class TextProcessor
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 * Read all the dictionaries specified.
+	 * The names specified are not the paths.
+	 * 
+	 * @param dictionaries map where the key is the dictionary name and value is the dictionary type.
+	 * @return if all dictionaries have been read.
+	 */
+	public boolean readDictionaries(Map<String,Integer> dictionaries)
+	{
+		return readDictionaries(dictionaries, false);
 	}
 	
 	/**
