@@ -32,5 +32,9 @@
 			</includes>
 			<outputDirectory>lib</outputDirectory>
 		</fileSet>
+		<fileSet>
+			<directory>doc</directory>
+			<outputDirectory>doc</outputDirectory>
+		</fileSet>
 	</fileSets>
 </assembly>
