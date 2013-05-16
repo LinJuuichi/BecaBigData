@@ -1,6 +1,10 @@
 package com.everis.bbd.examples.utilities;
 
-import com.everis.bbd.utilities.TextProcessDictionary;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.everis.bbd.utilities.TextProcessor;
+import com.everis.bbd.utilities.dictionary.DictionaryFactory;
 
 /**
  * Simple use case for dictionary. Given a short text and the dictionaries, it processes the text.
@@ -16,15 +20,19 @@ public class SimpleDictionaryUseCase
 	/**
 	 * Dictionary.
 	 */
-	private static TextProcessDictionary _dictionary;
+	private static TextProcessor _dictionary;
 	
 	/**
 	 * @param args arguments.
 	 */
 	public static void main(String[] args) 
 	{
-		_dictionary = new TextProcessDictionary();
-		if (!_dictionary.readDictionaries())
+		_dictionary = new TextProcessor();
+		Map<String, Integer> dictionaries = new HashMap<String, Integer>();
+		dictionaries.put("char", DictionaryFactory.CHAR_DICTIONARY);
+		dictionaries.put("word", DictionaryFactory.WORD_DICTIONARY);
+		dictionaries.put("list", DictionaryFactory.WORD_LIST_DICTIONARY);
+		if (!_dictionary.readDictionaries(dictionaries))
 		{
 			return;
 		}
