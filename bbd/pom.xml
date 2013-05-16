@@ -76,7 +76,7 @@
 		              <overWrite>true</overWrite>
 		              <overWriteReleases>true</overWriteReleases>
 		              <overWriteSnapshots>true</overWriteSnapshots>
-		              <includeArtifactIds>twitter4j-stream,linkedin-j-core,twitter4j-core,slf4j-api</includeArtifactIds> 
+		              <includeArtifactIds>twitter4j-stream,linkedin-j-core,twitter4j-core,guava</includeArtifactIds> 
 		            </configuration>
 		          </execution>
 		        </executions>
