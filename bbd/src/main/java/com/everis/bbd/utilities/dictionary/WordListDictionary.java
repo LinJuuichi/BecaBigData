@@ -69,7 +69,7 @@ public class WordListDictionary extends Dictionary
 				String[] valuesArray = var[1].split(String.valueOf(WordListDictionary.LIST_SEPARATOR_TOKEN));
 				for (String v: valuesArray)
 				{
-					_dictionary.put(v, var[0]);
+					_dictionary.put(v.toLowerCase(), var[0]);
 				}
 			}
 			in.close();
@@ -90,6 +90,7 @@ public class WordListDictionary extends Dictionary
 	@Override
 	public String processText(String text) 
 	{
+		text = text.toLowerCase();
 		for (String word: text.split(" "))
 		{
 			String replaceWord = _dictionary.get(word);

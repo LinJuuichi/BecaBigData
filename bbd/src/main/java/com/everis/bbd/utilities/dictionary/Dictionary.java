@@ -180,7 +180,7 @@ public abstract class Dictionary
 	    while (st.hasMoreTokens()) 
 	    {
 	        String w = st.nextToken();
-	        if (w.equals(word))
+	        if (w.equalsIgnoreCase(word))
 	        {
 	            result = result + replaceWord;
 	        } 
