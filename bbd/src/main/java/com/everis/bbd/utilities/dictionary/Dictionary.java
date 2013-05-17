@@ -26,6 +26,11 @@ public abstract class Dictionary
 	protected static Logger log = Logger.getLogger(Dictionary.class.getName());
 	
 	/**
+	 * Token delimiters.
+	 */
+	protected static String TOKEN_DELIMITERS = "+-*/(),. ";
+	
+	/**
 	 * Path to the config directory from target directory.
 	 */
 	public static String CONFIG_PATH = "/../config/dictionaries/";
@@ -139,7 +144,10 @@ public abstract class Dictionary
 			String line;
 			while((line = in.readLine()) != null)
 			{
-				_dictionary.put(line, "");
+				if (line.length() > 0 && !line.startsWith("#"))
+				{
+					_dictionary.put(line, "");
+				}
 			}
 			in.close();
 		} 
@@ -175,8 +183,7 @@ public abstract class Dictionary
 	protected String replaceWord(String text, String word, String replaceWord)
 	{
 		String result = "";
-	    String delimiters = "+-*/(),. ";
-	    StringTokenizer st = new StringTokenizer(text, delimiters, true);
+	    StringTokenizer st = new StringTokenizer(text, TOKEN_DELIMITERS, true);
 	    while (st.hasMoreTokens()) 
 	    {
 	        String w = st.nextToken();

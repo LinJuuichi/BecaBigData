@@ -65,11 +65,14 @@ public class WordListDictionary extends Dictionary
 			String line;
 			while((line = in.readLine()) != null)
 			{
-				String[] var = line.split(String.valueOf(WordListDictionary.KEYLIST_ASSIGN_TOKEN));
-				String[] valuesArray = var[1].split(String.valueOf(WordListDictionary.LIST_SEPARATOR_TOKEN));
-				for (String v: valuesArray)
+				if (line.length() > 0 && !line.startsWith("#"))
 				{
-					_dictionary.put(v.toLowerCase(), var[0]);
+					String[] var = line.split(String.valueOf(WordListDictionary.KEYLIST_ASSIGN_TOKEN));
+					String[] valuesArray = var[1].split(String.valueOf(WordListDictionary.LIST_SEPARATOR_TOKEN));
+					for (String v: valuesArray)
+					{
+						_dictionary.put(v.toLowerCase(), var[0]);
+					}
 				}
 			}
 			in.close();

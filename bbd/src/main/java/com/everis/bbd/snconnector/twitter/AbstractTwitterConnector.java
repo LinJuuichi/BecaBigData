@@ -79,6 +79,8 @@ public abstract class AbstractTwitterConnector extends SNConnector
 		Timestamp date = new Timestamp(status.getCreatedAt().getTime());
 		tweet.setTimestamp(SNObjectKeys.POST_DATE_KEY.getId(), date);
 		tweet.setString(SNObjectKeys.POST_QUERY_KEY.getId(), search);
+		tweet.setString(SNObjectKeys.POST_LANGUAGE_KEY.getId(), status.getUser().getLang());
+		
 		
 		GeoLocation geo = status.getGeoLocation();
 		if (geo != null)

@@ -15,7 +15,7 @@ public class SNObjectComment extends SNObject
 	
 	/**
 	 * Column order:
-	 * comment_id, text, userid, username, latitude, longitude, date, source, query
+	 * comment_id, text, userid, username, latitude, longitude, date, source, lang, query
 	 * COMMENT_ID	TEXT	
 	 */
 	@Override
@@ -95,7 +95,14 @@ public class SNObjectComment extends SNObject
 		
 		if (this.hasValue(SNObjectKeys.POST_SOURCE_KEY.getId()))
 		{
-			value = value.concat(this.getString(SNObjectKeys.POST_SOURCE_KEY.getId()));
+			String source = this.getString(SNObjectKeys.POST_SOURCE_KEY.getId());
+			int first = source.indexOf(">")+1;
+			int last = source.lastIndexOf("<");
+			if (first > 0 && last > 0)
+			{
+				source = source.substring(first,last);
+			}
+			value = value.concat(source);
 		}
 		else
 		{

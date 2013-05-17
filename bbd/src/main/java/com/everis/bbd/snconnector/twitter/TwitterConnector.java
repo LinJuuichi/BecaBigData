@@ -96,6 +96,7 @@ public class TwitterConnector extends AbstractTwitterConnector
 		{
 			_twitterQuery.setUntil(_configuration.getValue(SNConnectorKeys.CONF_UNTIL_KEY.getId(), ""));
 		}
+		
 		return true;
 	}
 

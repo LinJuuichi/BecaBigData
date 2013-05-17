@@ -46,6 +46,11 @@ public enum SNObjectKeys
 	POST_SOURCE_KEY("source"),
 	
 	/**
+	 * Language key.
+	 */
+	POST_LANGUAGE_KEY("language"),
+	
+	/**
 	 * Search key.
 	 */
 	POST_QUERY_KEY("query");
