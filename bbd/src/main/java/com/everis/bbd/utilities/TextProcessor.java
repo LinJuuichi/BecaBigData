@@ -77,10 +77,15 @@ public class TextProcessor
 	 * Process the line.
 	 * 
 	 * @param line to process.
+	 * @param alphanum if true removes all characters non alphanumeric.
 	 * @return processed text.
 	 */
-	public String preProcess(String line)
+	public String preProcess(String line, boolean alphanum)
 	{
+		if (alphanum)
+		{
+			line = line.replaceAll("[^a-zA-Z0-9\\ ]", "");
+		}
 		for (Dictionary dictionary: _dictionaries)
 		{
 			line = dictionary.processText(line);

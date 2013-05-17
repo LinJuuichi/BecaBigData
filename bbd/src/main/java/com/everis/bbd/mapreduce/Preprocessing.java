@@ -45,7 +45,7 @@ public class Preprocessing extends Configured implements Tool
 	    {
 	    	_tp = new TextProcessor();
 			Map<String, Integer> dictionaries = new HashMap<String, Integer>();
-			dictionaries.put("char.dictionary", DictionaryFactory.CHAR_DICTIONARY);
+			//dictionaries.put("char.dictionary", DictionaryFactory.CHAR_DICTIONARY);
 			dictionaries.put("word.dictionary", DictionaryFactory.WORD_DICTIONARY);
 			dictionaries.put("words.dictionary", DictionaryFactory.WORD_LIST_DICTIONARY);
 			if (!_tp.readDictionaries(dictionaries, true))
@@ -59,7 +59,7 @@ public class Preprocessing extends Configured implements Tool
 	    {
 	        Text processed = new Text();
 	        String line = value.toString();
-	        processed.set(_tp.preProcess(line));
+	        processed.set(_tp.preProcess(line,true));
 	        context.write(processed, NullWritable.get());
 	    }
 	}

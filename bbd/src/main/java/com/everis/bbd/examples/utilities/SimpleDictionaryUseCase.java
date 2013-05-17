@@ -29,7 +29,6 @@ public class SimpleDictionaryUseCase
 	{
 		_dictionary = new TextProcessor();
 		Map<String, Integer> dictionaries = new HashMap<String, Integer>();
-		dictionaries.put("char", DictionaryFactory.CHAR_DICTIONARY);
 		dictionaries.put("word", DictionaryFactory.WORD_DICTIONARY);
 		dictionaries.put("list", DictionaryFactory.WORD_LIST_DICTIONARY);
 		if (!_dictionary.readDictionaries(dictionaries))
@@ -40,7 +39,7 @@ public class SimpleDictionaryUseCase
 		System.out.println("Original text:");
 		System.out.println(_text);
 		
-		_text = _dictionary.preProcess(_text);
+		_text = _dictionary.preProcess(_text,true);
 		
 		System.out.println("Resulting text:");
 		System.out.println(_text.replaceAll("week", ""));

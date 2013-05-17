@@ -36,7 +36,7 @@ public class CharDictionary extends Dictionary
 		text = text.toLowerCase();
 		for (String character: _dictionary.keySet())
 		{
-			text = text.replaceAll("\\"+character, " ");
+			text = text.replaceAll("\\"+character.charAt(0), " ");
 		}
 		return text;
 	}
