@@ -3,19 +3,20 @@ package com.everis.bbd.utilities.dictionary;
 import java.util.logging.Logger;
 
 /**
- * Word dictionary.
+ * Removes all the text if has one of the words in the dictionary.
  */
-public class WordDictionary extends Dictionary 
+public class BlackListDictionary extends Dictionary 
 {
+
 	/**
 	 * Logger.
 	 */
-	protected static Logger log = Logger.getLogger(WordDictionary.class.getName());
+	protected static Logger log = Logger.getLogger(BlackListDictionary.class.getName());
 	
 	/**
 	 * Constructor.
 	 */
-	public WordDictionary() 
+	public BlackListDictionary() 
 	{
 		super();
 	}
@@ -25,7 +26,7 @@ public class WordDictionary extends Dictionary
 	 * 
 	 * @param name name of the dictionary.
 	 */
-	public WordDictionary(String name)
+	public BlackListDictionary(String name)
 	{
 		super(name);
 	}
@@ -35,8 +36,12 @@ public class WordDictionary extends Dictionary
 	{
 		for (String word: _dictionary.keySet())
 		{
-			text = replaceWord(text, word, "");
+			if (text.contains(word))
+			{
+				return "";
+			}
 		}
 		return text;
 	}
+
 }

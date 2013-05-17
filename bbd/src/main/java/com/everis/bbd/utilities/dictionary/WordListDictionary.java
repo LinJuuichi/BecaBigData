@@ -93,7 +93,6 @@ public class WordListDictionary extends Dictionary
 	@Override
 	public String processText(String text) 
 	{
-		text = text.toLowerCase();
 		for (String word: text.split(" "))
 		{
 			String replaceWord = _dictionary.get(word);

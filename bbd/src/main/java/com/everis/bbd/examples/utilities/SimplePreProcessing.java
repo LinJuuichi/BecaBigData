@@ -90,6 +90,7 @@ public class SimplePreProcessing
 		Map<String, Integer> dictionaries = new HashMap<String, Integer>();
 		dictionaries.put("word", DictionaryFactory.WORD_DICTIONARY);
 		dictionaries.put("words", DictionaryFactory.WORD_LIST_DICTIONARY);
+		dictionaries.put("blacklist", DictionaryFactory.BLACK_LIST_DICTIONARY);
 		if (!processor.readDictionaries(dictionaries))
 		{
 			System.out.println("Could not read dictionaries.");

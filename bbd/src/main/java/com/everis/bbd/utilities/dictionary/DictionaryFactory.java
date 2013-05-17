@@ -27,6 +27,11 @@ public class DictionaryFactory
 	 */
 	public static final int WORD_LIST_DICTIONARY = 3;
 	
+	/**
+	 * Identifier for BlackListDictionary.
+	 */
+	public static final int BLACK_LIST_DICTIONARY = 4;
+	
 
 	/**
 	 * DictionaryFactory can't be instantiated.
@@ -53,6 +58,9 @@ public class DictionaryFactory
 			break;
 		case WORD_LIST_DICTIONARY:
 			dictionary = new WordListDictionary(dictionaryName);
+			break;
+		case BLACK_LIST_DICTIONARY:
+			dictionary = new BlackListDictionary(dictionaryName);
 			break;
 		default:
 			log.warning("Dictionary type does not exist");

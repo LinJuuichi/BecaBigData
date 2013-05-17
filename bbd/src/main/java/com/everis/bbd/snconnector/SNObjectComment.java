@@ -15,7 +15,7 @@ public class SNObjectComment extends SNObject
 	
 	/**
 	 * Column order:
-	 * comment_id, text, userid, username, latitude, longitude, date, source, lang, query
+	 * comment_id, text, userid, username, latitude, longitude, date, source, query
 	 * COMMENT_ID	TEXT	
 	 */
 	@Override

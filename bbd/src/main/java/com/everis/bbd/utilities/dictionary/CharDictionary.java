@@ -33,7 +33,6 @@ public class CharDictionary extends Dictionary
 	@Override
 	public String processText(String text) 
 	{
-		text = text.toLowerCase();
 		for (String character: _dictionary.keySet())
 		{
 			text = text.replaceAll("\\"+character.charAt(0), " ");
