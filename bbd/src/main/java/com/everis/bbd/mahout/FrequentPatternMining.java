@@ -2,6 +2,7 @@ package com.everis.bbd.mahout;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -17,7 +18,9 @@ import org.apache.mahout.common.Parameters;
 import org.apache.mahout.fpm.pfpgrowth.PFPGrowth;
 import org.apache.mahout.fpm.pfpgrowth.convertors.string.TopKStringPatterns;
 
-import com.everis.bbd.hbase.HBaseWrapper;
+import com.everis.bbd.mahout.outputwrappers.OutputWrapper;
+import com.everis.bbd.mahout.outputwrappers.OutputWrapperException;
+import com.everis.bbd.mahout.outputwrappers.OutputWrapperFactory;
 import com.everis.bbd.utilities.ConfigurationReader;
 
 /**
@@ -89,6 +92,11 @@ public class FrequentPatternMining
 	 */
 	private List<Pair<String,TopKStringPatterns>> _results;
 	
+	/**
+	 * 
+	 */
+	private List<OutputWrapper> _outputWrappers = new ArrayList<OutputWrapper> ();
+	
     /**
      * Execute all the process of frequent pattern mining.
      * @param args Not used.
@@ -130,6 +138,14 @@ public class FrequentPatternMining
          _minSupport = cr.getValue("minSupport", _minSupport);
          _maxHeapSize = cr.getValue("maxPatternSupport", _maxHeapSize);
          _key = cr.getValue("key", _key);
+         for(String outputWrapperName : cr.getValues("outputWrappers"))
+         {
+        	 try {
+				_outputWrappers.add(OutputWrapperFactory.getOutputWrapper(outputWrapperName));
+			} catch (OutputWrapperException e) {
+				log.info(e.getMessage());
+			}
+         }
     }    
     
     /**
@@ -190,39 +206,53 @@ public class FrequentPatternMining
     } 
     
     /**
-     * Write the obtained results in HBase.
+     * Write the obtained results in the selected wrappers.
      * @throws IOException 
      */
     private void writeResults() throws IOException {
     
     	log.info("Total keys obtained: " + _results.size());
-    	log.info(_results.toString());
     	
-    	HBaseWrapper hbw = new HBaseWrapper();
-    	hbw.selectTable("tweets");
-    	
-    	for(Pair<String,TopKStringPatterns> p : _results)
+    	for(OutputWrapper ow : _outputWrappers)
     	{
-    		String key = p.getFirst();
-    		List<Pair<List<String>, Long>> patterns = p.getSecond().getPatterns();
-    		
-    		for(Pair<List<String>, Long> pattern : patterns) 
-    		{
-    			String qualifier = key;
-    			Long value = pattern.getSecond();
-    			
-    			List<String> features = pattern.getFirst();
-    			for(String feature : features)
-    			{
-    				qualifier = qualifier + "." + feature;
-    			}
-    			
-        		hbw.insertValue(_key, "patterns", qualifier, value.toString());
-    		}
+    		try {
+				ow.before();
+				
+	        	for(Pair<String,TopKStringPatterns> p : _results)
+	        	{
+	        		String key = p.getFirst();
+	        		List<Pair<List<String>, Long>> patterns = p.getSecond().getPatterns();
+	        		
+	        		for(Pair<List<String>, Long> pattern : patterns) 
+	        		{
+	        			String qualifier = null;
+	        			Long repetitions = pattern.getSecond();
+	        			
+	        			List<String> features = pattern.getFirst();
+	        			for(String feature : features)
+	        			{
+	        				if(qualifier == null) qualifier = feature;
+	        				else qualifier = qualifier + "." + feature;
+	        			}
+	        			
+	        			log.info("Trying to save the pattern: " + qualifier + " , into " + ow.getName());
+	            		try 
+	            		{
+							ow.saveFPMresult(_key, key, qualifier, repetitions);
+						} catch (OutputWrapperException e) {
+							log.warning(e.getMessage());
+						}
+	        			
+	        		}
+	        	}
+	        	
+	        	ow.after();
+	        	
+			} catch (OutputWrapperException owe) {
+				log.severe(owe.getMessage());
+			}
+
     	}
-    	
-    	hbw.flushInserts();
-    	hbw.closeTable();
     }
     
 }
