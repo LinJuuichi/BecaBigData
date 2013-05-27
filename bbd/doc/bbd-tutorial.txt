@@ -1,0 +1,27 @@
+##################################################
+I - FLUME AGENT AND SOCIAL NETWORK CONNECTORS
+##################################################
+1) FLUME AGENT
+##################################################
+To run a flume agent on a node you must execute:
+	bbd -s flume 
+This agent will be configured with the default configuration file located under
+/config/flume folder or the one you configure with the option -c {path_to_configuration_file}.
+	bbd -s flume -c path_to_configuration_file
+	
+##################################################
+I - FLUME AGENT AND SOCIAL NETWORK CONNECTORS
+##################################################
+2) SOCIAL NETWORK CONNECTORS
+##################################################	
+To start downloading data from social networks you must execute:
+	bbd -s snconnector
+This will download data from social networks and the configurations specified under 
+/config/snconnector
+
+##################################################
+II - WORKFLOW SOCIAL NETWORK PATTERN ANALYSIS
+##################################################
+1) HIVE LOAD DATA AND SELECTION
+##################################################
+QUITAR OVERWRITE

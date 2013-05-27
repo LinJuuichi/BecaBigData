@@ -22,8 +22,8 @@ cd "$BASEDIR"
 . mahout.sh
 
 # Execute getopt
-SHORT_OPT="s:"
-LONG_OPT="step:,uninstall,upgrade"
+SHORT_OPT="s:c:"
+LONG_OPT="step:,uninstall,upgrade,configuration:"
 
 ARGS=`getopt -o $SHORT_OPT -l $LONG_OPT -n "getopt.sh" -- "$@"`
 # Bad arguments
@@ -46,6 +46,9 @@ do
 			shift 2;;
 		-s|--step)
 			STEP=$2
+			shift 2;;
+		-c|--configuration)
+			CONFIGURATION="$2"
 			shift 2;;
 		--uninstall)
 			uninstall
@@ -71,7 +74,7 @@ fi
 # STEP execution
 case  "$STEP" in
 "flume")
-	flume_start
+	flume_start "$CONFIGURATION"
 	;;
 "snconnector")
 	snconnector_start

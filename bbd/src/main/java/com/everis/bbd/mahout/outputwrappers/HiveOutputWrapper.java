@@ -34,7 +34,10 @@ class HiveOutputWrapper extends OutputWrapper {
 	@Override
 	public void before() throws OutputWrapperException {
         try {
-			FileSystem fs = FileSystem.get(new Configuration());
+        	Configuration conf = new Configuration();
+        	conf.addResource(new Path("/usr/lib/hadoop/conf/core-site.xml"));
+            conf.addResource(new Path("/usr/lib/hadoop/conf/hdfs-site.xml"));
+			FileSystem fs = FileSystem.get(conf);
 			/*if (fs.exists(pt))
 			{
 				//remove the file
