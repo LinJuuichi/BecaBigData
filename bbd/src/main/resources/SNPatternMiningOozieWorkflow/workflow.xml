@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workflow-app name="snpm-wf" xmlns="uri:oozie:workflow:0.1">
+
+  <start to="selectTextTweets-hn"/>
+  
+  <action name="selectTextTweets-hn">
+    <hive xmlns="uri:oozie:hive-action:0.2">
+       <job-tracker>${jobTracker}</job-tracker>
+        <name-node>${nameNode}</name-node>
+        <prepare>
+            <delete path="${outputDir}"/>
+        </prepare>
+        <configuration>
+            <property>
+                <name>mapred.job.queue.name</name>
+                <value>default</value>
+            </property>
+            <property>
+                <name>oozie.hive.defaults</name>
+                <value>${hiveConfDir}</value>
+            </property>
+        </configuration>
+        <script>selectText.q</script>
+        <param>INPUT=${input}</param>
+        <param>OUTPUT=${output}</param>
+        <param>TABLEPATH=${tablePath}</param>
+    </hive>
+    <ok to="end"/>
+    <error to="fail"/>
+  </action>
+  
+  <action name="preprocessing-jn">
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>{nameNode}</name-node>
+            <prepare>
+                <delete path="${outputDirMh}"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapred.queue.name</name>
+                    <value>default</value>
+                </property>
+            </configuration>
+            <main-class>com.everis.bbd.mapreduce.Preprocessing</main-class>
+        </java>
+        <ok to="mahout-jn"/>
+        <error to="fail"/>
+  </action>
+  
+  <action name="mahout-jn">
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>mapred.queue.name</name>
+                    <value>default</value>
+                </property>
+            </configuration>
+            <main-class>com.everis.bbd.mahout.FrequentPatternMining</main-class>
+        </java>
+        <ok to="end"/>
+        <error to="fail"/>
+  </action>
+  
+  <kill name="fail">
+        <message>Some error :( [${wf:errorMessage(wf:lastErrorNode())}]</message>
+  </kill>
+  
+  <end name="end">
+          <message>All seems Ok :)</message>
+  </end>
+  
+</workflow-app>
