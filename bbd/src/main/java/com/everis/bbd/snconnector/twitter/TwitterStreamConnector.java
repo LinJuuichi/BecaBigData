@@ -99,6 +99,8 @@ public class TwitterStreamConnector extends AbstractTwitterConnector
 			clearResults();
 		}
 		
+		log.warning("oñljghasfouhatgñifhjsñlghsighñsough´pidhgñdhujg-ldhfkio-gñdhig-kldhjñogdfgkndfljghy´dfghd-fklgh´ñdhfyg´pdfgldfjhgñodyhfgihdfj-lghyoñdyhfgoñudhfgñoud");
+		
 		StatusListener listener = new StatusListener() 
 		{
 			public void onStatus(Status status) 

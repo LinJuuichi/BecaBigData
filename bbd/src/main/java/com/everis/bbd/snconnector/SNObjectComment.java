@@ -21,7 +21,7 @@ public class SNObjectComment extends SNObject
 	@Override
 	public String toString() 
 	{
-		log.info("To string called.");
+		//log.info("To string called.");
 		String value = "";
 		if (this.hasValue(SNObjectKeys.POST_ID_KEY.getId()))
 		{
@@ -35,7 +35,12 @@ public class SNObjectComment extends SNObject
 		
 		if (this.hasValue(SNObjectKeys.POST_TEXT_KEY.getId()))
 		{
-			value = value.concat(this.getString(SNObjectKeys.POST_TEXT_KEY.getId()));
+			String comment = this.getString(SNObjectKeys.POST_TEXT_KEY.getId());
+			//comment = comment.replaceAll("[^\\w\\s]","");
+			//comment = comment.replaceAll("[\\-\\+\\.\\^:,]","");
+			//comment = comment.replaceAll("[^\\p{L}\\p{Nd}]", "");
+			comment = comment.replaceAll("(\\r|\\n)", "");
+			value = value.concat(comment);
 		}
 		else
 		{

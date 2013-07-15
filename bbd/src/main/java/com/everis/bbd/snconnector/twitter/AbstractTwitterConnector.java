@@ -8,6 +8,7 @@ import com.everis.bbd.snconnector.SNObjectComment;
 import com.everis.bbd.snconnector.SNObjectKeys;
 import twitter4j.GeoLocation;
 import twitter4j.Status;
+import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
 
 /**
@@ -73,13 +74,26 @@ public abstract class AbstractTwitterConnector extends SNConnector
 	{
 		SNObject tweet = new SNObjectComment();
 		tweet.setLong(SNObjectKeys.POST_ID_KEY.getId(), status.getId());
-		tweet.setLong(SNObjectKeys.POST_USERID_KEY.getId(), status.getUser().getId());
-		tweet.setString(SNObjectKeys.POST_USER_KEY.getId(), status.getUser().getName());
-		tweet.setString(SNObjectKeys.POST_SOURCE_KEY.getId(), status.getSource());
+		User user = status.getUser();
+		if (user != null)
+		{
+			tweet.setLong(SNObjectKeys.POST_USERID_KEY.getId(), user.getId());
+			tweet.setString(SNObjectKeys.POST_USER_KEY.getId(), user.getName());
+			tweet.setString(SNObjectKeys.POST_LANGUAGE_KEY.getId(), user.getLang());
+		}
+		else
+		{
+			tweet.setLong(SNObjectKeys.POST_USERID_KEY.getId(), -1);
+			tweet.setString(SNObjectKeys.POST_USER_KEY.getId(), "NULL");
+			tweet.setString(SNObjectKeys.POST_LANGUAGE_KEY.getId(), "NULL");
+		}
+		
 		Timestamp date = new Timestamp(status.getCreatedAt().getTime());
 		tweet.setTimestamp(SNObjectKeys.POST_DATE_KEY.getId(), date);
+		
 		tweet.setString(SNObjectKeys.POST_QUERY_KEY.getId(), search);
-		tweet.setString(SNObjectKeys.POST_LANGUAGE_KEY.getId(), status.getUser().getLang());
+		
+		tweet.setString(SNObjectKeys.POST_SOURCE_KEY.getId(), status.getSource());
 		
 		
 		GeoLocation geo = status.getGeoLocation();
@@ -88,7 +102,10 @@ public abstract class AbstractTwitterConnector extends SNConnector
 			tweet.setDouble(SNObjectKeys.POST_LATITUDE_KEY.getId(), geo.getLatitude());
 			tweet.setDouble(SNObjectKeys.POST_LONGITUDE_KEY.getId(), geo.getLongitude());
 		}
+		
+		// @TODO: remove all spacial characters
 		tweet.setString(SNObjectKeys.POST_TEXT_KEY.getId(), status.getText().replaceAll("\t", "").replaceAll("\n", ""));
+		
 		return tweet;
 	}
 }

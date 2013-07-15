@@ -24,6 +24,11 @@ public class RpcClientFacade
 	private static Logger log = Logger.getLogger(RpcClientFacade.class.getName());
 	
 	/**
+	 * Number of messages sent.
+	 */
+	protected static int _sentItems = 0;
+	
+	/**
 	 * Key for the header value of the timestamp.
 	 */
 	private static String TIMESTAMP_HEADER = "timestamp";
@@ -46,7 +51,7 @@ public class RpcClientFacade
 	/**
 	 * Output directory where flume agent will store the events.
 	 */
-	private String _outputDirectory;
+	protected String _outputDirectory;
 	
 	
 	/**
@@ -109,6 +114,17 @@ public class RpcClientFacade
 		}
 		return true;
 	}
+	
+	/**
+	 * Increments sent items and writes a log with the message sent.
+	 * 
+	 * @param toSend message to send.
+	 */
+	protected void logSentItem(String toSend)
+	{
+		_sentItems++;
+		log.info("Send number "+_sentItems+": "+toSend);
+	}
 
 	/**
 	 * Connects the client to hostname and port.
@@ -141,8 +157,7 @@ public class RpcClientFacade
 		{
 			try
 			{
-				log.info("Sending event "+event.toString()+".");
-
+				logSentItem(event.toString());
 				_client.append(event);
 			}
 			catch (EventDeliveryException e) 
@@ -150,6 +165,10 @@ public class RpcClientFacade
 				log.warning("Couldn't send event. Reconnecting client...");
 				_client.close();
 				_client = RpcClientFactory.getDefaultInstance(_hostname, _port);
+			}
+			catch (Exception e)
+			{
+				log.warning("Something went wrong.");
 			}
 		}
 	}
@@ -192,6 +211,7 @@ public class RpcClientFacade
 		log.warning("Closing  with"+_hostname+":"+_port+".");
 		_client.close();
 		_client = null;
+		_sentItems = 0;
 	}
 
 	/**

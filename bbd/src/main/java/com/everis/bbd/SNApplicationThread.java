@@ -128,6 +128,7 @@ public class SNApplicationThread extends Thread
 		}
 		
 		int connectorType = SNConnectorFactory.getConnectorId(_configuration.getValue(SNConnectorKeys.CONF_APPLICATION_KEY.getId(), ""));
+
 		_connector = SNConnectorFactory.getConnector(connectorType);
 		
 		if (!_connector.configure(_configuration))
@@ -259,7 +260,7 @@ public class SNApplicationThread extends Thread
 			results.addAll(_connector.getAndClearResults());
 			for (SNObject event: results)
 			{
-				log.info("Sending event");
+				//log.info("Sending event");
 				_client.sendData(event);
 			}
 			// If there are more results (pages), then executes the query.
@@ -296,5 +297,6 @@ public class SNApplicationThread extends Thread
 		{
 			log.warning("Connector type does not exists");
 		}
+		_client.cleanUp();
 	}
 }
