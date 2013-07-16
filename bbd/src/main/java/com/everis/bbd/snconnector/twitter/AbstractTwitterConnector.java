@@ -74,6 +74,7 @@ public abstract class AbstractTwitterConnector extends SNConnector
 	{
 		SNObject tweet = new SNObjectComment();
 		tweet.setLong(SNObjectKeys.POST_ID_KEY.getId(), status.getId());
+		
 		User user = status.getUser();
 		if (user != null)
 		{
@@ -93,8 +94,8 @@ public abstract class AbstractTwitterConnector extends SNConnector
 		
 		tweet.setString(SNObjectKeys.POST_QUERY_KEY.getId(), search);
 		
+
 		tweet.setString(SNObjectKeys.POST_SOURCE_KEY.getId(), status.getSource());
-		
 		
 		GeoLocation geo = status.getGeoLocation();
 		if (geo != null)
