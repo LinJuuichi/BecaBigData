@@ -21,7 +21,7 @@ public class SNObjectComment extends SNObject
 	@Override
 	public String toString() 
 	{
-		log.info("To string called.");
+		//log.info("To string called.");
 		String value = "";
 		if (this.hasValue(SNObjectKeys.POST_ID_KEY.getId()))
 		{

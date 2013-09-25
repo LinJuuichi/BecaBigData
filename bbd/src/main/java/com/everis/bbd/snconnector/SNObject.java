@@ -180,7 +180,7 @@ public class SNObject
 	 */
 	public String toString()
 	{
-		log.info("To string called.");
+		//log.info("To string called.");
 		return null;
 	}
 }
