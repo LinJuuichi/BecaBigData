@@ -91,6 +91,7 @@ public abstract class AbstractTwitterConnector extends SNConnector
 		
 		Timestamp date = new Timestamp(status.getCreatedAt().getTime());
 		tweet.setTimestamp(SNObjectKeys.POST_DATE_KEY.getId(), date);
+		
 		tweet.setString(SNObjectKeys.POST_QUERY_KEY.getId(), search);
 		
 
@@ -102,7 +103,10 @@ public abstract class AbstractTwitterConnector extends SNConnector
 			tweet.setDouble(SNObjectKeys.POST_LATITUDE_KEY.getId(), geo.getLatitude());
 			tweet.setDouble(SNObjectKeys.POST_LONGITUDE_KEY.getId(), geo.getLongitude());
 		}
+		
+		// @TODO: remove all spacial characters
 		tweet.setString(SNObjectKeys.POST_TEXT_KEY.getId(), status.getText().replaceAll("\t", "").replaceAll("\n", ""));
+		
 		return tweet;
 	}
 }

@@ -61,6 +61,8 @@ public class TwitterConnector extends AbstractTwitterConnector
 	{
 		_twitterQuery = new Query();
 		
+		_twitterQuery.setLang("en");
+		
 		if (_configuration.exists(SNConnectorKeys.CONF_QUERY_KEY.getId()) > 0)
 		{
 			_search = _configuration.getValue(SNConnectorKeys.CONF_QUERY_KEY.getId(), "");

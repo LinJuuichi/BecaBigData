@@ -12,16 +12,11 @@ import com.everis.bbd.snconnector.SNObject;
  * Writes to a file the events instead of sending them through a client. 
  */
 public class RpcClientFacadeWrapper extends RpcClientFacade 
-{
+{	
 	/**
 	 * Logger.
 	 */
 	private static Logger log = Logger.getLogger(RpcClientFacadeWrapper.class.getName());
-
-	/**
-	 * Default path to the file.
-	 */
-	private static String DEFAULT_FILE = "events.txt";
 	
 	/**
 	 * Writer.
@@ -51,7 +46,7 @@ public class RpcClientFacadeWrapper extends RpcClientFacade
 	{
 		try 
 		{
-			_writer = new PrintWriter(DEFAULT_FILE, "UTF-8");
+			_writer = new PrintWriter(_outputDirectory+".txt", "UTF-8");
 		} 
 		catch (FileNotFoundException e) 
 		{
@@ -73,6 +68,7 @@ public class RpcClientFacadeWrapper extends RpcClientFacade
 	public void cleanUp()
 	{
 		log.warning("Closing  file.");
+		_sentItems = 0;
 		_writer.close();
 	}
 
@@ -98,8 +94,16 @@ public class RpcClientFacadeWrapper extends RpcClientFacade
 	@Override
 	public void sendEvent(Event event)
 	{	
-		System.out.println(event.toString());
-		_writer.println(event.toString());
+		logSentItem(event.toString());
+		try 
+		{
+			_writer.println(event.toString());
+		}
+		catch (Exception e)
+		{
+			log.warning("Error writing.");
+			System.exit(0);
+		}
 	}
 	
 	/**
@@ -111,8 +115,16 @@ public class RpcClientFacadeWrapper extends RpcClientFacade
 	@Override
 	public void sendData(String data, long time)
 	{
-		System.out.println(data);
-		_writer.println(data);
+		logSentItem(data);
+		try 
+		{
+			_writer.println(data);
+		}
+		catch (Exception e)
+		{
+			log.warning("Error writing.");
+			System.exit(0);
+		}
 	}
 
 	/**
@@ -123,7 +135,15 @@ public class RpcClientFacadeWrapper extends RpcClientFacade
 	@Override
 	public void sendData(SNObject data)
 	{
-		System.out.println(data.toString());
-		_writer.println(data.toString());
+		//logSentItem(data.toString());
+		try 
+		{
+			_writer.println(data.toString());
+		}
+		catch (Exception e)
+		{
+			log.warning("Error writing.");
+			System.exit(0);
+		}
 	}
 }
