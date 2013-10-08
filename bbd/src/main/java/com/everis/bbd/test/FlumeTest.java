@@ -1,4 +1,4 @@
-package com.everis.bbd;
+package com.everis.bbd.test;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
