@@ -73,9 +73,9 @@ public class SNObject
 	{
 		if (!_information.containsKey(key))
 		{
-			return (Integer) null;
+			return -1;
 		}
-		return ((Integer)_information.get(key));
+		return ((int)_information.get(key));
 	}
 	
 	/**
@@ -95,9 +95,9 @@ public class SNObject
 	{
 		if (!_information.containsKey(key))
 		{
-			return (Long) null;
+			return -1;
 		}
-		return ((Long)_information.get(key));
+		return ((long)_information.get(key));
 	}
 	
 	/**
@@ -161,9 +161,9 @@ public class SNObject
 	{
 		if (!_information.containsKey(key))
 		{
-			return (Double) null;
+			return -1;
 		}
-		return ((Double)_information.get(key));
+		return ((double)_information.get(key));
 	}
 	
 	/**
