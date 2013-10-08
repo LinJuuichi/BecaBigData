@@ -3,13 +3,16 @@ package com.everis.bbd.flume;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Logger;
+
 import org.apache.flume.Event;
 import org.apache.flume.EventDeliveryException;
 import org.apache.flume.FlumeException;
 import org.apache.flume.api.RpcClient;
 import org.apache.flume.api.RpcClientFactory;
 import org.apache.flume.event.EventBuilder;
+
 import com.everis.bbd.snconnector.SNObject;
 import com.everis.bbd.snconnector.SNObjectKeys;
 
@@ -75,6 +78,17 @@ public class RpcClientFacade
 	}
 	
 	/**
+	 * Creates a client configured with props.
+	 * 
+	 * @param props properties
+	 */
+	public RpcClientFacade(Properties props) 
+	{
+		_client = RpcClientFactory.getInstance(props);
+		_outputDirectory = DEFAULT_OUTPUT_DIRECTORY;
+	}
+	
+	/**
 	 * @param outputDirectory new output directory.
 	 */
 	public void setOutputDirectory(String outputDirectory)
@@ -94,7 +108,7 @@ public class RpcClientFacade
 		_hostname = hostname;
 		_port = port;
 	}
-	
+
 	/**
 	 * Connects the client.
 	 * 

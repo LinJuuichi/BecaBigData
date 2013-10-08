@@ -1,5 +1,6 @@
 package com.everis.bbd.flume;
 
+import java.util.Properties;
 import java.util.logging.Logger;
 
 /**
@@ -84,6 +85,31 @@ public class RpcClientFacadeFactory
 		{
 		case RPC_CLIENT_FACADE:
 			client = new RpcClientFacade();
+			break;
+		case RPC_CLIENT_FACADE_WRAPPER:
+			client = new RpcClientFacadeWrapper();
+			break;
+		default:
+			log.warning("Client type does not exist");
+			break;
+		}
+		return client;
+	}
+	
+	/**
+	 * Returns the client configured with a failover.
+	 * 
+	 * @param type client type.
+	 * @param props properties configured for failover.
+	 * @return client.
+	 */
+	public static RpcClientFacade getClientWithProperties(int type, Properties props)
+	{
+		RpcClientFacade client = null;
+		switch (type) 
+		{
+		case RPC_CLIENT_FACADE:
+			client = new RpcClientFacade(props);
 			break;
 		case RPC_CLIENT_FACADE_WRAPPER:
 			client = new RpcClientFacadeWrapper();

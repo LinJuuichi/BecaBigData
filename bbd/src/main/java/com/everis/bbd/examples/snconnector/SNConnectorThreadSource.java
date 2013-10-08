@@ -2,8 +2,7 @@ package com.everis.bbd.examples.snconnector;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.everis.bbd.SNApplicationThread;
+import com.everis.bbd.examples.snconnector.SNApplicationThread;
 import com.everis.bbd.flume.RpcClientFacade;
 import com.everis.bbd.flume.RpcClientFacadeFactory;
 import com.everis.bbd.utilities.ConfigurationReader;
