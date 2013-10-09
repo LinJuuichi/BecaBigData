@@ -3,9 +3,9 @@ package com.everis.bbd.examples.snconnector;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.everis.bbd.SNApplicationThread;
 import com.everis.bbd.flume.RpcClientFacade;
 import com.everis.bbd.flume.RpcClientFacadeFactory;
+import com.everis.bbd.snconnector.SNConnectorThread;
 import com.everis.bbd.utilities.ConfigurationReader;
 
 /**
@@ -46,10 +46,10 @@ public class SNConnectorThreadSource
 		List<String> twitterPropertiesFiles = configuration.getValues("config");
 		
 		// creating a connectorThread for each file read and starting it.
-		List<SNApplicationThread> connectors = new ArrayList<SNApplicationThread>();
+		List<SNConnectorThread> connectors = new ArrayList<SNConnectorThread>();
 		for(String configFile: twitterPropertiesFiles)
 		{
-			SNApplicationThread connectorThread = new SNApplicationThread(configFile);
+			SNConnectorThread connectorThread = new SNConnectorThread(configFile);
 			if(connectorThread.configure(client))
 			{
 				connectors.add(connectorThread);

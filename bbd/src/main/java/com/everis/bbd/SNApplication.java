@@ -3,9 +3,11 @@ package com.everis.bbd;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.everis.bbd.flume.RpcClientFacade;
 import com.everis.bbd.flume.RpcClientFacadeFactory;
 import com.everis.bbd.flume.RpcClientFacadeKeys;
+import com.everis.bbd.snconnector.SNConnectorThread;
 import com.everis.bbd.utilities.ConfigurationReader;
 
 /**
@@ -69,15 +71,14 @@ public class SNApplication
 		File folder = new File(configuration.getConfigFilePath().substring(0,configuration.getConfigFilePath().lastIndexOf("/")) + "/" + queriesPropertiesDir);
 		File[] queriesPropertiesFiles = folder.listFiles();
 		
-
 		// creating a connectorThread for each file read and starting it.
-		List<SNApplicationThread> connectors = new ArrayList<SNApplicationThread>();
+		List<SNConnectorThread> connectors = new ArrayList<SNConnectorThread>();
 		for(File configFile: queriesPropertiesFiles)
 		{
 			String configFileName = configFile.getName();
 			if (configFileName.endsWith(".properties"))
 			{
-				SNApplicationThread connectorThread = new SNApplicationThread(_propertiesDir+"/"+queriesPropertiesDir+"/"+configFileName);
+				SNConnectorThread connectorThread = new SNConnectorThread(_propertiesDir+"/"+queriesPropertiesDir+"/"+configFileName);
 				boolean configured = false;
 				if (generalClient)
 				{

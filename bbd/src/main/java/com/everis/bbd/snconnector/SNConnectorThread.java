@@ -1,26 +1,23 @@
-package com.everis.bbd;
+package com.everis.bbd.snconnector;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
 import com.everis.bbd.flume.RpcClientFacade;
 import com.everis.bbd.flume.RpcClientFacadeFactory;
 import com.everis.bbd.flume.RpcClientFacadeKeys;
-import com.everis.bbd.snconnector.SNConnector;
-import com.everis.bbd.snconnector.SNConnectorFactory;
-import com.everis.bbd.snconnector.SNConnectorKeys;
-import com.everis.bbd.snconnector.SNObject;
 import com.everis.bbd.utilities.ConfigurationReader;
 
 /**
  * Wrapper for inherited classes from SNConnector.
  */
-public class SNApplicationThread extends Thread
+public class SNConnectorThread extends Thread
 {
 	/**
 	 * Logger.
 	 */
-	private static Logger log = Logger.getLogger(SNApplicationThread.class.getName());
+	private static Logger log = Logger.getLogger(SNConnectorThread.class.getName());
 
 	/**
 	 * Key for default mode.
@@ -80,7 +77,7 @@ public class SNApplicationThread extends Thread
 	/**
 	 * @param propertiesFile Name of the property file.
 	 */
-	public SNApplicationThread(String propertiesFile)
+	public SNConnectorThread(String propertiesFile)
 	{
 		_propertiesFile = propertiesFile;
 	}
