@@ -1,4 +1,4 @@
-package com.everis.mapreduce;
+package com.everis.bbd.mapreduce;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -61,7 +61,6 @@ public class LogFilter extends Configured implements Tool
 			return timestamp;
 		}
 		
-		@Override
 		public void readFields(DataInput in) throws IOException 
 		{
 			timestamp = WritableUtils.readString(in);
@@ -69,7 +68,6 @@ public class LogFilter extends Configured implements Tool
 			start_or_end = WritableUtils.readString(in);
 		}
 
-		@Override
 		public void write(DataOutput out) throws IOException 
 		{
 			WritableUtils.writeString(out, timestamp);
@@ -77,7 +75,6 @@ public class LogFilter extends Configured implements Tool
 			WritableUtils.writeString(out, start_or_end);
 		}
 
-		@Override
 		public int compareTo(Object o) {
 			LogFilterKey lfk = (LogFilterKey)o;
 			int result = method_name.compareTo(lfk.method_name);
@@ -149,7 +146,6 @@ public class LogFilter extends Configured implements Tool
 					.append(difference).toString();
 		}
 		
-		@Override
 		public void readFields(DataInput in) throws IOException 
 		{
 			timestamp = WritableUtils.readString(in);
@@ -158,7 +154,6 @@ public class LogFilter extends Configured implements Tool
 			start_or_end = WritableUtils.readString(in);
 		}
 
-		@Override
 		public void write(DataOutput out) throws IOException 
 		{
 			WritableUtils.writeString(out, timestamp);
@@ -294,7 +289,6 @@ public class LogFilter extends Configured implements Tool
 		return -1;
 	}
 	
-	@Override
 	public int run(String[] args) throws Exception 
 	{
 		Job job = Job.getInstance(getConf(), "logfilter");
