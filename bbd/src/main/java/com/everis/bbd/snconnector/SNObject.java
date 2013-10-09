@@ -69,13 +69,13 @@ public class SNObject
 	 * @param key of the value
 	 * @return an int with the value
 	 */
-	public int getInt(String key)
+	public Integer getInt(String key)
 	{
 		if (!_information.containsKey(key))
 		{
 			return -1;
 		}
-		return ((int)_information.get(key));
+		return (Integer)_information.get(key);
 	}
 	
 	/**
@@ -91,13 +91,13 @@ public class SNObject
 	 * @param key of the value
 	 * @return a long with the value
 	 */
-	public long getLong(String key)
+	public Long getLong(String key)
 	{
 		if (!_information.containsKey(key))
 		{
-			return -1;
+			return -1L;
 		}
-		return ((long)_information.get(key));
+		return (Long)_information.get(key);
 	}
 	
 	/**
@@ -157,13 +157,13 @@ public class SNObject
 	 * @param key of the value
 	 * @return a double with the value
 	 */
-	public double getDouble(String key)
+	public Double getDouble(String key)
 	{
 		if (!_information.containsKey(key))
 		{
-			return -1;
+			return -1.;
 		}
-		return ((double)_information.get(key));
+		return ((Double)_information.get(key));
 	}
 	
 	/**
