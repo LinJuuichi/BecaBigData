@@ -58,7 +58,12 @@ public abstract class AbstractTwitterConnector extends SNConnector
 			.setOAuthConsumerKey(_configuration.getValue(SNConnectorKeys.OAUTH_CONSUMER_KEY.getId(),""))
 			.setOAuthConsumerSecret(_configuration.getValue(SNConnectorKeys.OAUTH_CONSUMER_SECRET.getId(),""))
 			.setOAuthAccessToken(_configuration.getValue(SNConnectorKeys.OAUTH_ACCESS_TOKEN.getId(),""))
-			.setOAuthAccessTokenSecret(_configuration.getValue(SNConnectorKeys.OAUTH_ACCESS_TOKEN_SECRET.getId(),""));
+			.setOAuthAccessTokenSecret(_configuration.getValue(SNConnectorKeys.OAUTH_ACCESS_TOKEN_SECRET.getId(),""))
+			.setHttpProxyHost("10.110.8.42")
+			.setHttpProxyPort(8080)
+			.setHttpProxyUser("rserratm")
+			.setHttpProxyPassword("Rs12092013");
+		
 
 		return connectToTwitter(cb);
 	}
