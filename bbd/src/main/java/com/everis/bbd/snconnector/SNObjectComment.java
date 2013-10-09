@@ -39,7 +39,7 @@ public class SNObjectComment extends SNObject
 			//comment = comment.replaceAll("[^\\w\\s]","");
 			//comment = comment.replaceAll("[\\-\\+\\.\\^:,]","");
 			//comment = comment.replaceAll("[^\\p{L}\\p{Nd}]", "");
-			comment = comment.replaceAll("(\\r|\\n)", "");
+			comment = comment.replaceAll("(\\r|\\n|\\t)", "");
 			value = value.concat(comment);
 		}
 		else
@@ -60,7 +60,7 @@ public class SNObjectComment extends SNObject
 		
 		if (this.hasValue(SNObjectKeys.POST_USER_KEY.getId()))
 		{
-			value = value.concat(this.getString(SNObjectKeys.POST_USER_KEY.getId()));
+			value = value.concat(this.getString(SNObjectKeys.POST_USER_KEY.getId().replaceAll("(\\r|\\n|\\t)", "")));
 		}
 		else
 		{
@@ -107,7 +107,7 @@ public class SNObjectComment extends SNObject
 			{
 				source = source.substring(first,last);
 			}
-			value = value.concat(source);
+			value = value.concat(source.replaceAll("(\\r|\\n|\\t)", ""));
 		}
 		else
 		{
