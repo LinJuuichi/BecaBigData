@@ -40,7 +40,7 @@ public class SNObject
 	 */
 	public void setString(String key, String value)
 	{
-		_information.put(key, value);
+		_information.put(key, value.replace("\t","").replace("\n", "").replace("\r", ""));
 	}
 	
 	/**

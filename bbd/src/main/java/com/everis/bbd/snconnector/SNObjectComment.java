@@ -60,7 +60,7 @@ public class SNObjectComment extends SNObject
 		
 		if (this.hasValue(SNObjectKeys.POST_USER_KEY.getId()))
 		{
-			value = value.concat(this.getString(SNObjectKeys.POST_USER_KEY.getId().replaceAll("(\\r|\\n|\\t)", "")));
+			value = value.concat(this.getString(SNObjectKeys.POST_USER_KEY.getId()));
 		}
 		else
 		{
@@ -107,7 +107,7 @@ public class SNObjectComment extends SNObject
 			{
 				source = source.substring(first,last);
 			}
-			value = value.concat(source.replaceAll("(\\r|\\n|\\t)", ""));
+			value = value.concat(source);
 		}
 		else
 		{
