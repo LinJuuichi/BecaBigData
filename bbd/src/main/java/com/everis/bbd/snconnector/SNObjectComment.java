@@ -1,5 +1,8 @@
 package com.everis.bbd.snconnector;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.logging.Logger;
 
 /**
@@ -90,7 +93,10 @@ public class SNObjectComment extends SNObject
 		
 		if (this.hasValue(SNObjectKeys.POST_DATE_KEY.getId()))
 		{
-			value = value.concat(this.getTimestamp(SNObjectKeys.POST_DATE_KEY.getId()).toString());
+			long time = this.getTimestamp(SNObjectKeys.POST_DATE_KEY.getId()).getTime();
+			String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date(time));
+			System.out.println(date);
+			value = value.concat(date);
 		}
 		else
 		{
