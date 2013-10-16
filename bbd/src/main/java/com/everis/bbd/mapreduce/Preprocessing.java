@@ -77,8 +77,8 @@ public class Preprocessing extends Configured implements Tool
 	    job.setInputFormatClass(TextInputFormat.class);
 	    job.setOutputFormatClass(TextOutputFormat.class);
 
-	    FileInputFormat.setInputPaths(job, new Path("hdfs://localhost/tmp/fpm"));
-	    FileOutputFormat.setOutputPath(job, new Path("hdfs://localhost/tmp/fpm_filtered"));
+	    FileInputFormat.setInputPaths(job, new Path("hdfs://node/tmp/fpm"));
+	    FileOutputFormat.setOutputPath(job, new Path("hdfs://node/tmp/fpm_filtered"));
 
 	    job.setJarByClass(Preprocessing.class);
 
