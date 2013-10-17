@@ -34,7 +34,7 @@ public class NewTimeLog
 			String[] splitLine = line.split(";");
 			if (splitLine.length > 10)
 			{
-				_out.write(splitLine[0]+"\t"+splitLine[1]+"\t"+splitLine[2]+"\t"
+				_out.write(splitLine[0].replace(",",".")+"\t"+splitLine[1]+"\t"+splitLine[2]+"\t"
 								+splitLine[3]+"\t"+splitLine[4]+"\t"
 								+splitLine[5]+"\t"+splitLine[6]+"\t"
 								+splitLine[7]+"\t"+splitLine[8]+"\t"
