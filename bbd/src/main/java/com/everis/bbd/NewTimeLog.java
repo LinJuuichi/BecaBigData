@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 import java.util.Vector;
 import java.sql.Timestamp;
 
-public class LogFilter 
+public class NewTimeLog 
 {
 
 	// Class parameters.
@@ -38,8 +38,7 @@ public class LogFilter
 								+splitLine[3]+"\t"+splitLine[4]+"\t"
 								+splitLine[5]+"\t"+splitLine[6]+"\t"
 								+splitLine[7]+"\t"+splitLine[8]+"\t"
-								+splitLine[9]+"\t"+splitLine[10]+"\t"
-								+splitLine[11]+"\n");
+								+splitLine[9]+"\t"+splitLine[10]+"\n");
 			}
 		}
 		br.close();
