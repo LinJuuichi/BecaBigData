@@ -39,19 +39,16 @@ public class Preprocessing extends Configured implements Tool
 		 * 
 		 */
 		private static TextProcessor _tp;
+		private static int[] order = {0, 1, 2, 3};
 	    
 		@Override
 	    protected void setup(Context context) throws IOException 
 	    {
 	    	_tp = new TextProcessor();
-			Map<String, Integer> dictionaries = new HashMap<String, Integer>();
-			//dictionaries.put("char.dictionary", DictionaryFactory.CHAR_DICTIONARY);
-			dictionaries.put("word.dictionary", DictionaryFactory.WORD_DICTIONARY);
-			dictionaries.put("words.dictionary", DictionaryFactory.WORD_LIST_DICTIONARY);
-			if (!_tp.readDictionaries(dictionaries, true))
-			{
-				//some error.
-			}
+	    	_tp.readDictionary("nourl", DictionaryFactory.NO_URL_DICTIONARY,0,false);
+			_tp.readDictionary("blacklist", DictionaryFactory.BLACK_LIST_DICTIONARY,1,false);
+			_tp.readDictionary("word", DictionaryFactory.WORD_DICTIONARY,2,false);
+			_tp.readDictionary("words", DictionaryFactory.WORD_LIST_DICTIONARY,3,false);
 	    }
 
 		@Override
@@ -59,7 +56,7 @@ public class Preprocessing extends Configured implements Tool
 	    {
 	        Text processed = new Text();
 	        String line = value.toString();
-	        processed.set(_tp.preProcess(line,true));
+	        processed.set(_tp.preProcess(line, 2, order));
 	        context.write(processed, NullWritable.get());
 	    }
 	}
@@ -77,8 +74,8 @@ public class Preprocessing extends Configured implements Tool
 	    job.setInputFormatClass(TextInputFormat.class);
 	    job.setOutputFormatClass(TextOutputFormat.class);
 
-	    FileInputFormat.setInputPaths(job, new Path("hdfs://node/tmp/fpm"));
-	    FileOutputFormat.setOutputPath(job, new Path("hdfs://node/tmp/fpm_filtered"));
+	    FileInputFormat.setInputPaths(job, new Path("hdfs://cdh4-node1/tmp/fpm"));
+	    FileOutputFormat.setOutputPath(job, new Path("hdfs://cdh4-node1/tmp/fpm_filtered"));
 
 	    job.setJarByClass(Preprocessing.class);
 
