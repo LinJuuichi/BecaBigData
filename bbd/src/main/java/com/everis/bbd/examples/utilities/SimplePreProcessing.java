@@ -20,7 +20,7 @@ public class SimplePreProcessing
 	/**
 	 * Default path to the input file.
 	 */
-	private static String INPUT_FILE = "events.txt";
+	private static String INPUT_FILE = "C:\\Users\\rserratm\\Desktop\\tweets.txt";
 	
 	/**
 	 * Default path to the output file.
@@ -87,23 +87,19 @@ public class SimplePreProcessing
 		}
 		
 		TextProcessor processor = new TextProcessor();
-		Map<String, Integer> dictionaries = new HashMap<String, Integer>();
-		dictionaries.put("word", DictionaryFactory.WORD_DICTIONARY);
-		dictionaries.put("words", DictionaryFactory.WORD_LIST_DICTIONARY);
-		dictionaries.put("blacklist", DictionaryFactory.BLACK_LIST_DICTIONARY);
-		if (!processor.readDictionaries(dictionaries))
-		{
-			System.out.println("Could not read dictionaries.");
-			return;
-		}
-		
+
+		processor.readDictionary("nourl", DictionaryFactory.NO_URL_DICTIONARY,0,false);
+		processor.readDictionary("blacklist", DictionaryFactory.BLACK_LIST_DICTIONARY,1,false);
+		processor.readDictionary("word", DictionaryFactory.WORD_DICTIONARY,2,false);
+		processor.readDictionary("words", DictionaryFactory.WORD_LIST_DICTIONARY,3,false);
+
 		String line;
+		int[] order = {0,1,2,3};
 		try 
 		{
 			while((line = _reader.readLine()) != null)
 			{
-				String text = line.split("\t")[1];
-				text = processor.preProcess(text,true);
+				String text = processor.preProcess(line, 2, order);
 				_writer.println(text);
 				System.out.println(text);
 			}
@@ -114,5 +110,4 @@ public class SimplePreProcessing
 			e.printStackTrace();
 		}
 	}
-
 }

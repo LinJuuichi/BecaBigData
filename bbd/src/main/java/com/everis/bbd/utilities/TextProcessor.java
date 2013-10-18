@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import com.everis.bbd.utilities.dictionary.Dictionary;
 import com.everis.bbd.utilities.dictionary.DictionaryFactory;
+import com.everis.bbd.utilities.dictionary.DictionaryKeys;
 
 /**
  * Wrapper for dictionary that process text lines.
@@ -50,13 +51,42 @@ public class TextProcessor
 			}
 			if (newDictionary.readDictionary())
 			{
-				_dictionaries.add(newDictionary);
+				_dictionaries.add(newDictionary.getDictionaryType(), newDictionary);
 			}
 			else
 			{
 				log.warning("Dictionary "+dictionary.getKey()+" could not be read.");
 				return false;
 			}
+		}
+		return true;
+	}
+	
+	
+	/**
+	 * Reads a single dictionary and set into the indicated index.
+	 * 
+	 * @param dictionaryName dictionary name.
+	 * @param dictionaryType dictionary type.
+	 * @param index position where the dictionary will be placed.
+	 * @param nameIsPath if the dictionary name is the path to the dictionary itself.
+	 * @return if the dictionary has been read.
+	 */
+	public boolean readDictionary(String dictionaryName, int dictionaryType, int index, boolean nameIsPath)
+	{
+		Dictionary newDictionary = DictionaryFactory.getDictionary(dictionaryName,dictionaryType);
+		if (nameIsPath)
+		{
+			newDictionary.setPath(dictionaryName);
+		}
+		if (newDictionary.readDictionary())
+		{
+			_dictionaries.add(index, newDictionary);
+		}
+		else
+		{
+			log.warning("Dictionary "+dictionaryName+" could not be read.");
+			return false;
 		}
 		return true;
 	}
@@ -90,6 +120,29 @@ public class TextProcessor
 		for (Dictionary dictionary: _dictionaries)
 		{
 			text = dictionary.processText(text);
+		}
+		return text;
+	}
+	
+	/**
+	 * Process the line.
+	 * 
+	 * @param text to process.
+	 * @param alphanum before what dictionary the pre process should remove all characters non alphanumeric. (-1 if not)
+	 * @param order list of indexes of the dictionaries in order of execution.
+	 * @return processed text.
+	 */
+	public String preProcess(String text, int alphanum, int[] order)
+	{
+		text = text.toLowerCase();
+		text = _dictionaries.get(0).processText(text);
+		for (int i = 0; i < order.length; ++i)
+		{
+			if (alphanum == order[i])
+			{
+				text = text.replaceAll("[^a-zA-Z0-9\\ ]", " ");
+			}
+			text = _dictionaries.get(order[i]).processText(text);
 		}
 		return text;
 	}

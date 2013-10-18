@@ -51,6 +51,11 @@ public abstract class Dictionary
 	protected String _dictionaryPath;
 	
 	/**
+	 * Type of the dictionary.
+	 */
+	protected int _dictionaryType;
+	
+	/**
 	 * 
 	 */
 	protected Map<String, String> _dictionary;
@@ -75,6 +80,24 @@ public abstract class Dictionary
 		_dictionaryName = name;
 		_dictionaryPath = "";
 		_dictionary = new HashMap<String,String>();
+	}
+	
+	/**
+	 * Sets the dictionary type.
+	 * 
+	 * @param type of the dictionary.
+	 */
+	public void setDictionaryType(int type)
+	{
+		_dictionaryType = type;
+	}
+	
+	/**
+	 * @return dictionary type.
+	 */
+	public int getDictionaryType()
+	{
+		return _dictionaryType;
 	}
 	
 	/**

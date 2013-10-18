@@ -32,6 +32,11 @@ public class DictionaryFactory
 	 */
 	public static final int BLACK_LIST_DICTIONARY = 4;
 	
+	/**
+	 * Identifier for NoURLDictionary.
+	 */
+	public static final int NO_URL_DICTIONARY = 5;
+	
 
 	/**
 	 * DictionaryFactory can't be instantiated.
@@ -62,10 +67,14 @@ public class DictionaryFactory
 		case BLACK_LIST_DICTIONARY:
 			dictionary = new BlackListDictionary(dictionaryName);
 			break;
+		case NO_URL_DICTIONARY:
+			dictionary = new NoURLDictionary(dictionaryName);
+			break;
 		default:
 			log.warning("Dictionary type does not exist");
 			break;
 		}
+		dictionary.setDictionaryType(type);
 		return dictionary;
 	}
 }
