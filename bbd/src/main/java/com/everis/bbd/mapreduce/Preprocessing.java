@@ -45,10 +45,13 @@ public class Preprocessing extends Configured implements Tool
 	    protected void setup(Context context) throws IOException 
 	    {
 	    	_tp = new TextProcessor();
-	    	_tp.readDictionary("nourl", DictionaryFactory.NO_URL_DICTIONARY,0,false);
-			_tp.readDictionary("blacklist", DictionaryFactory.BLACK_LIST_DICTIONARY,1,false);
-			_tp.readDictionary("word", DictionaryFactory.WORD_DICTIONARY,2,false);
-			_tp.readDictionary("words", DictionaryFactory.WORD_LIST_DICTIONARY,3,false);
+	    	if (!_tp.readDictionary("nourl", DictionaryFactory.NO_URL_DICTIONARY,0,true))
+	    	{
+	    		
+	    	}
+			_tp.readDictionary("blacklist", DictionaryFactory.BLACK_LIST_DICTIONARY,1,true);
+			_tp.readDictionary("word", DictionaryFactory.WORD_DICTIONARY,2,true);
+			_tp.readDictionary("words", DictionaryFactory.WORD_LIST_DICTIONARY,3,true);
 	    }
 
 		@Override

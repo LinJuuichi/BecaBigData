@@ -135,7 +135,6 @@ public class TextProcessor
 	public String preProcess(String text, int alphanum, int[] order)
 	{
 		text = text.toLowerCase();
-		text = _dictionaries.get(0).processText(text);
 		for (int i = 0; i < order.length; ++i)
 		{
 			if (alphanum == order[i])
